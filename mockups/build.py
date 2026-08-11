@@ -405,9 +405,14 @@ def family_links(name: str) -> dict:
     People page, so its People link stays an anchor on the front page."""
     if name.startswith("a2-"):
         return {"HOME": "a2-signal.html", "PUBS": "a2-publications.html",
-                "NEWS": "a2-news.html", "PEOPLE_PAGE": "a2-people.html"}
+                "NEWS": "a2-news.html", "PEOPLE_PAGE": "a2-people.html",
+                "JOIN": "a2-join.html", "CONTACT": "a2-contact.html",
+                "TEACHING": "a2-teaching.html", "ETHICS": "a2-ethics.html"}
+    # A predates these pages, so its links stay where they were
     return {"HOME": "a-signal.html", "PUBS": "a-publications.html",
-            "NEWS": "a-news.html", "PEOPLE_PAGE": "a-signal.html#people"}
+            "NEWS": "a-news.html", "PEOPLE_PAGE": "a-signal.html#people",
+            "JOIN": "a-signal.html#join", "CONTACT": "a-signal.html#join",
+            "TEACHING": "a-signal.html", "ETHICS": "a-signal.html"}
 
 
 def render(template: str, name: str = "a-signal.html") -> str:
@@ -519,6 +524,15 @@ def main(argv: list[str]) -> int:
         dst.write_text(html, encoding="utf-8")
         seen[name] = _digest(html)
         print(f"{name:22s} {len(html)/1024:8.1f} KB")
+    # static/ ships verbatim: PDFs and anything else that has to stay a real file rather
+    # than being inlined as a data URI.
+    static = ROOT / "static"
+    if static.is_dir():
+        for f in sorted(static.iterdir()):
+            if f.is_file():
+                (OUT / f.name).write_bytes(f.read_bytes())
+                print(f"{f.name:22s} {f.stat().st_size/1024:8.1f} KB  (static)")
+
     if HOMEPAGE in targets:
         index = (OUT / HOMEPAGE).read_text(encoding="utf-8")
         (OUT / "index.html").write_text(index, encoding="utf-8")

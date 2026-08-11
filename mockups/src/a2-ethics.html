@@ -1,0 +1,81 @@
+<title>Fairness and justice in science &mdash; Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 26ch; }
+
+.prose { max-width: 62ch; display: grid; gap: 1.125rem; }
+.prose p { color: var(--fg-2); line-height: 1.7; }
+.prose a { color: var(--accent); }
+.prose h2 {
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding-top: 1.5rem;
+}
+.prose ul { display: grid; gap: 0.625rem; padding-left: 1.125rem; color: var(--fg-2); }
+.prose li { line-height: 1.65; }
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">Ethics<span class="trace"></span></p>
+      <h1 class="display">Ethical considerations for fairness and justice in science</h1>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0">
+    <div class="prose" data-reveal>
+      <p>
+        American academia has systematically excluded Black and Indigenous people of color.
+        The fields of systems and computational neuroscience in particular exclude women. As a
+        lab we are committed to making neuroscience a more open and inclusive field.
+      </p>
+      <p>
+        All lab members are encouraged to spend a portion of their work hours on mentoring,
+        outreach and education, including participating in the lab's reading group on these
+        topics.
+      </p>
+
+      <h2>Our action plan</h2>
+      <ul>
+        <li>Improving support for junior scientists from under-represented groups.</li>
+        <li>Working to improve departmental hiring policies.</li>
+        <li>
+          Improving representation in our journal club, in the citations in our papers, and in
+          the seminar series we attend.
+        </li>
+      </ul>
+
+      <h2>In practice</h2>
+      <p>
+        We took part in a faculty search for our department, and wrote up the practices we used
+        to reduce bias and broaden the pool:
+        <a href="BioStr_Faculty_Search_2021-22_DEI_review.pdf">a detailed review of that
+        search</a> (PDF).
+      </p>
+      <p>
+        We host a high-school researcher every summer through the
+        <a href="https://depts.washington.edu/bioethx/">BRIGHT-UP</a> program, and several of
+        our undergraduates have gone on to fellowships and graduate programs &mdash; see
+        <a href="a2-people.html#alumni">where people went</a>.
+      </p>
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+</script>

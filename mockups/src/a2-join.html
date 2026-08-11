@@ -1,0 +1,113 @@
+<title>Join us &mdash; Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 24ch; }
+.phead .lede { max-width: 52ch; }
+
+/* one block per route into the lab */
+.roles { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+.role {
+  display: grid;
+  grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+  gap: 0.75rem clamp(1.5rem, 3vw, 3rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule);
+}
+.role h3 { font-size: var(--step-1); letter-spacing: -0.01em; }
+.role p { color: var(--fg-2); max-width: 60ch; }
+.role p + p { margin-top: 0.75rem; }
+@media (max-width: 44rem) { .role { grid-template-columns: 1fr; } }
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">Join us<span class="trace"></span></p>
+      <h1 class="display">There are several ways into the lab</h1>
+      <p class="lede">
+        We are looking for curious, motivated and talented people interested in using
+        cutting-edge electrophysiological, imaging and behavioral techniques to answer
+        questions about the neural basis of cognition and behavior.
+      </p>
+      <p class="lede">
+        We are committed to making neuroscience a more open and inclusive field, so we
+        encourage applications from people with non-traditional backgrounds or from
+        under-represented groups &mdash; see our
+        <a href="a2-ethics.html" style="color:var(--accent)">statement on fairness and justice
+        in science</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0">
+    <div class="roles">
+      <article class="role" data-reveal>
+        <h3>Postdoctoral scientists</h3>
+        <div>
+          <p>
+            If you like asking hard questions, making things work, and pursuing creative ideas
+            with state-of-the-art tools, this lab may be for you. Prior experience with
+            neurophysiology and advanced data analysis is desirable.
+          </p>
+          <p>
+            Informal inquiries are welcome &mdash; write to
+            <a href="mailto:nick.steinmetz@gmail.com" style="color:var(--accent)">nick.steinmetz@gmail.com</a>.
+          </p>
+        </div>
+      </article>
+
+      <article class="role" data-reveal data-reveal-delay="0.06">
+        <h3>Graduate students</h3>
+        <div>
+          <p>
+            Students interested in joining the lab for a Ph.D. should apply to a UW graduate
+            program such as the
+            <a href="http://depts.washington.edu/neurogrd/" style="color:var(--accent)">Program
+            in Neurosciences</a>. Students from many programs are eligible to join the lab;
+            please inquire for details.
+          </p>
+        </div>
+      </article>
+
+      <article class="role" data-reveal data-reveal-delay="0.12">
+        <h3>Undergraduates and high-school students</h3>
+        <div>
+          <p>
+            Undergraduates run their own projects here and appear as authors on papers; several
+            have won Mary Gates, Simons SURF and Goldwater awards while in the lab. We have also
+            hosted a high-school researcher every summer since 2021 through the BRIGHT-UP
+            program.
+          </p>
+          <p>
+            Get in touch with a short note about what you would like to work on.
+          </p>
+        </div>
+      </article>
+
+      <article class="role" data-reveal data-reveal-delay="0.18">
+        <h3>Rotation students</h3>
+        <div>
+          <p>
+            Rotations are welcome and are usually the way graduate students join. Write to Nick
+            to arrange one.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+</script>

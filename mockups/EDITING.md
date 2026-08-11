@@ -26,6 +26,10 @@ palette/typeface/theme switcher still attached. Edit the `a2-*` files.
 | Publications | `src/a2-publications.html` |
 | People and alumni | `src/a2-people.html` |
 | News | `src/a2-news.html` |
+| Join us | `src/a2-join.html` |
+| Contact | `src/a2-contact.html` |
+| Teaching | `src/a2-teaching.html` |
+| Ethics | `src/a2-ethics.html` |
 
 ## Where does a given piece of text live?
 
@@ -53,6 +57,12 @@ change something later I read these files first, so I see your wording and work 
 
 The one thing that would lose your work is editing `out/`, which is what the guard above
 exists to prevent.
+
+## Files that ship as-is
+
+Anything in `static/` is copied straight into the built site, unchanged -- PDFs and
+similar, which have to stay real files rather than being inlined as data URIs.
+Everything in `assets/` is inlined instead.
 
 ## Adding an entry
 

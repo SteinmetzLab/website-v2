@@ -1,0 +1,109 @@
+<title>Contact &mdash; Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 22ch; }
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+@media (max-width: 52rem) { .contact { grid-template-columns: 1fr; } }
+
+.cblocks { display: grid; gap: 1.75rem; }
+.cblock { display: grid; gap: 0.375rem; }
+.cblock h3 {
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 0.25rem;
+}
+.cblock p, .cblock address { font-style: normal; color: var(--fg-2); line-height: 1.65; }
+.cblock a { color: var(--accent); }
+
+.cmap { border: 1px solid var(--rule); display: block; }
+.cmap img { width: 100%; height: auto; display: block; }
+.cmap figcaption {
+  font: 400 0.6875rem/1.5 var(--mono);
+  color: var(--fg-3);
+  padding: 0.625rem 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">Contact<span class="trace"></span></p>
+      <h1 class="display">Where to find us</h1>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0">
+    <div class="contact">
+      <div class="cblocks" data-reveal>
+        <div class="cblock">
+          <h3>Lab</h3>
+          <address>
+            Health Sciences Building, Lab I-534<br>
+            Department of Neurobiology &amp; Biophysics<br>
+            University of Washington
+          </address>
+        </div>
+
+        <div class="cblock">
+          <h3>Mail</h3>
+          <address>
+            HSB G-520<br>
+            Box 357420<br>
+            1959 NE Pacific St.<br>
+            Seattle, WA 98195-7420
+          </address>
+        </div>
+
+        <div class="cblock">
+          <h3>Phone</h3>
+          <p><a href="tel:+12066850960">206-685-0960</a></p>
+        </div>
+
+        <div class="cblock">
+          <h3>Email</h3>
+          <p><a href="mailto:nick.steinmetz@gmail.com">nick.steinmetz@gmail.com</a></p>
+        </div>
+
+        <div class="cblock">
+          <h3>Elsewhere</h3>
+          <p>
+            <a href="https://github.com/SteinmetzLab">GitHub</a> &middot;
+            <a href="https://scholar.google.com/citations?user=PkcYP74AAAAJ&amp;hl=en">Google Scholar</a> &middot;
+            <a href="https://orcid.org/0000-0001-7029-2908">ORCID</a>
+          </p>
+        </div>
+      </div>
+
+      <figure class="cmap has-corner" data-reveal data-reveal-delay="0.08">
+        <a href="https://www.google.com/maps/place/1959+NE+Pacific+St,+Seattle,+WA+98195">
+          <img src="{{IMG:uwmap}}" alt="Map of the University of Washington medical campus, with the Health Sciences Building marked.">
+        </a>
+        <figcaption>The Health Sciences Building, UW medical campus. Opens in Google Maps.</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+</script>

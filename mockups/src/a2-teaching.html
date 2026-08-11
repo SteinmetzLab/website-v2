@@ -1,0 +1,117 @@
+<title>Teaching &mdash; Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 24ch; }
+.phead .lede { max-width: 52ch; }
+
+.tlist { list-style: none; padding: 0; margin: 0; display: grid; }
+.titem {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  gap: 0.5rem clamp(1.5rem, 3vw, 3rem);
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.titem h3 { font-size: var(--step-0); letter-spacing: -0.01em; }
+.titem p { color: var(--fg-2); max-width: 62ch; }
+.titem a { color: var(--accent); }
+.titem__meta { font: 400 0.6875rem/1.5 var(--mono); color: var(--fg-3); }
+@media (max-width: 44rem) { .titem { grid-template-columns: 1fr; } }
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">Teaching<span class="trace"></span></p>
+      <h1 class="display">Courses and workshops</h1>
+      <p class="lede">
+        The lab contributes to the education of UW students and to training across the wider
+        neuroscience community.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0">
+    <ul class="tlist">
+      <li class="titem" data-reveal>
+        <div>
+          <h3>NEUSCI 490</h3>
+          <p class="titem__meta">Every autumn, UW</p>
+        </div>
+        <p>
+          Seminar in Computational Neuroscience, an undergraduate course Nick teaches each fall.
+        </p>
+      </li>
+
+      <li class="titem" data-reveal>
+        <div>
+          <h3>UW&ndash;Allen Neuropixels Workshop</h3>
+          <p class="titem__meta">Annual, three days</p>
+        </div>
+        <p>
+          Co-hosted by the lab and open to participants worldwide. We run the third day here,
+          with advanced Neuropixels lectures, live experiment demos, and hands-on data
+          processing tutorials.
+          <a href="https://alleninstitute.org/events/2024-neuropixels-and-openscope-workshop/">Workshop page</a>.
+        </p>
+      </li>
+
+      <li class="titem" data-reveal>
+        <div>
+          <h3>UCL Neuropixels Course</h3>
+          <p class="titem__meta">Annual, London</p>
+        </div>
+        <p>
+          Nick and other lab members contribute regularly to this international course.
+          <a href="https://www.ucl.ac.uk/neuropixels/courses">Course page</a>, and
+          <a href="https://www.youtube.com/channel/UCChkhcGBVElY8KLqIYc00gw/playlists">recordings
+          of recent years on YouTube</a>.
+        </p>
+      </li>
+
+      <li class="titem" data-reveal>
+        <div>
+          <h3>Other UW courses</h3>
+          <p class="titem__meta">Guest lectures</p>
+        </div>
+        <p>
+          NEURO 502 (Neurobiology), NEURO 527 (Current Topics in Neurobiology and Behavior) and
+          CSE 528 (Computational Neuroscience).
+        </p>
+      </li>
+
+      <li class="titem" data-reveal>
+        <div>
+          <h3>International summer courses</h3>
+          <p class="titem__meta">Faculty</p>
+        </div>
+        <p>
+          <a href="https://cajal-training.org/on-site/interacting-with-neural-circuits/">Interacting
+          with Neural Circuits</a> (Cajal, Lisbon),
+          <a href="https://parisneuro.ovh/">Paris Neuro Course</a>,
+          <a href="https://www.bordeaux-school-of-neuroscience.eu/trainings/cajal/">Linking Neural
+          Circuits and Behavior</a> (Cajal, Bordeaux),
+          <a href="https://meetings.cshl.edu/archivescourse.aspx?course=C-NEUDATA&amp;year=19">Neural
+          Data Science</a> (Cold Spring Harbor), and the
+          <a href="https://alleninstitute.org/events/summer-workshop-on-the-dynamic-brain-2024/">Summer
+          Workshop for the Dynamic Brain</a> (Friday Harbor).
+        </p>
+      </li>
+    </ul>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+</script>

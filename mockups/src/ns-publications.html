@@ -1,0 +1,53 @@
+<title>Publications &mdash; Nick Steinmetz</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); }
+.phead .lede { max-width: 46ch; }
+
+.pubyear {
+  font: 700 0.75rem/1 var(--mono);
+  letter-spacing: 0.18em;
+  color: var(--fg-3);
+  padding: 2.75rem 0 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: -1px;
+}
+.pubyear:first-child { padding-top: 0; }
+</style>
+
+{{PARTIAL:ns-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">Publications<span class="trace"></span></p>
+      <h1 class="display">{{PUB_COUNT}} papers</h1>
+      <p class="lede">
+        Newest first. Also on
+        <a href="https://scholar.google.co.uk/citations?user=PkcYP74AAAAJ&amp;hl=en"
+           style="color:var(--accent)">Google Scholar</a> and
+        <a href="https://orcid.org/0000-0001-7029-2908" style="color:var(--accent)">ORCID</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0">
+    <div class="pubs" data-reveal>
+      {{PUBS_ALL}}
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:ns-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+{{PARTIAL:ns-boot.js}}
+</script>

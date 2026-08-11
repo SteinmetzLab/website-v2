@@ -1,0 +1,111 @@
+<title>Nick Steinmetz</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+/* ---- personal site: one screen of who, then the links out ---------------- */
+.intro { padding-block: 9rem clamp(3rem, 6vw, 4.5rem); }
+.intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+@media (max-width: 46rem) {
+  .intro__grid { grid-template-columns: 1fr; }
+  .portrait { max-width: 13rem; }
+}
+
+.portrait { border: 1px solid var(--rule); background: var(--bg-2); }
+.portrait img { display: block; width: 100%; height: auto; }
+
+.intro h1 { font-size: var(--step-3); letter-spacing: -0.02em; }
+.intro__role {
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0.875rem 0 1.5rem;
+}
+.bio { display: grid; gap: 1.125rem; max-width: 64ch; }
+.bio p { color: var(--fg-2); line-height: 1.75; }
+.bio a { color: var(--accent); }
+
+.elsewhere {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule);
+}
+.elsewhere a {
+  font: 700 0.625rem/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-decoration: none;
+  border: 1px solid var(--rule);
+  padding: 0.5625rem 0.75rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.elsewhere a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+
+{{PARTIAL:ns-nav.html}}
+
+<main id="top">
+  <section class="intro wrap">
+    <div class="intro__grid">
+      <div class="portrait has-corner" data-reveal>
+        <img src="{{IMG:people/nick-steinmetz}}" alt="Nick Steinmetz">
+      </div>
+
+      <div data-reveal data-reveal-delay="0.06">
+        <h1 class="display">Nick Steinmetz</h1>
+        <p class="intro__role">Associate Professor &middot; Neurobiology &amp; Biophysics, UW</p>
+
+        <div class="bio">
+          <p>
+            I am an Associate Professor in the
+            <a href="https://nbio.uw.edu/">Department of Neurobiology &amp; Biophysics</a> at the
+            <a href="https://www.washington.edu/">University of Washington</a> in Seattle, and a
+            member of the <a href="https://www.internationalbrainlab.com/">International Brain
+            Laboratory</a>. Before starting my own lab I completed a PhD in Neuroscience at
+            Stanford University, studying visual attention with Tirin Moore and Kwabena Boahen.
+            As a postdoc at University College London I worked on Neuropixels probe development
+            and distributed coding in the mouse brain, with Kenneth Harris and Matteo Carandini.
+          </p>
+          <p>
+            <a href="https://www.steinmetzlab.net">My lab</a> works on the neural circuits and
+            systems underlying perception and cognition across the brain. We combine large-scale
+            electrophysiology using Neuropixels probes, calcium imaging across the cortex, and
+            systematic optogenetic manipulation, with behavioral tasks precise enough to model.
+            This work has been recognised with a Pew Biomedical Scholar award, a
+            Klingenstein-Simons Fellowship in Neuroscience, and an NSF CAREER award.
+          </p>
+        </div>
+
+        <nav class="elsewhere" aria-label="Elsewhere">
+          <a href="ns-publications.html">Publications</a>
+          <a href="Steinmetz_NA_CV.pdf">CV</a>
+          <a href="https://www.steinmetzlab.net">Steinmetz Lab</a>
+          <a href="https://scholar.google.co.uk/citations?user=PkcYP74AAAAJ&amp;hl=en">Scholar</a>
+          <a href="https://orcid.org/0000-0001-7029-2908">ORCID</a>
+          <a href="https://github.com/nsteinme">GitHub</a>
+          <a href="mailto:nick.steinmetz@gmail.com">Email</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:ns-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+{{PARTIAL:ns-boot.js}}
+</script>

@@ -5,7 +5,9 @@
    "title": "Datasets",
    "items": [
     { "label": "Brain-wide rotating waves", "href": "https://doi.org/10.6084/m9.figshare.27850707",
-      "note": "widefield imaging and Neuropixels", "cite": "Ye et al., Science, 2026" },
+      "note": "cortex-wide imaging and Neuropixels", "cite": "Ye et al., Science, 2026" },
+    { "label": "Midbrain reticular formation recordings", "href": "https://figshare.com/articles/dataset/Main_dataset_from_Shaker_et_al_2026/31428575",
+      "note": "context-dependent visual decisions", "cite": "Shaker et al., Neuron, 2026" },
     { "label": "Neuropixels Ultra waveforms", "href": "https://npultra.steinmetzlab.net/",
       "note": "browse or download", "cite": "Ye et al., Neuron, 2025" },
     { "label": "IBL brain-wide map", "href": "https://dandiarchive.org/dandiset/000409",

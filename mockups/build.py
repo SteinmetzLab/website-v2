@@ -71,6 +71,7 @@ def fonts_css_serif() -> str:
 
 
 def img_uri(name: str) -> str:
+    # a name may include a subfolder, e.g. people/nick-steinmetz
     p = ASSETS / f"{name}.webp"
     return "data:image/webp;base64," + base64.b64encode(p.read_bytes()).decode("ascii")
 
@@ -489,7 +490,7 @@ def render(template: str, name: str = "a-signal.html") -> str:
 
     s = re.sub(r"\{\{PARTIAL:([\w.\-]+)\}\}", partial_sub, s)
     s = re.sub(r"\{\{DATA:([\w\-]+)\}\}", data_sub, s)
-    s = re.sub(r"\{\{IMG:([\w\-]+)\}\}", img_sub, s)
+    s = re.sub(r"\{\{IMG:([\w\-/]+)\}\}", img_sub, s)
     s = re.sub(r"\{\{VIDEO:([\w\-]+)\}\}", lambda m: video_uri(m.group(1)), s)
     s = re.sub(r"\{\{JSON:([\w\-]+)\}\}", lambda m: json_literal(m.group(1)), s)
 

@@ -293,8 +293,15 @@
   text-transform: uppercase;
   color: var(--fg-3);
 }
-.res__col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.5rem; }
+.res__col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.875rem; }
 .res__col li { font-size: var(--step--1); line-height: 1.5; }
+/* the citation sits on its own line in mono, so it reads as provenance not prose */
+.res__cite {
+  display: block;
+  font: 400 0.6875rem/1.4 var(--mono);
+  color: var(--fg-3);
+  margin-top: 0.1875rem;
+}
 .res__col a { text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
 .res__col a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 

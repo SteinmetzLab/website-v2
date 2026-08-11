@@ -249,7 +249,7 @@ JOURNAL_SHORT = {
 # Which of pubs.json's many tags to expose as filters, and what to call them.
 DEFAULT_PUB_FILTER = "selected"      # which chip the Publications page opens on
 PUB_FILTERS = [("all", "Everything"), ("selected", "Selected"), ("neuropixels", "Neuropixels"),
-               ("brainwide", "Brain-wide"), ("widefield", "Widefield"), ("vision", "Vision"),
+               ("brainwide", "Brain-wide"), ("widefield", "Cortex-wide imaging"), ("vision", "Vision"),
                ("behavior", "Behavior"), ("methods", "Methods &amp; tools"),
                ("preprint", "Preprints")]
 
@@ -364,6 +364,7 @@ def resources_html() -> str:
         rows = "\n          ".join(
             f'<li><a href="{_esc(i["href"])}">{_esc(i["label"])}</a>'
             + (f' &mdash; {_esc(i["note"])}' if i.get("note") else "")
+            + (f'<span class="res__cite">{_esc(i["cite"])}</span>' if i.get("cite") else "")
             + "</li>"
             for i in c["items"])
         out.append(f'<div class="res__col">\n        <h3>{_esc(c["title"])}</h3>\n'

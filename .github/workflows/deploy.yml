@@ -59,7 +59,11 @@ jobs:
             node tools/runpage.js "$f" || exit 1
           done
 
+      # enablement lets the first run turn Pages on itself, instead of failing until
+      # somebody sets Settings -> Pages -> Source by hand.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: mockups/out

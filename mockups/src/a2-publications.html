@@ -1,0 +1,96 @@
+<title>Publications — Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+/* ---- interior page header ------------------------------------------------- */
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 22ch; }
+.phead .lede { max-width: 44ch; }
+
+/* year rules down the list */
+.pubyear {
+  font: 700 0.75rem/1 var(--mono);
+  letter-spacing: 0.18em;
+  color: var(--fg-3);
+  padding: 2.5rem 0 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: -1px;
+}
+.pubyear:first-child { padding-top: 0; }
+.pubyear[hidden] { display: none; }
+
+.count { font: 400 0.75rem/1.5 var(--mono); color: var(--fg-3); }
+.count b { color: var(--accent); font-weight: 400; font-variant-numeric: tabular-nums; }
+.chips { position: sticky; top: 4.25rem; z-index: 20; background: var(--bg);
+         padding-block: 1rem; margin-bottom: 0; }
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">Publications<span class="trace"></span></p>
+      <h1 class="display">Everything we have published</h1>
+      <p class="lede">
+        Seventy papers since 2005. Almost all are open access; where they are not, the PDF is
+        linked anyway. Filter by topic below.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0" id="list">
+    <div class="chips" role="group" aria-label="Filter publications">
+      {{PUB_CHIPS}}
+    </div>
+    <p class="count" style="margin-bottom:1.5rem"><b id="shown">70</b> of 70 shown</p>
+    <div class="pubs" id="pubList">
+      {{PUBS_ALL}}
+    </div>
+    <p class="meta" style="margin-top:2rem">
+      Also on <a href="#" style="color:var(--accent)">Google Scholar</a> and
+      <a href="#" style="color:var(--accent)">ORCID</a>.
+    </p>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+
+/* ---- filter, keeping the year headings honest --------------------------- */
+(() => {
+  const chips = [...document.querySelectorAll('.chip')];
+  const pubs = [...document.querySelectorAll('.pub')];
+  const years = [...document.querySelectorAll('.pubyear')];
+  const shown = document.getElementById('shown');
+
+  const apply = (tag) => {
+    pubs.forEach((p) => {
+      p.hidden = tag !== 'all' && !p.dataset.tags.split(' ').includes(tag);
+    });
+    // hide a year heading once every paper under it is filtered out
+    years.forEach((h) => {
+      let any = false;
+      for (let el = h.nextElementSibling; el && !el.classList.contains('pubyear');
+           el = el.nextElementSibling) {
+        if (!el.hidden) { any = true; break; }
+      }
+      h.hidden = !any;
+    });
+    shown.textContent = pubs.filter((p) => !p.hidden).length;
+  };
+
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    apply(c.dataset.tag);
+  }));
+  apply('all');
+})();
+</script>

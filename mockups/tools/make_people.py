@@ -7,7 +7,7 @@ and the face sits above centre. Members with no photo get `img: null` and the pa
 to a monogram tile.
 
 Writes:
-    assets/people.json          name / role / url / image filename, in display order
+    data/people.json            name / role / url / image filename, in display order
     assets/people/<slug>.webp   240 px square portraits
     tools/people_check.png      contact sheet, to confirm nothing is badly cropped
 """

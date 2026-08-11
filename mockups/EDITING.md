@@ -14,14 +14,28 @@ Then:
 python build.py
 ```
 
+## Which page is which
+
+`a2-*` is the live design line and what gets deployed; `index.html` is built as a copy of
+`a2-signal.html`. The `a-*` pages are the earlier version kept for comparison, with the
+palette/typeface/theme switcher still attached. Edit the `a2-*` files.
+
+| Page | Source |
+|---|---|
+| Home | `src/a2-signal.html` |
+| Publications | `src/a2-publications.html` |
+| People and alumni | `src/a2-people.html` |
+| News | `src/a2-news.html` |
+
 ## Where does a given piece of text live?
 
 | You want to change | Edit | Why there |
 |---|---|---|
-| A heading, a lede, the hero sentence, a research question or its subtext, the CTA | `src/a-signal.html` | One-off prose. Editing it in place lets you put a link or emphasis mid-sentence without escaping anything. |
+| A heading, a lede, the hero sentence, a research question or its subtext, the CTA | `src/a2-signal.html` | One-off prose. Editing it in place lets you put a link or emphasis mid-sentence without escaping anything. |
 | Publications | `data/pubs.json` | A list that grows. Adding a paper is one entry; the year headings, filters and counts follow automatically. |
 | News | `data/news.json` | Same. Newest first is automatic — the build sorts by date, so put a new entry anywhere in the file. |
-| People | `assets/people.json` | Same. Order is derived from `group` then `joined`, so a new arrival lands in the right cohort. |
+| People (current) | `data/people.json` | Same. Order is derived from `group` then `joined`, so a new arrival lands in the right cohort. |
+| Alumni | `data/alumni.json` | Same. Sorted by leaving year. Fill in `now` as you learn where someone went; it renders in the accent colour. |
 | The Open Science lists (datasets, software, hardware) | `data/resources.json` | Same. The section's *heading and lede* are prose and stay in `src/a-signal.html`. |
 | Colours, type, spacing, any styling | `src/partials/a-base.css`, `a-page.css`, `palettes.css` | Shared by every page. |
 | The header, nav, or footer | `src/partials/a-nav.html`, `a-foot.html` | Shared by every page — change once, all pages follow. |

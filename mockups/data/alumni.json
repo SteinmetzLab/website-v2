@@ -1,0 +1,167 @@
+{
+ "_comment": "Former lab members, newest departure first. Compiled from the trainee sections of Steinmetz_CV_SoM_2026-07-27.docx. 'now' is only filled in where the CV states a destination -- add more as you know them. Current members live in data/people.json.",
+ "alumni": [
+  {
+   "name": "Anna Bowen",
+   "role": "Postdoc",
+   "years": "2021-2026",
+   "note": "HHMI Hanna Gray postdoctoral fellow",
+   "now": "faculty at UW"
+  },
+  {
+   "name": "Autumn Takahashi",
+   "role": "Undergraduate",
+   "years": "2025-2026"
+  },
+  {
+   "name": "Zhiwen Ye",
+   "role": "Postdoc",
+   "years": "2020-2026",
+   "now": "faculty at SMART, Shenzhen, China"
+  },
+  {
+   "name": "Pascha Matveev",
+   "role": "Undergraduate",
+   "years": "2023-2025",
+   "note": "Simons SURFiN fellow 2024"
+  },
+  {
+   "name": "Jeremy Schroeter",
+   "role": "Research scientist",
+   "years": "2023-2025"
+  },
+  {
+   "name": "Jordan Shaker",
+   "role": "Graduate student",
+   "years": "2020-2025",
+   "note": "NIH F30 fellow"
+  },
+  {
+   "name": "Matthew Tucker",
+   "role": "Research scientist",
+   "years": "2023-2025"
+  },
+  {
+   "name": "Sophia Varilla",
+   "role": "High-school student",
+   "years": "2025",
+   "note": "BRIGHT-UP program"
+  },
+  {
+   "name": "Kenneth Yang",
+   "role": "Undergraduate",
+   "years": "2022-2025",
+   "note": "Mary Gates awardee 2023; WRF fellowship 2024"
+  },
+  {
+   "name": "Shae McNeil",
+   "role": "Undergraduate",
+   "years": "2021, 2024",
+   "note": "first as a BRIGHT-UP high-school student"
+  },
+  {
+   "name": "Daniel Birman",
+   "role": "Postdoc",
+   "years": "2020-2024",
+   "note": "Washington Research Foundation postdoctoral fellow"
+  },
+  {
+   "name": "Arshia Kathpalia",
+   "role": "High-school student",
+   "years": "2024",
+   "note": "BRIGHT-UP program"
+  },
+  {
+   "name": "Ljuvica Kolich",
+   "role": "Research scientist",
+   "years": "2020-2024"
+  },
+  {
+   "name": "Jasmine Schoch",
+   "role": "Undergraduate",
+   "years": "2022-2024",
+   "note": "Simons SURFiN fellow 2023"
+  },
+  {
+   "name": "Bethania Bahru",
+   "role": "High-school student",
+   "years": "2023",
+   "note": "BRIGHT-UP program"
+  },
+  {
+   "name": "Hailey Barrell",
+   "role": "Undergraduate",
+   "years": "2019-2023"
+  },
+  {
+   "name": "Jay Bhateja",
+   "role": "Undergraduate",
+   "years": "2020-2023"
+  },
+  {
+   "name": "Julia Hopkins",
+   "role": "Undergraduate",
+   "years": "2021-2023",
+   "note": "Simons SURF fellow 2021"
+  },
+  {
+   "name": "David Ottenheimer",
+   "role": "Postdoc",
+   "years": "2020-2023",
+   "note": "joint w/ Garret Stuber; NIH F32 postdoctoral fellow"
+  },
+  {
+   "name": "Noam Roth",
+   "role": "Postdoc",
+   "years": "2020-2023"
+  },
+  {
+   "name": "Christina Wang",
+   "role": "Rotation student",
+   "years": "2023"
+  },
+  {
+   "name": "Jeesoo Yoon",
+   "role": "Undergraduate",
+   "years": "2020-2023"
+  },
+  {
+   "name": "Qiqi Liang",
+   "role": "Undergraduate",
+   "years": "2022"
+  },
+  {
+   "name": "Kai Nylund",
+   "role": "Undergraduate",
+   "years": "2021-2022",
+   "note": "Mary Gates awardee 2022"
+  },
+  {
+   "name": "Nyah Stevenson",
+   "role": "High-school student",
+   "years": "2022",
+   "note": "BRIGHT-UP program"
+  },
+  {
+   "name": "Renee Wang",
+   "role": "Undergraduate",
+   "years": "2019-2022",
+   "note": "Simons SURF fellow 2021"
+  },
+  {
+   "name": "Haili Adams",
+   "role": "Research scientist",
+   "years": "2020-2021"
+  },
+  {
+   "name": "Sameer Apdalhaliem",
+   "role": "Undergraduate",
+   "years": "2019-2020"
+  },
+  {
+   "name": "Adam Davis",
+   "role": "Research scientist",
+   "years": "2019-2020"
+  }
+ ]
+}

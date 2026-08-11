@@ -1,0 +1,83 @@
+<title>People &mdash; Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 22ch; }
+.phead .lede { max-width: 48ch; }
+
+/* a heading per cohort, in the same register as the year headings on Publications */
+.cohort {
+  font: 700 0.75rem/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding: 2.75rem 0 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 1.5rem;
+}
+.cohort:first-child { padding-top: 0; }
+
+/* ---- alumni: a dense list, because there are more of them than of us ---- */
+.alumni { list-style: none; padding: 0; margin: 0; }
+.alum {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(9rem, 14rem) minmax(0, 1fr) minmax(0, auto);
+  gap: 0.5rem 1.25rem;
+  align-items: baseline;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.alum__y { font: 400 0.75rem/1.4 var(--mono); color: var(--fg-3); font-variant-numeric: tabular-nums; }
+.alum__n { font-weight: 700; }
+.alum__r { color: var(--fg-2); font-size: var(--step--1); }
+.alum__note { color: var(--fg-3); font-size: var(--step--1); }
+.alum__now { color: var(--accent); font-size: var(--step--1); }
+@media (max-width: 44rem) {
+  .alum { grid-template-columns: 5.5rem minmax(0, 1fr); }
+  .alum__r, .alum__note, .alum__now { grid-column: 2; }
+}
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">People<span class="trace"></span></p>
+      <h1 class="display">{{PEOPLE_COUNT_WORD}} of us, at the moment</h1>
+      <p class="lede">
+        Postdocs, graduate students, undergraduates and high-school researchers, plus the
+        {{ALUMNI_COUNT}} people who have moved on since the lab opened in 2019.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0" id="current">
+    {{PEOPLE_BY_GROUP}}
+  </section>
+
+  <section class="sec wrap" id="alumni">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">Alumni<span class="trace"></span></p>
+      <h2 class="display">Where people went</h2>
+      <p class="lede">
+        Everyone who has worked in the lab, most recent first.
+      </p>
+    </div>
+    <ul class="alumni" data-reveal>
+        {{ALUMNI}}
+    </ul>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+</script>

@@ -108,13 +108,13 @@ def spell(n: int) -> str:
 
 
 def people_count() -> int:
-    return len(json.loads((ASSETS / "people.json").read_text(encoding="utf-8")))
+    return len(json.loads((ROOT / "data/people.json").read_text(encoding="utf-8")))
 
 
 def people_html() -> str:
-    """Render the People grid from assets/people.json -- the same data the old Jekyll site
+    """Render the People grid from data/people.json -- the same data the old Jekyll site
     used, so adding or removing a lab member stays a one-line edit to a data file."""
-    recs = json.loads((ASSETS / "people.json").read_text(encoding="utf-8"))
+    recs = json.loads((ROOT / "data/people.json").read_text(encoding="utf-8"))
 
     def monograms(records) -> dict[str, str]:
         """Assign a short, unique label to each person who has no photo.
@@ -203,7 +203,7 @@ GROUP_LABEL = {
 
 def people_rows() -> str:
     """The same roster as a table body, for mockup C's data-dense treatment."""
-    recs = json.loads((ASSETS / "people.json").read_text(encoding="utf-8"))
+    recs = json.loads((ROOT / "data/people.json").read_text(encoding="utf-8"))
     out = []
     for p in recs:
         name, url = p["name"], p.get("url") or ""
@@ -219,7 +219,7 @@ def people_rows() -> str:
 
 def people_quiet() -> str:
     """A restrained list treatment for mockup D: small round portrait, name, role."""
-    recs = json.loads((ASSETS / "people.json").read_text(encoding="utf-8"))
+    recs = json.loads((ROOT / "data/people.json").read_text(encoding="utf-8"))
     out = []
     for p in recs:
         name, role = p["name"], p.get("role", "")
@@ -288,6 +288,52 @@ def pub_chips() -> str:
         f"{label}</button>" for t, label in PUB_FILTERS)
 
 
+GROUP_LABEL = {
+    "pi": "Principal investigator", "staff": "Staff scientists", "postdoc": "Postdocs",
+    "grad": "Graduate students", "undergrad": "Undergraduate scientists",
+    "highschool": "High-school students", "rotation": "Rotation students",
+}
+
+
+def people_by_group() -> str:
+    """The People page: the same cards as the front page, under a heading per cohort."""
+    recs = json.loads((ROOT / "data/people.json").read_text(encoding="utf-8"))
+    cards = people_html().split("\n      ")          # reuse the card markup exactly
+    assert len(cards) == len(recs), (len(cards), len(recs))
+    out, group = [], None
+    for rec, card in zip(recs, cards):
+        g = rec.get("group", "")
+        if g != group:
+            if group is not None:
+                out.append("</div>")
+            group = g
+            out.append(f'<h3 class="cohort">{_esc(GROUP_LABEL.get(g, g))}</h3>')
+            out.append('<div class="people">')
+        out.append(card)
+    out.append("</div>")
+    return "\n      ".join(out)
+
+
+def alumni_html() -> str:
+    """Former members as a compact table: who, what they were, when, where they went."""
+    rows = json.loads((ROOT / "data/alumni.json").read_text(encoding="utf-8"))["alumni"]
+    out = []
+    for a in rows:
+        note = a.get("note", "")
+        now = a.get("now", "")
+        tail = ""
+        if now:
+            tail = f'<span class="alum__now">now {_esc(now)}</span>'
+        elif note:
+            tail = f'<span class="alum__note">{_esc(note)}</span>'
+        out.append(
+            f'<li class="alum"><span class="alum__y">{_esc(a["years"])}</span>'
+            f'<span class="alum__n">{_esc(a["name"])}</span>'
+            f'<span class="alum__r">{_esc(a["role"])}</span>{tail}</li>'
+        )
+    return "\n        ".join(out)
+
+
 def resources_html() -> str:
     """The Open Science columns. Growing this section means editing data/resources.json."""
     cols = json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8"))["columns"]
@@ -352,16 +398,22 @@ def news_latest(n: int = 3) -> str:
     return "\n      ".join(_news_item_html(it, with_kind=False) for it in _news_items()[:n])
 
 
-def home_for(name: str) -> str:
-    """Which page the shared nav and footer should treat as home.
+def family_links(name: str) -> dict:
+    """Where the shared nav and footer should point, given which page they land in.
 
-    The A and A2 families each have their own homepage, so the same nav partial has to
-    resolve differently depending on which page it lands in."""
-    return "a2-signal.html" if name.startswith("a2-") else "a-signal.html"
+    A and A2 are separate families with their own homepage and subpages; A also has no
+    People page, so its People link stays an anchor on the front page."""
+    if name.startswith("a2-"):
+        return {"HOME": "a2-signal.html", "PUBS": "a2-publications.html",
+                "NEWS": "a2-news.html", "PEOPLE_PAGE": "a2-people.html"}
+    return {"HOME": "a-signal.html", "PUBS": "a-publications.html",
+            "NEWS": "a-news.html", "PEOPLE_PAGE": "a-signal.html#people"}
 
 
 def render(template: str, name: str = "a-signal.html") -> str:
     s = template
+    # {{PEOPLE}} renders the roster grid; the nav's link token is {{PEOPLE_PAGE}}. They are
+    # different lengths on purpose -- a prefix collision here silently ate the grid once.
 
     # Partials first, and repeatedly: a partial may itself contain {{FONTS}}, {{MARK}} or
     # even another {{PARTIAL:...}}, and those must still get expanded.
@@ -375,7 +427,8 @@ def render(template: str, name: str = "a-signal.html") -> str:
     else:
         raise SystemExit("partial includes nested more than 6 deep - probably a cycle")
 
-    s = s.replace("{{HOME}}", home_for(name))
+    for k, v in family_links(name).items():
+        s = s.replace("{{" + k + "}}", v)
     s = s.replace("{{FONTS_SERIF}}", fonts_css_serif())
     s = s.replace("{{FONTS}}", fonts_css())
     s = s.replace("{{MARK}}", (ASSETS / "mark.svg").read_text(encoding="utf-8").strip())
@@ -384,9 +437,15 @@ def render(template: str, name: str = "a-signal.html") -> str:
     s = s.replace("{{PEOPLE_QUIET}}", people_quiet())
     s = s.replace("{{PUBS_ALL}}", pubs_all())
     s = s.replace("{{PUB_CHIPS}}", pub_chips())
+    s = s.replace("{{PUB_COUNT}}", str(len(json.loads(
+        (ROOT / "data/pubs.json").read_text(encoding="utf-8"))["papers"])))
     s = s.replace("{{NEWS_ALL}}", news_all())
     s = s.replace("{{NEWS_LATEST}}", news_latest())
     s = s.replace("{{RESOURCES}}", resources_html())
+    s = s.replace("{{PEOPLE_BY_GROUP}}", people_by_group())
+    s = s.replace("{{ALUMNI}}", alumni_html())
+    s = s.replace("{{ALUMNI_COUNT}}", str(len(json.loads(
+        (ROOT / "data/alumni.json").read_text(encoding="utf-8"))["alumni"])))
     s = s.replace("{{PEOPLE_COUNT_WORD}}", spell(people_count()).capitalize())
     s = s.replace("{{PEOPLE_COUNT}}", str(people_count()))
 

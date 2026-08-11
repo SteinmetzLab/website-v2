@@ -1,0 +1,381 @@
+/* ---- generic section ----------------------------------------------------- */
+.sec { padding-block: clamp(4rem, 9vw, 7.5rem); }
+.sec__head {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+  max-width: 58rem;
+}
+.sec__head h2 { font-size: var(--step-3); }
+
+/* ---- research cards ----------------------------------------------------- */
+.methods {
+  display: grid;
+  /* 26rem min keeps this at a clean 2x2 on desktop rather than 3 + an orphan */
+  grid-template-columns: repeat(auto-fit, minmax(min(26rem, 100%), 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+.card {
+  border: 1px solid var(--rule);
+  background: var(--bg-2);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.4s cubic-bezier(.2,.7,.2,1);
+}
+.card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--rule)); transform: translateY(-3px); }
+.card__fig {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--deep);
+  overflow: hidden;
+}
+.card__fig img, .card__fig canvas, .card__fig video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s cubic-bezier(.2,.7,.2,1);
+}
+/* the psychometric is drawn to fit its box, so cropping it would cut the axes off */
+.card__fig canvas { object-fit: fill; }
+.card:hover .card__fig img { transform: scale(1.045); }
+.card__tag {
+  position: absolute;
+  left: 0.75rem; top: 0.75rem;
+  font: 700 0.5625rem/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--di);
+  background: color-mix(in srgb, var(--deep) 72%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--di) 22%, transparent);
+  padding: 0.3125rem 0.5rem;
+}
+.card__body { padding: 1.25rem 1.25rem 1.5rem; display: grid; gap: 0.625rem; align-content: start; }
+.card__body h3 { font-size: var(--step-1); font-weight: 700; letter-spacing: -0.01em; }
+.card__body p { color: var(--fg-2); font-size: var(--step--1); line-height: 1.6; }
+
+/* ---- research cards as a numbered list of questions --------------------- */
+.methods--q { list-style: none; counter-reset: q; padding: 0; margin: 0; }
+.methods--q > .card { counter-increment: q; }
+/* the number sits on its own line above the question, in mono, like a figure label */
+.methods--q .card__body h3::before {
+  content: counter(q, decimal-leading-zero);
+  display: block;
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  margin-bottom: 0.625rem;
+}
+/* questions run longer than the old noun-phrase headings, so give them room to breathe */
+.methods--q .card__body h3 { font-size: var(--step-0); line-height: 1.3; max-width: 30ch; }
+
+/* ---- the scrubber (interactive centrepiece) ----------------------------- */
+.scrub { padding-block: clamp(4rem, 8vw, 6.5rem); position: relative; }
+.scrub__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: center;
+}
+@media (max-width: 58rem) { .scrub__grid { grid-template-columns: 1fr; } }
+.scrub__copy { display: grid; gap: 1.125rem; align-content: start; }
+.scrub__copy h2 { font-size: var(--step-3); color: var(--di); }
+
+.viewport {
+  border: 1px solid var(--drule);
+  background: var(--dark);
+  padding: 0.875rem;
+  display: grid;
+  gap: 0.75rem;
+}
+.viewport__stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background:
+    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--dark-2) 90%, transparent), var(--deep) 72%);
+  overflow: hidden;
+}
+.viewport__stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.viewport__hud {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1.75rem 0.75rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font: 400 0.625rem/1 var(--mono);
+  color: var(--di-2);
+  pointer-events: none;
+  /* the frame underneath can be bright, so the readout gets its own scrim */
+  background: linear-gradient(to top, color-mix(in srgb, #000 72%, transparent), transparent);
+}
+.viewport__hud b { color: var(--di); font-weight: 400; font-variant-numeric: tabular-nums; }
+.viewport__trace { height: 3.25rem; position: relative; }
+.viewport__trace canvas { width: 100%; height: 100%; }
+/* a seekable trace is a control, so say so on hover and when focused */
+.viewport__trace canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Alternate the two explorers so the page does not run the same layout twice. */
+@media (min-width: 58.01rem) {
+  .scrub__grid--rev { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  .scrub__grid--rev .scrub__copy { order: 2; }
+}
+/* the raster is wide rather than square */
+.viewport__stage--wide { aspect-ratio: 16 / 11; }
+
+/* ---- small segmented control (window length, playback) ------------------ */
+.seg { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+.seg button {
+  font: 700 0.625rem/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--di-2);
+  background: transparent;
+  border: 1px solid var(--drule);
+  padding: 0.5rem 0.6875rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.seg button:hover { color: var(--accent); border-color: var(--accent); }
+.seg button[aria-pressed="true"] {
+  color: var(--deep);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.readout {
+  display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem;
+  font: 400 0.6875rem/1.4 var(--mono);
+  color: var(--di-3);
+}
+.readout b { color: var(--di); font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* ---- publications -------------------------------------------------------- */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+.chip {
+  font: 600 0.75rem/1 var(--sans);
+  padding: 0.5rem 0.8125rem;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all 0.22s ease;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip[aria-pressed="true"] {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+.chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pubs { display: grid; }
+.pub {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  gap: 0.5rem 1.5rem;
+  align-items: baseline;
+  padding: 1.125rem 0;
+  border-top: 1px solid var(--rule);
+  text-decoration: none;
+}
+.pub:last-child { border-bottom: 1px solid var(--rule); }
+.pub:hover { background: var(--bg-2); }
+.pub[hidden] { display: none; }
+.pub__yr {
+  font: 400 0.8125rem/1.5 var(--mono);
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}
+.pub__t { font-weight: 600; line-height: 1.45; letter-spacing: -0.005em; }
+.pub:hover .pub__t { color: var(--accent); }
+.pub__a { display: block; font-size: var(--step--1); color: var(--fg-3); margin-top: 0.25rem; }
+.pub__j {
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  white-space: nowrap;
+  border: 1px solid var(--rule);
+  padding: 0.375rem 0.5rem;
+}
+@media (max-width: 48rem) {
+  .pub { grid-template-columns: 3.25rem minmax(0, 1fr); }
+  .pub__j { grid-column: 2; justify-self: start; }
+}
+
+/* ---- people -------------------------------------------------------------- */
+.people {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 1px;
+  /* Cells carry their own hairline instead of a shared backing colour, so a part-filled
+     last row leaves empty space rather than a solid slab. */
+}
+.person {
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--rule);
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 0;
+  align-content: start;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.25s;
+  padding-bottom: 1.375rem;
+}
+.person:hover { background: var(--bg-2); }
+.person:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.person__pic {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.9);
+  transition: filter 0.35s ease;
+}
+.person:hover .person__pic { filter: saturate(1.05); }
+.person__pic--mono {
+  display: grid;
+  place-items: center;
+  font: 700 1.75rem/1 var(--cond);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 6px,
+      color-mix(in srgb, var(--accent) 7%, transparent) 6px 7px),
+    var(--bg-2);
+}
+/* left padding clears the corner trace that runs up the inside of the tile */
+.person__n {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  padding: 0.75rem 0.75rem 0.1875rem 1.5rem;
+}
+.person:hover .person__n { color: var(--accent); }
+.person__r {
+  font: 400 0.625rem/1.4 var(--mono);
+  color: var(--fg-3);
+  padding: 0 0.75rem 0 1.5rem;
+}
+
+/* ---- news --------------------------------------------------------------- */
+.news { display: grid; gap: 0; }
+.item {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.5rem 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.item:last-of-type { border-bottom: 1px solid var(--rule); }
+.item__d { font: 400 0.75rem/1.6 var(--mono); color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.item__b h3 { font-size: var(--step-1); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.375rem; }
+.item__b p { color: var(--fg-2); font-size: var(--step--1); }
+@media (max-width: 40rem) { .item { grid-template-columns: 1fr; } }
+
+/* ---- resources ---------------------------------------------------------- */
+.res {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.res__col { background: var(--bg); padding: 1.5rem 1.375rem; display: grid; gap: 0.875rem; align-content: start; }
+.res__col h3 {
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.res__col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.5rem; }
+.res__col li { font-size: var(--step--1); line-height: 1.5; }
+.res__col a { text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
+.res__col a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ---- cta + footer ------------------------------------------------------- */
+.cta { padding-block: clamp(3.5rem, 7vw, 5.5rem); }
+.cta__in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2.5rem;
+}
+.cta h2 { font-size: var(--step-2); color: var(--di); max-width: 34ch; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font: 700 0.8125rem/1 var(--sans);
+  letter-spacing: 0.02em;
+  padding: 0.9375rem 1.375rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-decoration: none;
+  transition: transform 0.2s, filter 0.2s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.btn:focus-visible { outline: 2px solid var(--di); outline-offset: 3px; }
+.btn svg { width: 0.75rem; height: 0.75rem; fill: currentColor; }
+
+.ft { padding-block: 3rem 2.5rem; border-top: 1px solid var(--drule); }
+.ft__in { display: grid; gap: 2rem; }
+.ft__top { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; align-items: flex-start; }
+.ft__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
+.ft__links a { font: 600 0.8125rem/1 var(--sans); color: var(--di-2); text-decoration: none; }
+.ft__links a:hover { color: var(--accent); }
+.ft__fine { font: 400 0.6875rem/1.7 var(--mono); color: var(--di-3); }
+.ft__mark { display: flex; align-items: center; gap: 0.75rem; color: var(--di); }
+.ft__mark svg { width: 2.25rem; height: 2.25rem; }
+
+/* ---- mockup badge ------------------------------------------------------- */
+.badge {
+  position: fixed;
+  left: 1rem; bottom: 1rem;
+  z-index: 90;
+  font: 700 0.5625rem/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--di-2);
+  background: color-mix(in srgb, #000 62%, transparent);
+  border: 1px solid var(--drule);
+  backdrop-filter: blur(8px);
+  padding: 0.4375rem 0.625rem;
+}
+@media (max-width: 46rem) { .badge { display: none; } }
+
+/* light/dark switch, so the intended light body shows even on a dark-themed OS */
+.pal__theme {
+  font: 700 0.5625rem/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--di-2);
+  background: transparent;
+  border: 1px solid var(--drule);
+  padding: 0.4375rem 0.5rem;
+  cursor: pointer;
+  border-radius: 999px;
+  min-width: 3.25rem;
+}
+.pal__theme:hover { color: var(--accent); border-color: var(--accent); }
+.pal__theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pal__sel {
+  font: 700 0.5625rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--di-2);
+  background: transparent;
+  border: 1px solid var(--drule);
+  border-radius: 999px;
+  padding: 0.4375rem 0.5rem;
+  cursor: pointer;
+}
+.pal__sel option { background: var(--dark); color: var(--di); }
+.pal__sel:hover { color: var(--accent); border-color: var(--accent); }
+.pal__sel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

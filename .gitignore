@@ -1,0 +1,14 @@
+# Built output. CI runs build.py and publishes the result, so the repo holds sources only.
+mockups/out/
+
+# Review MP4s rendered by tools/make_videos.py and friends (~110 MB, regenerable).
+mockups/video/
+
+# Throwaway
+scratch.py
+scratch_*.json
+scratch_*.npy
+scratch_*.xml
+__pycache__/
+*.pyc
+mockups/tools/_fontcache/

@@ -1,0 +1,598 @@
+<title>Steinmetz Lab</title>
+
+
+<style>
+{{PARTIAL:a-base.css}}
+/* ---- hero ---------------------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: min(46rem, 100svh);
+  display: grid;
+  align-items: end;
+  padding-block: 9rem 3rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: -2;
+  opacity: 0.62;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 72%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 72%, transparent);
+}
+.hero::before {
+  /* keeps the headline legible over whatever the raster is doing */
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(120% 85% at 8% 100%, color-mix(in srgb, var(--deep) 92%, transparent), transparent 68%),
+    linear-gradient(to top, var(--deep) 2%, transparent 55%);
+}
+/* the sweeping bar, kept out of the canvas so it leaves no residue and can glow */
+.sweepbar {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--accent) 16%, var(--accent) 84%, transparent);
+  box-shadow: 0 0 14px 1px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.hd__ribbon + .sweepbar,
+.hd .sweepbar {
+  z-index: 0;
+  box-shadow: 0 0 8px 0 color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.hero__grid { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+.hero h1 {
+  font-size: var(--step-4);
+  max-width: 30ch;
+  color: var(--di);
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--drule);
+}
+.hero .lede { color: var(--di-2); }
+.figcap {
+  font: 400 0.6875rem/1.6 var(--mono);
+  color: var(--di-3);
+  max-width: 30ch;
+}
+.figcap b { color: var(--di-2); font-weight: 400; }
+
+{{PARTIAL:a-page.css}}
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+
+  <!-- ============================================================ HERO -->
+  <section class="hero on-dark">
+    <canvas class="hero__canvas" id="heroRaster" aria-hidden="true"></canvas>
+    <div class="sweepbar" id="heroBar" aria-hidden="true"></div>
+    <div class="wrap hero__grid">
+      <p class="eyebrow pcb--on" style="color: var(--accent)">Department of Neurobiology &amp; Biophysics<span class="trace"></span></p>
+      <h1 class="display">Brain-wide circuits for perception, cognition&nbsp;and <em>action</em></h1>
+      <div class="hero__foot">
+        <p class="lede">
+          We record from thousands of neurons across the whole mouse brain at once — with
+          Neuropixels electrophysiology, cortex-wide calcium imaging, and optogenetics — to
+          work out how distributed circuits turn sensation into decisions.
+        </p>
+        <p class="figcap">
+          Behind this text: <b>141 neurons recorded simultaneously</b>, 90 s of a real
+          Neuropixels recording from this lab. Each mark is one spike; rows are sorted by
+          depth along the probe.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ RESEARCH -->
+  <section class="sec wrap" id="research">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">What we do<span class="trace"></span></p>
+      <h2 class="display">Four questions we are asking</h2>
+      <p class="lede">
+        Each one needs a different way of looking at a brain. Every panel below is real data
+        from the lab and the collaborations it is part of.
+      </p>
+    </div>
+
+    <ol class="methods methods--q">
+      <li class="card has-corner" data-reveal>
+        <div class="card__fig">
+          <canvas id="cardPsy" aria-label="Psychometric curves: probability of turning left, turning right, or holding still, against contrast difference."></canvas>
+          <span class="card__tag">Behavior</span>
+        </div>
+        <div class="card__body">
+          <h3>How do we decide actions based on what we see?</h3>
+          <p>
+            Mice report what they saw by turning a wheel, which gives us thousands of
+            precisely measured choices per session.
+          </p>
+        </div>
+      </li>
+
+      <li class="card has-corner" data-reveal data-reveal-delay="0.08">
+        <div class="card__fig">
+          <video class="card__vid" src="{{VIDEO:clip_ibl}}" loop muted playsinline preload="metadata"
+                 aria-label="Neurons recorded across the whole mouse brain, coloured by region, rotating."></video>
+          <span class="card__tag">Neuropixels</span>
+        </div>
+        <div class="card__body">
+          <h3>What neurons across the brain contribute to vision and decision-making?</h3>
+          <p>
+            Neuropixels probes record hundreds of neurons at once, many probes at a time,
+            from cortex to midbrain.
+          </p>
+        </div>
+      </li>
+
+      <li class="card has-corner" data-reveal data-reveal-delay="0.16">
+        <div class="card__fig">
+          <video class="card__vid" src="{{VIDEO:clip_wave}}" loop muted playsinline preload="metadata"
+                 aria-label="Phase map of mouse dorsal cortex, showing a wave of activity rotating across the hemispheres."></video>
+          <span class="card__tag">Widefield</span>
+        </div>
+        <div class="card__body">
+          <h3>What are the brain dynamics that give rise to behavior?</h3>
+          <p>
+            Activity crosses the cortex in coordinated patterns, including waves that
+            sweep and rotate, which we follow with imaging and electrophysiology.
+          </p>
+        </div>
+      </li>
+
+      <li class="card has-corner" data-reveal data-reveal-delay="0.24">
+        <div class="card__fig">
+          <video class="card__vid" src="{{VIDEO:clip_mouselight}}" loop muted playsinline preload="metadata"
+                 aria-label="Single-neuron axonal reconstructions filling a rotating mouse brain."></video>
+          <span class="card__tag">Circuits</span>
+        </div>
+        <div class="card__body">
+          <h3>What circuits underlie these computations?</h3>
+          <p>
+            Optogenetics, anatomy and single-neuron reconstruction tell us which
+            projections actually carry a signal, and what happens without them.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============================================================ SCRUBBER -->
+  <section class="scrub on-dark" id="explore">
+    <div class="wrap scrub__grid">
+      <div class="scrub__copy" data-reveal>
+        <p class="eyebrow" style="color: var(--accent)">Cortex, live<span class="trace"></span></p>
+        <h2 class="display">Twenty-six seconds of mouse cortex</h2>
+        <p class="lede" style="color: var(--di-2)">
+          A real widefield calcium recording, running continuously — both hemispheres of dorsal
+          cortex at 35&nbsp;frames per second. Each pixel is shown against its own baseline, so
+          black is rest and warm is activity above it.
+        </p>
+        <p class="figcap">
+          Subject <b>ZYE_0092</b>, 2&nbsp;June&nbsp;2025. The whole camera field of view, 900
+          frames reconstructed live from 8&nbsp;spatial components — a few hundred KB instead
+          of a video file. The trace below the image is mean fluorescence across the frame —
+          click or drag along it to jump to that moment.
+        </p>
+      </div>
+
+      <div class="viewport has-corner" data-reveal data-reveal-delay="0.1">
+        <div class="viewport__stage">
+          <canvas id="wfBig"></canvas>
+          <div class="viewport__hud">
+            <span>dorsal cortex &middot; dF/F</span>
+            <span><b id="wfTime">0.00</b> s</span>
+          </div>
+        </div>
+        <div class="viewport__trace"><canvas id="wfTrace"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================== SPIKE EXPLORER -->
+  <section class="scrub on-dark" id="spikes">
+    <div class="wrap scrub__grid scrub__grid--rev">
+      <div class="viewport has-corner" data-reveal>
+        <div class="viewport__stage viewport__stage--wide">
+          <canvas id="spkRaster"></canvas>
+          <div class="viewport__hud">
+            <span>141 neurons &middot; ordered by depth</span>
+            <span><b id="spkWin">0.0&ndash;8.0</b> s</span>
+          </div>
+        </div>
+        <div class="viewport__trace"><canvas id="spkRate"></canvas></div>
+      </div>
+
+      <div class="scrub__copy" data-reveal data-reveal-delay="0.1">
+        <p class="eyebrow" style="color: var(--accent)">Spikes, live<span class="trace"></span></p>
+        <h2 class="display">Ninety seconds of a Neuropixels probe</h2>
+        <p class="lede" style="color: var(--di-2)">
+          Every dot is one action potential from one neuron. Rows run from the top of the probe
+          down into the brain, so a vertical streak is many cells firing together.
+        </p>
+        <div class="seg" role="group" aria-label="Visible time window">
+          <button data-span="2" aria-pressed="false">2 s</button>
+          <button data-span="8" aria-pressed="true">8 s</button>
+          <button data-span="30" aria-pressed="false">30 s</button>
+          <button id="spkPlay" aria-pressed="true">Running</button>
+        </div>
+        <p class="readout">
+          <span>Spikes shown <b id="spkCount">0</b></span>
+          <span>Population rate <b id="spkRateN">0.0</b> spikes/s</span>
+        </p>
+        <p class="figcap">
+          A single recording, 2024 Neuropixels workshop dataset, sorted with Kilosort. The trace
+          below the raster is population firing rate &mdash; click or drag along it to move the
+          window, or use the arrow keys.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ PUBS -->
+  <section class="sec wrap" id="pubs">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">Publications<span class="trace"></span></p>
+      <h2 class="display">Recent work</h2>
+    </div>
+
+    <div class="chips" role="group" aria-label="Filter publications by topic" data-reveal>
+      <button class="chip" data-tag="all" aria-pressed="true">All recent</button>
+      <button class="chip" data-tag="neuropixels" aria-pressed="false">Neuropixels</button>
+      <button class="chip" data-tag="brainwide" aria-pressed="false">Brain-wide</button>
+      <button class="chip" data-tag="widefield" aria-pressed="false">Widefield</button>
+      <button class="chip" data-tag="methods" aria-pressed="false">Methods &amp; tools</button>
+    </div>
+
+    <div class="pubs" id="pubList" data-reveal>
+      <a class="pub" href="https://doi.org/10.1038/s41586-026-10443-5" data-tags="neuropixels behavior cortex">
+        <span class="pub__yr">2026</span>
+        <span>
+          <span class="pub__t">Prefrontal to ventral tegmental area dynamics drive contingency degradation</span>
+          <span class="pub__a">Hjort, Garrett, Gordon, Ancell, Trzeciak, Lu, Bruchas, Witten, Steinmetz, Stuber</span>
+        </span>
+        <span class="pub__j">Nature</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1016/j.neuron.2026.04.003" data-tags="neuropixels brainwide behavior cortex vision">
+        <span class="pub__yr">2026</span>
+        <span>
+          <span class="pub__t">The midbrain reticular formation in contextual control of perceptual decisions</span>
+          <span class="pub__a">Shaker, Schroeter, Birman, Steinmetz</span>
+        </span>
+        <span class="pub__j">Neuron</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1038/s41583-026-01042-4" data-tags="neuropixels methods">
+        <span class="pub__yr">2026</span>
+        <span>
+          <span class="pub__t">Large-scale electrophysiology at single-spike resolution</span>
+          <span class="pub__a">Siegle, Steinmetz &middot; Review</span>
+        </span>
+        <span class="pub__j">Nat Rev Neurosci</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1038/s41467-026-71331-0" data-tags="neuropixels methods">
+        <span class="pub__yr">2026</span>
+        <span>
+          <span class="pub__t">A multimodal approach for visualizing and identifying electrophysiological cell types in vivo</span>
+          <span class="pub__a">Lee, Gül, Heller, Lakunina, Yu, Shelton, Olsen, Steinmetz, Hurwitz, Jaramillo, Przytycki, Chandrasekaran</span>
+        </span>
+        <span class="pub__j">Nat Commun</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1101/2026.03.06.710130" data-tags="neuropixels methods brainwide">
+        <span class="pub__yr">2026</span>
+        <span>
+          <span class="pub__t">A flexible quality metric for electrophysiological recordings across brain regions and species</span>
+          <span class="pub__a">Roth, Chapuis, Winter, IBL, Ressmeyer, Bun, Canfield, Horwitz, Steinmetz &middot; Preprint</span>
+        </span>
+        <span class="pub__j">bioRxiv</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1016/j.neuron.2025.08.030" data-tags="neuropixels brainwide methods">
+        <span class="pub__yr">2025</span>
+        <span>
+          <span class="pub__t">Ultra-high-density Neuropixels probes improve detection and identification in neuronal recordings</span>
+          <span class="pub__a">Ye*, Shelton*, Shaker, Boussard, Colonell, … Harris, Steinmetz</span>
+        </span>
+        <span class="pub__j">Neuron</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1101/2025.02.04.636286" data-tags="neuropixels methods">
+        <span class="pub__yr">2025</span>
+        <span>
+          <span class="pub__t">Neuropixels Opto: combining high-resolution electrophysiology and optogenetics</span>
+          <span class="pub__a">Lakunina, Socha, Ladd, Bowen, … Li, … Ye, … Steinmetz, Svoboda, Siegle, Carandini</span>
+        </span>
+        <span class="pub__j">Nat Methods</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1101/2025.08.08.669442" data-tags="neuropixels brainwide widefield">
+        <span class="pub__yr">2025</span>
+        <span>
+          <span class="pub__t">Global and local origins of trial-to-trial spike count variability in visual cortex</span>
+          <span class="pub__a">Li, Lu, Ladd, Matveev, Shea-Brown, Steinmetz &middot; Preprint</span>
+        </span>
+        <span class="pub__j">bioRxiv</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.48550/arXiv.2510.18037" data-tags="widefield brainwide methods">
+        <span class="pub__yr">2025</span>
+        <span>
+          <span class="pub__t">Benchmarking probabilistic time-series forecasting models on neural activity</span>
+          <span class="pub__a">Lu, Li, Ladd, Matveev, Deole, Shea-Brown, Kutz, Steinmetz &middot; Preprint</span>
+        </span>
+        <span class="pub__j">arXiv</span>
+      </a>
+      <a class="pub" href="https://doi.org/10.1101/2024.11.01.621418" data-tags="widefield">
+        <span class="pub__yr">2024</span>
+        <span>
+          <span class="pub__t">Simultaneous mesoscopic measurement and manipulation of mouse cortical activity</span>
+          <span class="pub__a">Matveev, Li, Ye, Bowen, Opitz-Araya, Ting, Steinmetz &middot; Preprint</span>
+        </span>
+        <span class="pub__j">bioRxiv</span>
+      </a>
+    </div>
+    <p class="meta" style="margin-top:1.25rem">
+      <a href="#" style="color:var(--accent)">All 70 publications</a> &middot; Google Scholar &middot; ORCID
+    </p>
+  </section>
+
+  <!-- ============================================================ PEOPLE -->
+  <section class="sec wrap" id="people">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">People<span class="trace"></span></p>
+      <h2 class="display">{{PEOPLE_COUNT_WORD}} of us, at the moment</h2>
+      <p class="lede">
+        Physicists, engineers, physicians and biologists — plus undergraduates and high-school
+        students who run their own projects and get their names on papers.
+      </p>
+    </div>
+    <div class="people" data-reveal id="peopleGrid">
+      {{PEOPLE}}
+    </div>
+    <p class="meta" style="margin-top:1.25rem">Plus 29 alumni &middot; <a href="#" style="color:var(--accent)">where they went</a></p>
+  </section>
+
+  <!-- ============================================================ NEWS -->
+  <section class="sec wrap" id="news">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">News<span class="trace"></span></p>
+      <h2 class="display">Lab news</h2>
+    </div>
+    <div class="news" data-reveal>
+      {{NEWS_LATEST}}
+    </div>
+    <p class="meta" style="margin-top:1.25rem"><a href="a-news.html" style="color:var(--accent)">All news</a></p>
+  </section>
+
+  <!-- ============================================================ RESOURCES -->
+  <section class="sec wrap" id="resources">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">Open science<span class="trace"></span></p>
+      <h2 class="display">Take our data. Take our code.</h2>
+      <p class="lede">
+        Everything below is public. If a tool you need doesn't exist, tell us — we probably want
+        it too.
+      </p>
+    </div>
+    <div class="res" data-reveal>
+      {{RESOURCES}}
+    </div>
+  </section>
+
+  <!-- ============================================================ CTA -->
+  <section class="cta on-dark" id="join">
+    <div class="wrap cta__in">
+      <h2 class="display">We are hiring postdocs and taking rotation students.</h2>
+      <a class="btn" href="#">
+        How to join the lab
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 5h7.2L5.6 2.4 6.8 1.2 11 5.4 6.8 9.6 5.6 8.4 8.2 6H1z"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+const WIDEFIELD = {{DATA:widefield}};
+{{PARTIAL:engine.js}}
+
+document.documentElement.dataset.palette = 'teal';
+document.documentElement.dataset.theme = 'dark';
+document.documentElement.dataset.font = 'plex';
+document.documentElement.classList.add('js');
+// A2 has no control panel: palette, theme and typeface are fixed above, and the raster
+// runs in sweep mode. (A's inline handlers for those controls lived here; keeping them
+// would throw on the missing elements and take every later script with them.)
+
+const raster = SL.decodeRaster(RASTER);
+const wf = SL.decodeWidefield(WIDEFIELD);
+SL.initPaletteSwitch();
+
+/* ---- ambient raster: hero + the sliver behind the header ---------------- */
+const heroRaster = SL.raster(document.getElementById('heroRaster'), raster, {
+  mode: 'sweep', spanS: 9, speed: 0.85, dotW: 1.5,
+  padTop: 0.04, padBottom: 0.04,
+  barEl: document.getElementById('heroBar'),
+});
+// No sweep bar in the header: the ribbon is a masked sliver, and a bar drawn across the
+// full bar width would stick out beyond it.
+const hdRaster = SL.raster(document.getElementById('hdRaster'), raster, {
+  mode: 'sweep', spanS: 14, speed: 0.85, dotW: 1.2, fade: false,
+});
+
+
+
+/* ---- the spike explorer: raster + rate trace, seekable ------------------- */
+(() => {
+  const view = SL.raster(document.getElementById('spkRaster'), raster, {
+    mode: 'scroll', spanS: 8, speed: 0.9, dotW: 1.6, dotAlpha: 0.9,
+  });
+  const durS = raster.durMs / 1000;
+  const win = document.getElementById('spkWin');
+  const cnt = document.getElementById('spkCount');
+  const rateN = document.getElementById('spkRateN');
+  const playBtn = document.getElementById('spkPlay');
+  let span = 8;
+
+  const report = (startMs) => {
+    const endMs = startMs + span * 1000;
+    const n = raster.seek(endMs) - raster.seek(startMs);
+    win.textContent = (startMs / 1000).toFixed(1) + '–' + (endMs / 1000).toFixed(1);
+    cnt.textContent = n.toLocaleString('en-US');
+    rateN.textContent = (n / span / raster.nNeurons).toFixed(1);
+    tr.window = [startMs / 1000 / durS, Math.min(1, endMs / 1000 / durS)];
+  };
+
+  // seeking pauses playback: the window you picked should stay where you put it
+  const seekTo = (frac) => {
+    const startMs = frac * Math.max(0, durS - span) * 1000;
+    setPlaying(false);
+    view.showAt(startMs);
+    tr.cursor = frac;
+    report(startMs);
+  };
+  const tr = SL.trace(document.getElementById('spkRate'), raster.rate, {
+    lineWidth: 1.3, onSeek: seekTo,
+  });
+
+  let playing = false;
+  function setPlaying(on) {
+    playing = on;
+    playBtn.textContent = on ? 'Running' : 'Paused';
+    playBtn.setAttribute('aria-pressed', String(on));
+    if (on) { view.start(); loop(); } else view.stop();
+  }
+  const loop = () => { if (!playing) return; report(view.time); requestAnimationFrame(loop); };
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+
+  document.querySelectorAll('.seg [data-span]').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.seg [data-span]').forEach((o) =>
+        o.setAttribute('aria-pressed', String(o === b)));
+      span = +b.dataset.span;
+      view.span = span;
+      report(view.time);
+    });
+  });
+
+  setPlaying(!SL.reduceMotion);
+  report(0);
+})();
+
+/* ---- research card: the psychometric, drawn from the fitted parameters --- */
+(() => {
+  const psy = SL.psychometric(document.getElementById('cardPsy'), {{JSON:psychometric}});
+  // draw the sweep once, the first time the card is actually on screen
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    psy.start();
+    io.disconnect();
+  }), { threshold: 0.35 });
+  io.observe(document.getElementById('cardPsy'));
+})();
+
+/* ---- research cards: clips play only while visible, and never off-screen -- */
+(() => {
+  const vids = [...document.querySelectorAll('.card__vid')];
+  if (SL.reduceMotion) { vids.forEach((v) => { v.currentTime = 0; }); return; }
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
+  }), { threshold: 0.2 });
+  vids.forEach((v) => io.observe(v));
+})();
+
+/* ---- the cortex panel: plays continuously, cursor tracks the trace ------- */
+(() => {
+  const big = SL.widefield(document.getElementById('wfBig'), wf, { speed: 1 });
+  const tEl = document.getElementById('wfTime');
+
+  // Mean dF/F0 across the frame, per frame — this is the scrub track.
+  const HW = wf.H * wf.W;
+  const mean = new Float32Array(wf.T);
+  const uSum = new Float32Array(wf.K);
+  for (let k = 0; k < wf.K; k++) {
+    let s = 0;
+    const base = k * HW;
+    for (let i = 0; i < HW; i++) s += wf.U[base + i];
+    uSum[k] = s / HW;
+  }
+  for (let t = 0; t < wf.T; t++) {
+    let s = 0;
+    for (let k = 0; k < wf.K; k++) s += uSum[k] * wf.V[t * wf.K + k];
+    mean[t] = s;
+  }
+  const tr = SL.trace(document.getElementById('wfTrace'), mean, {
+    lineWidth: 1.4,
+    // click or drag the trace to jump the movie there; playback carries on from that point
+    onSeek: (f) => { big.showFrame(Math.round(f * (wf.T - 1))); },
+  });
+
+  const sync = () => {
+    const f = Math.round(big.frame);
+    tEl.textContent = (f / wf.fps).toFixed(2);
+    tr.cursor = f / (wf.T - 1);
+    requestAnimationFrame(sync);
+  };
+  if (SL.reduceMotion) { tEl.textContent = '0.00'; tr.cursor = 0; }
+  else requestAnimationFrame(sync);
+})();
+
+/* The People grid is rendered at build time from assets/people.json -- see build.py. */
+
+/* ---- publication filter ------------------------------------------------- */
+(() => {
+  const chips = [...document.querySelectorAll('.chip')];
+  const pubs = [...document.querySelectorAll('.pub')];
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    const tag = c.dataset.tag;
+    pubs.forEach((p) => {
+      p.hidden = tag !== 'all' && !p.dataset.tags.split(' ').includes(tag);
+    });
+  }));
+})();
+
+/* ---- PCB traces --------------------------------------------------------- */
+(() => {
+  document.querySelectorAll('.eyebrow .trace').forEach((el) => SL.pcbRule(el));
+  document.querySelectorAll('.has-corner').forEach((el) => SL.pcbCorner(el, 'bl', 54));
+})();
+
+/* ---- header state, menu, reveals ---------------------------------------- */
+(() => {
+  const hd = document.getElementById('hd');
+  const onScroll = () => hd.classList.toggle('is-stuck', scrollY > 40);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  const burger = document.getElementById('burger');
+  const nav = document.getElementById('nav');
+  const setOpen = (open) => {
+    nav.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  };
+  burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
+  nav.addEventListener('click', (e) => { if (e.target.tagName === 'A') setOpen(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+  SL.reveal();
+})();
+</script>

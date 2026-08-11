@@ -1,0 +1,944 @@
+<title>Steinmetz Lab — Mockup C "Instrument"</title>
+
+<style>
+{{FONTS}}
+{{PARTIAL:palettes.css}}
+
+/* ===========================================================================
+   MOCKUP C -- "INSTRUMENT"
+   Dark and data-dense. Structured like the lab's own acquisition software:
+   a fixed left rail, hairline-bordered panels, monospace labels, real axes.
+
+   Type   Monospace leads -- it carries nav, labels, units and every number.
+          SLCond appears only at moderate size for panel titles, and SLSans
+          does the reading. The opposite emphasis from mockups A and B.
+   Layout Fixed 14rem rail + panel grid. Nothing is rounded; nothing floats.
+          Panels announce what they contain in a header strip, like an
+          instrument's channel labels.
+   =========================================================================== */
+
+:root {
+  --cond: 'SLC-plex', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --sans: 'SLS-plex', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'SLMono', ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, monospace;
+
+  --rail: 14rem;
+  --pad: clamp(1rem, 2.5vw, 2rem);
+
+  --s--1: 0.6875rem;
+  --s-0: 0.8125rem;
+  --s-1: 0.9375rem;
+  --s-2: clamp(1.15rem, 1rem + 0.6vw, 1.55rem);
+  --s-3: clamp(1.6rem, 1.2rem + 1.8vw, 2.75rem);
+}
+
+:root[data-font="opensans"] { --cond: 'SLC-opensans', sans-serif; --sans: 'SLS-opensans', sans-serif; }
+:root[data-font="plex"]     { --cond: 'SLC-plex', sans-serif;     --sans: 'SLS-plex', sans-serif; }
+:root[data-font="barlow"]   { --cond: 'SLC-barlow', sans-serif;   --sans: 'SLS-barlow', sans-serif; }
+:root[data-font="archivo"]  { --cond: 'SLC-archivo', sans-serif;  --sans: 'SLS-archivo', sans-serif; }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--deep);
+  color: var(--di);
+  font: 400 var(--s-0)/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+canvas { display: block; }
+
+/* ---- the fixed rail ----------------------------------------------------- */
+.rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--rail);
+  z-index: 60;
+  border-right: 1px solid var(--drule);
+  background: var(--deep);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0;
+}
+.rail__brand {
+  display: grid;
+  gap: 0.625rem;
+  padding: 0 1rem 1.25rem;
+  border-bottom: 1px solid var(--drule);
+  text-decoration: none;
+  color: var(--di);
+}
+.rail__brand svg { width: 2.125rem; height: 2.125rem; color: var(--accent); }
+.rail__name {
+  font: 700 0.8125rem/1.1 var(--cond);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.rail__sub { font: 400 0.5625rem/1.5 var(--mono); letter-spacing: 0.08em; color: var(--di-3); }
+.rail__nav { display: flex; flex-direction: column; padding-block: 0.75rem; }
+.rail__nav a {
+  font: 400 var(--s--1)/1 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--di-2);
+  text-decoration: none;
+  padding: 0.5625rem 1rem;
+  border-left: 2px solid transparent;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.rail__nav a span { color: var(--di-3); font-variant-numeric: tabular-nums; }
+.rail__nav a:hover {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+.rail__nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.rail__foot {
+  margin-top: auto;
+  padding: 1rem;
+  border-top: 1px solid var(--drule);
+  font: 400 0.5625rem/1.7 var(--mono);
+  color: var(--di-3);
+  display: grid;
+  gap: 0.25rem;
+}
+.rail__foot b { color: var(--di-2); font-weight: 400; }
+.dot {
+  display: inline-block;
+  width: 0.375rem; height: 0.375rem;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-right: 0.375rem;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+
+.main { margin-left: var(--rail); }
+
+@media (max-width: 60rem) {
+  .rail {
+    position: static;
+    width: auto;
+    inset: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--drule);
+    padding-bottom: 0;
+  }
+  .rail__brand { border-bottom: 0; padding-bottom: 1rem; }
+  .rail__nav { flex-direction: row; overflow-x: auto; border-top: 1px solid var(--drule); padding-block: 0; }
+  .rail__nav a { border-left: 0; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .rail__nav a span { display: none; }
+  .rail__nav a:hover { border-left-color: transparent; border-bottom-color: var(--accent); }
+  .rail__foot { display: none; }
+  .main { margin-left: 0; }
+}
+
+/* ---- panel primitives --------------------------------------------------- */
+.grid { display: grid; }
+.sec { border-bottom: 1px solid var(--drule); }
+.sec__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  padding: 0.75rem var(--pad);
+  border-bottom: 1px solid var(--drule);
+  background: color-mix(in srgb, var(--dark) 55%, var(--deep));
+}
+.sec__id {
+  font: 700 var(--s--1)/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.sec__meta { font: 400 0.625rem/1 var(--mono); color: var(--di-3); margin-left: auto; }
+.pad { padding: var(--pad); }
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-reveal].is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---- hero split --------------------------------------------------------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 64rem) { .hero { grid-template-columns: 1fr; } }
+.hero__copy {
+  padding: clamp(2rem, 5vw, 4.5rem) var(--pad);
+  display: grid;
+  gap: 1.25rem;
+  align-content: center;
+  border-right: 1px solid var(--drule);
+}
+@media (max-width: 64rem) { .hero__copy { border-right: 0; border-bottom: 1px solid var(--drule); } }
+.kicker {
+  font: 400 var(--s--1)/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.hero h1 {
+  font: 700 var(--s-3)/0.98 var(--cond);
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+  max-width: 24ch;
+}
+.hero p.lede { font-size: var(--s-1); color: var(--di-2); max-width: 44ch; line-height: 1.6; }
+.kv {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 1px;
+  background: var(--drule);
+  border: 1px solid var(--drule);
+  margin-top: 0.5rem;
+}
+.kv > div { background: var(--deep); padding: 0.75rem 0.875rem; }
+.kv dt {
+  font: 400 0.5625rem/1.4 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--di-3);
+}
+.kv dd {
+  margin: 0.3125rem 0 0;
+  font: 700 1.375rem/1 var(--cond);
+  font-variant-numeric: tabular-nums;
+  color: var(--di);
+}
+
+/* ---- viewport chrome ---------------------------------------------------- */
+.vp { position: relative; display: grid; grid-template-rows: 1fr auto; min-height: 24rem; }
+.vp__stage { position: relative; overflow: hidden; background: var(--deep); }
+.vp__stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.vp__corner {
+  position: absolute;
+  width: 0.625rem; height: 0.625rem;
+  border: 1px solid color-mix(in srgb, var(--di) 30%, transparent);
+  pointer-events: none;
+}
+.vp__corner:nth-child(1) { top: 0.625rem; left: 0.625rem; border-right: 0; border-bottom: 0; }
+.vp__corner:nth-child(2) { top: 0.625rem; right: 0.625rem; border-left: 0; border-bottom: 0; }
+.vp__corner:nth-child(3) { bottom: 0.625rem; left: 0.625rem; border-right: 0; border-top: 0; }
+.vp__corner:nth-child(4) { bottom: 0.625rem; right: 0.625rem; border-left: 0; border-top: 0; }
+.vp__hud {
+  position: absolute;
+  top: 0.625rem; left: 1.75rem; right: 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font: 400 0.625rem/1 var(--mono);
+  color: var(--di-3);
+  pointer-events: none;
+}
+.vp__hud b { color: var(--accent); font-weight: 400; font-variant-numeric: tabular-nums; }
+.vp__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-top: 1px solid var(--drule);
+  font: 400 0.625rem/1 var(--mono);
+  color: var(--di-3);
+}
+.cbar { width: 5.5rem; height: 0.5rem; border: 1px solid var(--drule); }
+.scale {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+}
+.scale i { display: block; width: 2.25rem; height: 1px; background: var(--di-2); }
+
+/* ---- channel strip: the ambient raster --------------------------------- */
+.strip { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); }
+.strip__ax {
+  border-right: 1px solid var(--drule);
+  position: relative;
+  font: 400 0.5625rem/1 var(--mono);
+  color: var(--di-3);
+}
+.strip__ax span { position: absolute; right: 0.375rem; transform: translateY(-50%); }
+.strip__ax em {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--di-3);
+}
+.strip__body { position: relative; }
+.strip__raster { position: relative; height: min(46svh, 24rem); }
+.strip__raster canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.strip__rate {
+  position: relative;
+  height: 4.5rem;
+  border-top: 1px solid var(--drule);
+  cursor: ew-resize;
+  touch-action: none;
+}
+.strip__rate canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.strip__xax {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.375rem 0 0;
+  font: 400 0.5625rem/1 var(--mono);
+  color: var(--di-3);
+  border-top: 1px solid var(--drule);
+}
+.ctrl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  padding: 0.75rem var(--pad);
+  border-top: 1px solid var(--drule);
+  font: 400 0.6875rem/1 var(--mono);
+  color: var(--di-3);
+}
+.ctrl b { color: var(--accent); font-weight: 400; font-variant-numeric: tabular-nums; }
+.seg { display: flex; border: 1px solid var(--drule); }
+.seg button {
+  font: 400 0.625rem/1 var(--mono);
+  color: var(--di-2);
+  background: transparent;
+  border: 0;
+  border-left: 1px solid var(--drule);
+  padding: 0.4375rem 0.625rem;
+  cursor: pointer;
+}
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.seg button:hover:not([aria-pressed="true"]) { color: var(--accent); }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---- method panels ----------------------------------------------------- */
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 1px;
+  background: var(--drule);
+}
+.panel { background: var(--deep); display: grid; grid-template-rows: auto auto 1fr; }
+.panel__hd {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--drule);
+  font: 400 0.625rem/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--di-3);
+}
+.panel__hd b { color: var(--accent); font-weight: 400; }
+.panel__fig { aspect-ratio: 16 / 10; overflow: hidden; background: var(--dark); position: relative; }
+.panel__fig img, .panel__fig canvas { width: 100%; height: 100%; object-fit: cover; }
+.panel__body { padding: 0.875rem; display: grid; gap: 0.5rem; align-content: start; }
+.panel__body h3 { font: 700 var(--s-1)/1.3 var(--sans); letter-spacing: -0.01em; }
+.panel__body p { font-size: var(--s--1); color: var(--di-2); line-height: 1.6; }
+
+/* ---- tables ------------------------------------------------------------ */
+.tbl { width: 100%; border-collapse: collapse; font-size: var(--s-0); }
+.tbl caption { text-align: left; padding: 0 var(--pad) 0.75rem; font: 400 0.625rem/1.6 var(--mono); color: var(--di-3); }
+.tbl th {
+  text-align: left;
+  font: 400 0.5625rem/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--di-3);
+  padding: 0.625rem var(--pad);
+  border-bottom: 1px solid var(--drule);
+  white-space: nowrap;
+}
+.tbl td {
+  padding: 0.6875rem var(--pad);
+  border-bottom: 1px solid var(--drule);
+  vertical-align: top;
+}
+.tbl tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+/* Only the outer edges need the full page gutter; inner columns would otherwise push a
+   four-column table into horizontal scroll on an ordinary desktop width. */
+.tbl th + th, .tbl td + td { padding-inline: 0.875rem; }
+.tbl th:last-child, .tbl td:last-child { padding-right: var(--pad); }
+.tbl .n { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--di-3); white-space: nowrap; }
+.tbl a { text-decoration: none; font-weight: 600; letter-spacing: -0.005em; }
+.tbl a:hover { color: var(--accent); }
+.tbl .who { font: 400 var(--s--1)/1.5 var(--mono); color: var(--di-3); display: block; margin-top: 0.25rem; }
+.tag {
+  display: inline-block;
+  font: 400 0.5625rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--di-2);
+  border: 1px solid var(--drule);
+  padding: 0.25rem 0.375rem;
+  margin: 0 0.25rem 0.25rem 0;
+  white-space: nowrap;
+}
+.tbl--scroll { overflow-x: auto; }
+
+/* ---- log --------------------------------------------------------------- */
+.log { display: grid; }
+.log__row {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0.375rem 1.25rem;
+  padding: 0.875rem var(--pad);
+  border-bottom: 1px solid var(--drule);
+}
+.log__row:last-child { border-bottom: 0; }
+.log__t { font: 400 0.625rem/1.7 var(--mono); color: var(--di-3); text-transform: uppercase; letter-spacing: 0.08em; }
+.log__b h3 { font: 700 var(--s-1)/1.4 var(--sans); margin-bottom: 0.25rem; }
+.log__b p { font-size: var(--s--1); color: var(--di-2); }
+@media (max-width: 34rem) { .log__row { grid-template-columns: 1fr; } }
+
+/* ---- cta / foot -------------------------------------------------------- */
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  padding: clamp(2rem, 4vw, 3rem) var(--pad);
+}
+.cta h2 { font: 700 var(--s-2)/1.15 var(--cond); text-transform: uppercase; max-width: 30ch; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 400 0.6875rem/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.8125rem 1.125rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-decoration: none;
+  border: 1px solid var(--accent);
+}
+.btn:hover { background: transparent; color: var(--accent); }
+.btn:focus-visible { outline: 2px solid var(--di); outline-offset: 2px; }
+
+.foot {
+  padding: var(--pad);
+  font: 400 0.625rem/1.9 var(--mono);
+  color: var(--di-3);
+  display: grid;
+  gap: 1rem;
+}
+.foot__nav { display: flex; flex-wrap: wrap; gap: 0.375rem 1.25rem; }
+.foot__nav a { text-decoration: none; color: var(--di-2); }
+.foot__nav a:hover { color: var(--accent); }
+
+.badge {
+  position: fixed;
+  left: calc(var(--rail) + 1rem); bottom: 1rem;
+  z-index: 90;
+  font: 700 0.5625rem/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--di-2);
+  background: color-mix(in srgb, #000 62%, transparent);
+  border: 1px solid var(--drule);
+  backdrop-filter: blur(8px);
+  padding: 0.4375rem 0.625rem;
+}
+@media (max-width: 60rem) { .badge { display: none; } }
+</style>
+
+<aside class="rail">
+  <a class="rail__brand" href="#top">
+    {{MARK}}
+    <span>
+      <span class="rail__name">Steinmetz Lab</span>
+      <span class="rail__sub">Neurobiology &amp; Biophysics<br>University of Washington</span>
+    </span>
+  </a>
+  <nav class="rail__nav" aria-label="Main">
+    <a href="#top">Overview</a>
+    <a href="#signals">Live signals</a>
+    <a href="#methods">Methods <span>4</span></a>
+    <a href="#papers">Papers <span>70</span></a>
+    <a href="#people">People <span>{{PEOPLE_COUNT}}</span></a>
+    <a href="#data">Data &amp; code <span>15</span></a>
+    <a href="#log">News</a>
+    <a href="#join">Join us</a>
+  </nav>
+  <div class="rail__foot">
+    <div><span class="dot" aria-hidden="true"></span><b>2 recordings loaded</b></div>
+    <div>ephys &middot; 141 units</div>
+    <div>imaging &middot; 140 x 140 px</div>
+  </div>
+</aside>
+
+<main class="main" id="top">
+
+  <!-- ============================================================== HERO -->
+  <section class="sec hero">
+    <div class="hero__copy">
+      <p class="kicker">Steinmetz Lab / University of Washington</p>
+      <h1>Brain-wide circuits for perception, cognition and action</h1>
+      <p class="lede">
+        We record thousands of neurons across the whole mouse brain at once, image the entire
+        dorsal cortex, and switch circuits off to find out which ones actually matter. And we
+        build the instruments and software that make it possible.
+      </p>
+      <dl class="kv">
+        <div><dt>Publications</dt><dd data-reveal data-count><span data-count-target="70" data-count-suffix="+">70+</span></dd></div>
+        <div><dt>People</dt><dd data-reveal data-count><span data-count-target="{{PEOPLE_COUNT}}">{{PEOPLE_COUNT}}</span></dd></div>
+        <div><dt>Open datasets</dt><dd data-reveal data-count><span data-count-target="7">7</span></dd></div>
+        <div><dt>Tools</dt><dd data-reveal data-count><span data-count-target="8">8</span></dd></div>
+      </dl>
+    </div>
+
+    <div class="vp">
+      <div class="vp__stage">
+        <canvas id="vpWf" aria-label="Cortex-wide calcium imaging, playing continuously"></canvas>
+        <i class="vp__corner"></i><i class="vp__corner"></i><i class="vp__corner"></i><i class="vp__corner"></i>
+        <div class="vp__hud">
+          <span>widefield / dorsal cortex / dF/F</span>
+          <span>t = <b id="vpClock">0.00</b> s</span>
+        </div>
+      </div>
+      <div class="vp__bar">
+        <span>-dF/F</span>
+        <canvas class="cbar" id="cbar" aria-hidden="true"></canvas>
+        <span>+dF/F</span>
+        <span class="scale"><i aria-hidden="true"></i>2 mm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================== LIVE SIGNALS -->
+  <section class="sec" id="signals">
+    <div class="sec__bar">
+      <span class="sec__id">Live signals</span>
+      <span>Neuropixels recording, 141 simultaneously recorded neurons</span>
+      <span class="sec__meta">drag the rate trace to scrub</span>
+    </div>
+
+    <div class="strip">
+      <div class="strip__ax" id="stripAx" aria-hidden="true"><em>um from tip</em></div>
+      <div class="strip__body">
+        <div class="strip__raster"><canvas id="stripRaster"></canvas></div>
+        <div class="strip__rate" id="rateBox">
+          <canvas id="stripRate"></canvas>
+        </div>
+        <div class="strip__xax"><span>0 s</span><span>45 s</span><span>90 s</span></div>
+      </div>
+    </div>
+
+    <div class="ctrl">
+      <div class="seg" role="group" aria-label="Visible time window">
+        <button data-span="2" aria-pressed="false">2 s</button>
+        <button data-span="8" aria-pressed="true">8 s</button>
+        <button data-span="30" aria-pressed="false">30 s</button>
+      </div>
+      <div class="seg" role="group" aria-label="Playback">
+        <button id="playBtn" aria-pressed="true">running</button>
+      </div>
+      <span>window <b id="cWin">0.0 - 8.0</b> s</span>
+      <span>spikes shown <b id="cSpk">0</b></span>
+      <span>population rate <b id="cRate">0.0</b> spikes/s</span>
+      <span class="sec__meta">Kilosort output &middot; units above 0.1 spikes/s</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ METHODS -->
+  <section class="sec" id="methods">
+    <div class="sec__bar">
+      <span class="sec__id">Methods</span>
+      <span>Four instruments, one question</span>
+    </div>
+    <div class="panels">
+      <article class="panel" data-reveal>
+        <div class="panel__hd"><span>Electrophysiology</span><b>141 units</b></div>
+        <div class="panel__fig"><img src="{{IMG:hero_ibl}}" alt="Recorded neurons rendered as coloured points inside a translucent mouse brain."></div>
+        <div class="panel__body">
+          <h3>Brain-wide Neuropixels recording</h3>
+          <p>
+            Hundreds of neurons per probe at single-spike resolution, from cortex through
+            midbrain. We help develop the probes and the sorting software the field runs on.
+          </p>
+        </div>
+      </article>
+
+      <article class="panel" data-reveal data-reveal-delay="0.06">
+        <div class="panel__hd"><span>Imaging</span><b>35 Hz</b></div>
+        <div class="panel__fig"><canvas id="panelWf" aria-hidden="true"></canvas></div>
+        <div class="panel__body">
+          <h3>Cortex-wide calcium imaging</h3>
+          <p>
+            The whole dorsal surface at once, so a single recording site can be read in the
+            context of everything else happening in cortex.
+          </p>
+        </div>
+      </article>
+
+      <article class="panel" data-reveal data-reveal-delay="0.12">
+        <div class="panel__hd"><span>Manipulation</span><b>Optogenetics</b></div>
+        <div class="panel__fig"><img src="{{IMG:fig_mrf}}" alt="Two single-neuron axonal reconstructions, teal and orange, traced across a sagittal mouse brain."></div>
+        <div class="panel__body">
+          <h3>Causal circuit dissection</h3>
+          <p>
+            Trace single-neuron projections, then silence them during behavior to separate
+            correlation from cause.
+          </p>
+        </div>
+      </article>
+
+      <article class="panel" data-reveal data-reveal-delay="0.18">
+        <div class="panel__hd"><span>Behavior</span><b>2-AFC</b></div>
+        <div class="panel__fig"><img src="{{IMG:hero_wf}}" alt="Mouse cortex imaged through a cranial window, fluorescence in yellow through magenta."></div>
+        <div class="panel__body">
+          <h3>Psychophysics worth modelling</h3>
+          <p>
+            Two-alternative visual discrimination with enough trials and enough control that the
+            behavior can be fit properly and compared across labs.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================= PAPERS -->
+  <section class="sec" id="papers">
+    <div class="sec__bar">
+      <span class="sec__id">Papers</span>
+      <span>Recent and selected</span>
+      <span class="sec__meta">70 total</span>
+    </div>
+    <div class="tbl--scroll">
+      <table class="tbl">
+        <thead>
+          <tr><th>Year</th><th>Title</th><th>Venue</th><th>Topics</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="n">2026</td>
+            <td>
+              <a href="https://doi.org/10.1038/s41586-026-10443-5">Prefrontal to ventral tegmental area dynamics drive contingency degradation</a>
+              <span class="who">Hjort, Garrett, Gordon, Ancell, Trzeciak, Lu, Bruchas, Witten, Steinmetz, Stuber</span>
+            </td>
+            <td class="n">Nature</td>
+            <td><span class="tag">ephys</span><span class="tag">behavior</span></td>
+          </tr>
+          <tr>
+            <td class="n">2026</td>
+            <td>
+              <a href="https://doi.org/10.1016/j.neuron.2026.04.003">The midbrain reticular formation in contextual control of perceptual decisions</a>
+              <span class="who">Shaker, Schroeter, Birman, Steinmetz</span>
+            </td>
+            <td class="n">Neuron</td>
+            <td><span class="tag">brain-wide</span><span class="tag">vision</span></td>
+          </tr>
+          <tr>
+            <td class="n">2026</td>
+            <td>
+              <a href="https://doi.org/10.1038/s41583-026-01042-4">Large-scale electrophysiology at single-spike resolution</a>
+              <span class="who">Siegle, Steinmetz &middot; Review</span>
+            </td>
+            <td class="n">Nat Rev Neurosci</td>
+            <td><span class="tag">methods</span></td>
+          </tr>
+          <tr>
+            <td class="n">2026</td>
+            <td>
+              <a href="https://doi.org/10.1038/s41467-026-71331-0">A multimodal approach for visualizing and identifying electrophysiological cell types in vivo</a>
+              <span class="who">Lee, G&uuml;l, Heller, Lakunina, Yu, Shelton, Olsen, Steinmetz, Hurwitz, Jaramillo, Przytycki, Chandrasekaran</span>
+            </td>
+            <td class="n">Nat Commun</td>
+            <td><span class="tag">cell types</span><span class="tag">methods</span></td>
+          </tr>
+          <tr>
+            <td class="n">2026</td>
+            <td>
+              <a href="https://doi.org/10.1101/2026.03.06.710130">A flexible quality metric for electrophysiological recordings across brain regions and species</a>
+              <span class="who">Roth, Chapuis, Winter, IBL, Ressmeyer, Bun, Canfield, Horwitz, Steinmetz &middot; Preprint</span>
+            </td>
+            <td class="n">bioRxiv</td>
+            <td><span class="tag">quality</span><span class="tag">IBL</span></td>
+          </tr>
+          <tr>
+            <td class="n">2025</td>
+            <td>
+              <a href="https://doi.org/10.1016/j.neuron.2025.08.030">Ultra-high-density Neuropixels probes improve detection and identification in neuronal recordings</a>
+              <span class="who">Ye*, Shelton*, Shaker, Boussard, Colonell, ... Harris, Steinmetz</span>
+            </td>
+            <td class="n">Neuron</td>
+            <td><span class="tag">probes</span><span class="tag">methods</span></td>
+          </tr>
+          <tr>
+            <td class="n">2025</td>
+            <td>
+              <a href="https://doi.org/10.1101/2025.02.04.636286">Neuropixels Opto: combining high-resolution electrophysiology and optogenetics</a>
+              <span class="who">Lakunina, Socha, Ladd, Bowen, ... Steinmetz, Svoboda, Siegle, Carandini</span>
+            </td>
+            <td class="n">Nat Methods</td>
+            <td><span class="tag">probes</span><span class="tag">opto</span></td>
+          </tr>
+          <tr>
+            <td class="n">2025</td>
+            <td>
+              <a href="https://doi.org/10.1101/2025.08.08.669442">Global and local origins of trial-to-trial spike count variability in visual cortex</a>
+              <span class="who">Li, Lu, Ladd, Matveev, Shea-Brown, Steinmetz &middot; Preprint</span>
+            </td>
+            <td class="n">bioRxiv</td>
+            <td><span class="tag">variability</span><span class="tag">vision</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================= PEOPLE -->
+  <section class="sec" id="people">
+    <div class="sec__bar">
+      <span class="sec__id">People</span>
+      <span>Currently in the lab</span>
+      <span class="sec__meta">plus 29 alumni</span>
+    </div>
+    <div class="tbl--scroll">
+      <table class="tbl">
+        <thead><tr><th>Name</th><th>Role</th><th>Cohort</th><th>Since</th></tr></thead>
+          <tbody>
+          {{PEOPLE_ROWS}}
+          </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- =========================================================== DATA/CODE -->
+  <section class="sec" id="data">
+    <div class="sec__bar">
+      <span class="sec__id">Data &amp; code</span>
+      <span>All public</span>
+      <span class="sec__meta">7 datasets &middot; 8 tools</span>
+    </div>
+    <div class="tbl--scroll">
+      <table class="tbl">
+        <thead><tr><th>Kind</th><th>Resource</th><th>What it is</th></tr></thead>
+        <tbody>
+          <tr><td class="n">dataset</td><td><a href="https://npultra.steinmetzlab.net/">Neuropixels Ultra waveforms</a></td><td>Detailed extracellular waveforms; browse online or download</td></tr>
+          <tr><td class="n">dataset</td><td><a href="https://doi.org/10.6084/m9.figshare.21365598">Olfactory Pavlovian conditioning</a></td><td>Electrophysiology and two-photon imaging</td></tr>
+          <tr><td class="n">dataset</td><td><a href="https://doi.org/10.6084/m9.figshare.14024495">Neuropixels 2.0, imposed brain motion</a></td><td>For testing drift correction</td></tr>
+          <tr><td class="n">dataset</td><td><a href="https://figshare.com/articles/steinmetz/9598406">Visual discrimination recordings</a></td><td>Also in NWB and ONE formats</td></tr>
+          <tr><td class="n">software</td><td><a href="https://data.virtualbrainlab.org/pinpoint/">Pinpoint</a></td><td>Plan probe insertions in the mouse brain</td></tr>
+          <tr><td class="n">software</td><td><a href="https://github.com/MouseLand/kilosort2">Kilosort2</a></td><td>Fast, accurate spike sorting for large datasets</td></tr>
+          <tr><td class="n">software</td><td><a href="https://github.com/cortex-lab/allenCCF">allenCCF</a></td><td>Browse and work with the Allen atlas</td></tr>
+          <tr><td class="n">software</td><td><a href="https://github.com/cortex-lab/widefield">widefield</a></td><td>Analyse widefield calcium imaging</td></tr>
+          <tr><td class="n">software</td><td><a href="https://github.com/cortex-lab/alyx">Alyx</a></td><td>Database for subjects and datasets</td></tr>
+          <tr><td class="n">hardware</td><td><a href="https://www.ucl.ac.uk/cortexlab/tools/wheel">Wheel task</a></td><td>Designs and code for the behavioral rig</td></tr>
+          <tr><td class="n">community</td><td><a href="http://neuropix.cortexlab.net">Neuropixels wiki &amp; forum</a></td><td>Practical help for probe users</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================================================================ LOG -->
+  <section class="sec" id="log">
+    <div class="sec__bar">
+      <span class="sec__id">News</span>
+      <span>Recent activity</span>
+    </div>
+    <div class="log">
+      <div class="log__row">
+        <p class="log__t">Apr 2026</p>
+        <div class="log__b">
+          <h3>Jordan's midbrain paper is out in Neuron</h3>
+          <p>The midbrain reticular formation carries the context signal that decides which rule a mouse applies to an identical stimulus.</p>
+        </div>
+      </div>
+      <div class="log__row">
+        <p class="log__t">2026</p>
+        <div class="log__b">
+          <h3>Contingency degradation, in Nature</h3>
+          <p>With the Stuber lab: prefrontal to VTA dynamics as mice learn that their actions have stopped mattering.</p>
+        </div>
+      </div>
+      <div class="log__row">
+        <p class="log__t">2026</p>
+        <div class="log__b">
+          <h3>Where large-scale electrophysiology goes next</h3>
+          <p>Josh Siegle and Nick review single-spike-resolution recording for Nature Reviews Neuroscience.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== JOIN -->
+  <section class="sec cta" id="join">
+    <h2>We are hiring postdocs and taking rotation students</h2>
+    <a class="btn" href="#">How to join &rarr;</a>
+  </section>
+
+  <footer class="foot">
+    <nav class="foot__nav" aria-label="Footer">
+      <a href="#methods">Methods</a>
+      <a href="#papers">Papers</a>
+      <a href="#people">People</a>
+      <a href="#data">Data &amp; code</a>
+      <a href="#">Teaching</a>
+      <a href="#">Ethics</a>
+      <a href="#join">Join us</a>
+      <a href="#">Contact</a>
+    </nav>
+    <p>
+      Box 357290, University of Washington, Seattle WA 98195 &middot; Part of the International
+      Brain Laboratory and the Neuropixels Consortium.<br>
+      Design mockup &mdash; the live panels are real recordings pulled from the lab server.
+    </p>
+  </footer>
+</main>
+
+<div class="pal" role="group" aria-label="Mockup controls">
+  <select class="pal__sel" id="fontSel" aria-label="Typeface">
+    <option value="plex">IBM Plex</option>
+    <option value="barlow">Barlow</option>
+    <option value="archivo">Archivo</option>
+    <option value="opensans">Open Sans</option>
+  </select>
+  <span class="pal__label">Palette</span>
+  <button class="pal__btn pal__btn--indigo" data-pal="indigo" aria-pressed="false" title="Signal -- indigo &amp; cyan"></button>
+  <button class="pal__btn pal__btn--plasma" data-pal="plasma" aria-pressed="false" title="Plasma -- violet, magenta &amp; amber"></button>
+  <button class="pal__btn pal__btn--teal" data-pal="teal" aria-pressed="false" title="Projection -- teal &amp; coral"></button>
+  <button class="pal__btn pal__btn--atlas" data-pal="atlas" aria-pressed="true" title="Atlas -- monochrome page, spectral data"></button>
+</div>
+<div class="badge">Mockup C &middot; "Instrument" &middot; dark, data-dense</div>
+
+<script>
+const RASTER = {{DATA:raster}};
+const WIDEFIELD = {{DATA:widefield}};
+{{PARTIAL:engine.js}}
+
+document.documentElement.dataset.palette = 'atlas';
+document.documentElement.dataset.font = 'plex';
+(() => {
+  const sel = document.getElementById('fontSel');
+  sel.addEventListener('change', () => {
+    document.documentElement.dataset.font = sel.value;
+    dispatchEvent(new Event('resize'));
+  });
+})();
+
+const raster = SL.decodeRaster(RASTER);
+const wf = SL.decodeWidefield(WIDEFIELD);
+SL.initPaletteSwitch();
+
+/* ---- hero viewport ------------------------------------------------------ */
+(() => {
+  const vp = SL.widefield(document.getElementById('vpWf'), wf, { speed: 1 });
+  const clock = document.getElementById('vpClock');
+  const tick = () => { clock.textContent = (vp.frame / wf.fps).toFixed(2); requestAnimationFrame(tick); };
+  if (!SL.reduceMotion) requestAnimationFrame(tick);
+})();
+SL.widefield(document.getElementById('panelWf'), wf, { speed: 1 });
+
+/* ---- colour bar, redrawn whenever the palette changes ------------------ */
+(() => {
+  const cv = document.getElementById('cbar');
+  const paint = () => {
+    const { w, h } = SL.fitCanvas(cv);
+    const ctx = cv.getContext('2d');
+    const lut = SL.rampLUT();
+    for (let x = 0; x < w; x++) {
+      ctx.fillStyle = SL.lutCSS(lut, (x / (w - 1)) * 255, 1);
+      ctx.fillRect(x, 0, 1, h);
+    }
+  };
+  SL.onPalette(paint);
+  addEventListener('resize', paint, { passive: true });
+  if (typeof ResizeObserver === 'function') new ResizeObserver(paint).observe(cv);
+  paint();
+})();
+
+/* ---- the channel strip: raster + rate, scrubbable ---------------------- */
+(() => {
+  const rasterCv = document.getElementById('stripRaster');
+  const rateCv = document.getElementById('stripRate');
+  const rateBox = document.getElementById('rateBox');
+  const axis = document.getElementById('stripAx');
+  const playBtn = document.getElementById('playBtn');
+
+  let span = 8;
+  const view = SL.raster(rasterCv, raster, { spanS: span, speed: 0.9, dotW: 1.6, dotAlpha: 0.9 });
+  const tr = SL.trace(rateCv, raster.rate, { lineWidth: 1.3 });
+
+  // probe-position ticks down the left edge
+  const d = raster.depth;
+  const dTop = d[0], dBot = d[d.length - 1];
+  axis.insertAdjacentHTML('beforeend', [0, 0.25, 0.5, 0.75, 1].map((f) => {
+    const um = Math.round(dTop - f * (dTop - dBot));
+    return '<span style="top:' + (f * 100).toFixed(1) + '%">' + um + '</span>';
+  }).join(''));
+
+  const durS = raster.durMs / 1000;
+  const cWin = document.getElementById('cWin');
+  const cSpk = document.getElementById('cSpk');
+  const cRate = document.getElementById('cRate');
+
+  function report(startMs) {
+    const endMs = startMs + span * 1000;
+    const i0 = raster.seek(startMs), i1 = raster.seek(endMs);
+    const n = i1 - i0;
+    cWin.textContent = (startMs / 1000).toFixed(1) + ' - ' + (endMs / 1000).toFixed(1);
+    cSpk.textContent = n.toLocaleString('en-US');
+    cRate.textContent = (n / span / raster.nNeurons).toFixed(1);
+    tr.window = [startMs / 1000 / durS, Math.min(1, endMs / 1000 / durS)];
+  }
+
+  let playing = !SL.reduceMotion;
+  const setPlaying = (on) => {
+    playing = on;
+    playBtn.textContent = on ? 'running' : 'paused';
+    playBtn.setAttribute('aria-pressed', String(on));
+    if (on) { view.start(); loop(); } else view.stop();
+  };
+  const loop = () => { if (!playing) return; report(view.time); requestAnimationFrame(loop); };
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+
+  // drag anywhere on the rate trace to move the visible window
+  const scrubTo = (e) => {
+    const r = rateBox.getBoundingClientRect();
+    const frac = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    const maxStart = Math.max(0, durS - span) * 1000;
+    const startMs = frac * maxStart;
+    setPlaying(false);
+    view.showAt(startMs);
+    report(startMs);
+  };
+  rateBox.addEventListener('pointerdown', (e) => { rateBox.setPointerCapture(e.pointerId); scrubTo(e); });
+  rateBox.addEventListener('pointermove', (e) => { if (e.buttons) scrubTo(e); });
+
+  document.querySelectorAll('.seg [data-span]').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.seg [data-span]').forEach((o) =>
+        o.setAttribute('aria-pressed', String(o === b)));
+      span = +b.dataset.span;
+      view.span = span;
+      report(view.time);
+    });
+  });
+
+  setPlaying(playing);
+  report(0);
+})();
+
+/* The People table is rendered at build time from assets/people.json - see build.py. */
+
+SL.reveal();
+</script>

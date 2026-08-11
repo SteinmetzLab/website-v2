@@ -1,0 +1,106 @@
+<title>News — Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(2rem, 5vw, 3.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 22ch; }
+.phead .lede { max-width: 44ch; }
+
+.pubyear {
+  font: 700 0.75rem/1 var(--mono);
+  letter-spacing: 0.18em;
+  color: var(--fg-3);
+  padding: 2.75rem 0 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: -1px;
+}
+.pubyear:first-child { padding-top: 0; }
+.pubyear[hidden] { display: none; }
+
+/* the date column carries a small kind label, so the feed scans by type */
+.item__d { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+.kind {
+  font: 700 0.5625rem/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3125rem 0.4375rem;
+  border: 1px solid var(--rule);
+  color: var(--fg-3);
+}
+.kind--paper { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.kind--award { color: var(--accent-2); border-color: color-mix(in srgb, var(--accent-2) 45%, transparent); }
+.item__link { text-decoration: none; }
+.item__link:hover { color: var(--accent); }
+.item[hidden] { display: none; }
+@media (max-width: 40rem) {
+  .item__d { flex-direction: row; align-items: center; gap: 0.75rem; }
+}
+
+.chips { position: sticky; top: 4.25rem; z-index: 20; background: var(--bg);
+         padding-block: 1rem; margin-bottom: 1.5rem; }
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">News<span class="trace"></span></p>
+      <h1 class="display">What has been happening</h1>
+      <p class="lede">
+        Papers and awards since the lab opened in January 2019. Publication dates are the
+        month each paper first appeared.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-top:0" id="feed">
+    <div class="chips" role="group" aria-label="Filter news">
+      <button class="chip" data-kind="all" aria-pressed="true">Everything</button>
+      <button class="chip" data-kind="paper" aria-pressed="false">Papers</button>
+      <button class="chip" data-kind="award" aria-pressed="false">Awards</button>
+      <button class="chip" data-kind="lab" aria-pressed="false">Lab</button>
+    </div>
+    <div class="news" id="newsList">
+      {{NEWS_ALL}}
+    </div>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+{{PARTIAL:a-controls.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+
+(() => {
+  const chips = [...document.querySelectorAll('.chip')];
+  const items = [...document.querySelectorAll('.item')];
+  const years = [...document.querySelectorAll('.pubyear')];
+
+  const kindOf = (el) => {
+    const k = el.querySelector('.kind');
+    return k ? [...k.classList].find((c) => c.startsWith('kind--')).slice(6) : '';
+  };
+  const apply = (kind) => {
+    items.forEach((el) => { el.hidden = kind !== 'all' && kindOf(el) !== kind; });
+    years.forEach((h) => {
+      let any = false;
+      for (let el = h.nextElementSibling; el && !el.classList.contains('pubyear');
+           el = el.nextElementSibling) {
+        if (!el.hidden) { any = true; break; }
+      }
+      h.hidden = !any;
+    });
+  };
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    apply(c.dataset.kind);
+  }));
+})();
+</script>

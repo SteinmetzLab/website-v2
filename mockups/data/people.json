@@ -1,0 +1,150 @@
+{
+  "_comment": "Current lab members: source of truth for the People section. Reconciled 2026-07-27 from Nick's roster table and Steinmetz_CV_SoM_2026-07-27.docx. Display order is derived, not hand-maintained: sorted by GROUP_ORDER in tools/make_people.py, then by 'joined' ascending (seniority). 'img' is the filename stem in the old repo's assets/img/people/, or null for a monogram tile.",
+  "_groups": ["pi", "staff", "postdoc", "grad", "undergrad", "highschool"],
+  "person": [
+    {
+      "name": "Nick Steinmetz",
+      "role": "Principal Investigator",
+      "group": "pi",
+      "joined": "2019-01-02",
+      "img": "nick",
+      "url": "http://www.nicksteinmetz.com"
+    },
+    {
+      "name": "Kim Miller",
+      "role": "Research Scientist",
+      "group": "staff",
+      "joined": "2023-02-13",
+      "img": "Kim",
+      "url": ""
+    },
+    {
+      "name": "Fabiola Duarte Ortiz",
+      "role": "Postdoctoral Scientist",
+      "group": "postdoc",
+      "joined": "2025-01-01",
+      "img": "Fabiola",
+      "url": ""
+    },
+    {
+      "name": "Aditya Deole",
+      "role": "Postdoctoral Scientist",
+      "group": "postdoc",
+      "joined": "2025-10-07",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Edward Yan",
+      "role": "Postdoctoral Scientist, CIHR Fellow",
+      "group": "postdoc",
+      "joined": "2026-06-29",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Saghar Mirbagheri",
+      "role": "PhD Student",
+      "group": "grad",
+      "joined": "2019-10-16",
+      "img": "Saghar",
+      "url": "https://scholar.google.com/citations?user=5Jph4ToAAAAJ&hl=en"
+    },
+    {
+      "name": "Anna Li",
+      "role": "PhD Student, NIH F31 Fellow",
+      "group": "grad",
+      "joined": "2021-01-04",
+      "img": "AnnaLi",
+      "url": ""
+    },
+    {
+      "name": "Nancy Mackenzie",
+      "role": "PhD Student",
+      "group": "grad",
+      "joined": "2024-01-01",
+      "img": "Nancy",
+      "url": ""
+    },
+    {
+      "name": "Xander Ladd",
+      "role": "PhD Student",
+      "group": "grad",
+      "joined": "2024-03-20",
+      "img": "Xander",
+      "url": "https://xanderladd.github.io/"
+    },
+    {
+      "name": "Alex Wu",
+      "role": "MD-PhD Rotation Student",
+      "group": "grad",
+      "joined": "2026-06-25",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Rachel Yin",
+      "role": "Undergraduate Scientist, Goldwater Scholar",
+      "group": "undergrad",
+      "joined": "2023-11-08",
+      "img": "Rachel",
+      "url": ""
+    },
+    {
+      "name": "Alice Gettig",
+      "role": "Undergraduate Scientist",
+      "group": "undergrad",
+      "joined": "2025-09-25",
+      "img": "Alice",
+      "url": ""
+    },
+    {
+      "name": "Zhorzh Zelenkov",
+      "role": "Undergraduate Scientist",
+      "group": "undergrad",
+      "joined": "2025-11-21",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Annie Wu",
+      "role": "Undergraduate Scientist",
+      "group": "undergrad",
+      "joined": "2026-05-14",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Kimmie Shenoy",
+      "role": "Undergraduate Scientist",
+      "group": "undergrad",
+      "joined": "2026-06-23",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Ian McFadden",
+      "role": "Undergraduate Scientist, summer",
+      "group": "undergrad",
+      "joined": "2026-07-08",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Allison Lin",
+      "role": "High-School Summer Student",
+      "group": "highschool",
+      "joined": "2025-06-30",
+      "img": null,
+      "url": ""
+    },
+    {
+      "name": "Bersabel Bahru",
+      "role": "High-School Summer Student, BRIGHT-UP",
+      "group": "highschool",
+      "joined": "2026-07-13",
+      "img": null,
+      "url": ""
+    }
+  ]
+}

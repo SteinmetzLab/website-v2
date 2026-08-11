@@ -1,0 +1,543 @@
+<title>Steinmetz Lab — Mockup D "Quiet"</title>
+
+<style>
+{{FONTS_SERIF}}
+
+/* ===========================================================================
+   MOCKUP D -- "QUIET"
+   The opposite register from A, B and C. Those pitch a scientist: big data, big
+   caps, live instrumentation. This one is written for a reader who is deciding
+   whether this work is worth supporting -- and it earns attention by withholding
+   rather than performing.
+
+   Colour  Paper, deep navy-black ink, one burgundy accent used perhaps six times
+           on the page. The data figures are printed plates in a navy-to-burgundy
+           diverging ramp, not neon heatmaps.
+   Type    EB Garamond throughout, set large (20px body, 1.8 leading) -- readable
+           for older eyes and unhurried by design. IBM Plex Sans appears only in
+           small letterspaced caps for plate labels and section marks.
+   Layout  A single 36rem measure, centred, with plates breaking wider. Nothing is
+           carded, nothing is boxed. Rules and space do the work.
+   Motion  Almost none. Slow fades; the cortex plate breathes at half speed. No
+           sweeping bars, no glow, nothing that asks to be watched.
+   =========================================================================== */
+
+:root {
+  --serif: 'SLSerif', Georgia, 'Times New Roman', serif;
+  --sans: 'SLS-plex', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SLMono', ui-monospace, Consolas, monospace;
+
+  --paper: #faf9f6;
+  --paper-2: #f1f0ea;
+  --ink: #131820;
+  --ink-2: #4c5462;
+  --ink-3: #838a96;
+  --rule: #e0ded6;
+  --accent: #6e2b33;
+  --accent-soft: #a85a57;
+
+  /* Diverging plate ramp: muted navy below baseline, warm grey at rest, burgundy above.
+     The midpoint is deliberately a shade darker than the paper -- set to the paper colour
+     itself, a resting cortex simply disappears into the page. */
+  --d0: #2f3b50;
+  --d1: #7e8a9c;
+  --d2: #d6d4ca;
+  --d3: #b06a64;
+  --d4: #5c2129;
+
+  --measure: 36rem;
+  --wide: 58rem;
+  --gut: clamp(1.5rem, 6vw, 4rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  /* A deliberately single-world design: this direction is a printed page, and it
+     stays one in either OS setting rather than inverting into something it is not. */
+  :root { color-scheme: light; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.25rem/1.8 var(--serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 400; letter-spacing: -0.01em; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+canvas { display: block; }
+
+.col { width: 100%; max-width: var(--measure); margin-inline: auto; padding-inline: var(--gut); }
+.wide { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--gut); }
+
+/* ---- small letterspaced marks, the only sans on the page ------------------ */
+.mark {
+  font: 400 0.6875rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.rule-mark {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.rule-mark::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+
+.lead { font-size: 1.5rem; line-height: 1.6; }
+.dim { color: var(--ink-2); }
+
+a.link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  padding-bottom: 0.5px;
+  transition: border-color 0.25s;
+}
+a.link:hover { border-bottom-color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* No scroll-triggered reveals in this direction. The other mockups fade content in as you
+   arrive at it; here the page is meant to behave like print -- everything is simply there. */
+
+/* ---- masthead ------------------------------------------------------------- */
+.mast {
+  padding-block: clamp(2rem, 5vw, 3.5rem) 0;
+}
+.mast__in {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.mast__id { display: flex; align-items: center; gap: 0.875rem; text-decoration: none; color: inherit; }
+.mast__id svg { width: 2.25rem; height: 2.25rem; color: var(--accent); flex: none; }
+.mast__name { font-size: 1.375rem; line-height: 1.1; letter-spacing: 0.005em; }
+.mast__sub { display: block; margin-top: 0.25rem; font: 400 0.625rem/1 var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+.mast__nav { display: flex; gap: 1.75rem; }
+.mast__nav a {
+  font: 400 0.75rem/1 var(--sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+.mast__nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+@media (max-width: 46rem) { .mast__nav { display: none; } }
+
+/* the one circuit trace on the page: a hairline under the masthead */
+.mast__trace { position: absolute; inset: auto 0 -1px 0; height: 14px; pointer-events: none; }
+.mast__trace .pcb__wire { stroke: var(--accent); stroke-width: 1; opacity: 0.5; }
+.mast__trace .pcb__pad { stroke: var(--accent); stroke-width: 1; opacity: 0.5; }
+
+/* ---- opening statement ---------------------------------------------------- */
+.opening { padding-block: clamp(4rem, 12vh, 8rem) clamp(3rem, 8vh, 5rem); }
+.opening h1 {
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  max-width: 20ch;
+}
+.opening h1 em { font-style: italic; color: var(--accent); }
+.opening p { margin-top: 2rem; max-width: 34ch; }
+
+/* ---- prose sections ------------------------------------------------------- */
+.sec { padding-block: clamp(2.5rem, 7vh, 4.5rem); }
+.sec h2 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); line-height: 1.3; margin-bottom: 1.5rem; }
+.sec p + p { margin-top: 1.5rem; }
+.sec--rule { border-top: 1px solid var(--rule); }
+
+/* ---- plates --------------------------------------------------------------- */
+.plate { padding-block: clamp(2.5rem, 6vh, 4rem); }
+.plate__frame {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+}
+.plate__frame canvas { width: 100%; aspect-ratio: 1; }
+.plate__frame--wide canvas { aspect-ratio: 21 / 9; }
+/* a square plate at full measure would dominate the page; keep it book-sized */
+.plate__frame--sq { max-width: 28rem; margin-inline: auto; }
+.plate__cap {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.875rem;
+  margin-top: 1rem;
+  font: 400 0.8125rem/1.65 var(--sans);
+  color: var(--ink-2);
+  max-width: 46rem;
+}
+.plate__no {
+  font: 400 0.6875rem/1.9 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* ---- pull quote ----------------------------------------------------------- */
+.quote {
+  padding-block: clamp(3rem, 8vh, 5rem);
+  text-align: center;
+}
+.quote blockquote {
+  margin: 0 auto;
+  max-width: 30ch;
+  font-style: italic;
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
+  line-height: 1.45;
+}
+.quote figcaption { margin-top: 1.5rem; }
+
+/* ---- people --------------------------------------------------------------- */
+.whos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.25rem 2.5rem;
+}
+.who { display: flex; align-items: center; gap: 0.875rem; }
+.who__face {
+  width: 2.75rem; height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+  filter: grayscale(1) contrast(1.02);
+}
+.who__face--none {
+  display: block;
+  background: var(--paper-2);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.who__t { display: grid; gap: 0.0625rem; min-width: 0; }
+.who__n { font-size: 1.0625rem; line-height: 1.3; }
+.who__r { font: 400 0.75rem/1.4 var(--sans); color: var(--ink-3); }
+
+/* ---- recognition ---------------------------------------------------------- */
+.honours { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.honours li {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 1.0625rem;
+}
+.honours li:last-child { border-bottom: 1px solid var(--rule); }
+.honours .yr { font: 400 0.8125rem/1.9 var(--sans); color: var(--ink-3); }
+
+/* ---- the ask -------------------------------------------------------------- */
+.ask { padding-block: clamp(3.5rem, 9vh, 6rem); background: var(--paper-2); border-block: 1px solid var(--rule); }
+.ask h2 { margin-bottom: 1.5rem; }
+.ask__ways { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1.25rem; }
+.ask__ways li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem; align-items: baseline; }
+.ask__ways .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); transform: translateY(-4px); }
+.ask__cta { margin-top: 2.5rem; }
+.btn {
+  display: inline-block;
+  font: 400 0.75rem/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 1.0625rem 2rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s;
+}
+.btn:hover { background: var(--accent); color: var(--paper); }
+
+/* ---- footer --------------------------------------------------------------- */
+.foot { padding-block: 3rem 3.5rem; }
+.foot__in { display: grid; gap: 1.5rem; }
+.foot__nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
+.foot__nav a { font: 400 0.75rem/1 var(--sans); letter-spacing: 0.08em; color: var(--ink-2); text-decoration: none; }
+.foot__nav a:hover { color: var(--accent); }
+.foot p { font-size: 0.9375rem; line-height: 1.7; color: var(--ink-3); }
+
+.pcb { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.pcb__wire { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.pcb__pad { fill: none; }
+
+.badge {
+  position: fixed;
+  left: 1rem; bottom: 1rem;
+  z-index: 90;
+  font: 400 0.625rem/1.4 var(--sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  border: 1px solid var(--rule);
+  backdrop-filter: blur(6px);
+  padding: 0.5rem 0.75rem;
+}
+@media (max-width: 46rem) { .badge { display: none; } }
+</style>
+
+<header class="mast">
+  <div class="wide mast__in">
+    <a class="mast__id" href="#top">
+      {{MARK}}
+      <span>
+        <span class="mast__name">Steinmetz Laboratory</span>
+        <span class="mast__sub">University of Washington</span>
+      </span>
+    </a>
+    <nav class="mast__nav" aria-label="Main">
+      <a href="#question">The question</a>
+      <a href="#work">The work</a>
+      <a href="#people">The people</a>
+      <a href="#support">Support</a>
+    </nav>
+    <div class="mast__trace" id="mastTrace"></div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ========================================================== OPENING -->
+  <section class="opening">
+    <div class="col">
+      <h1>A decision takes less than a second. We are learning to <em>watch it happen</em>.</h1>
+      <p class="lead dim">
+        In the time it takes to notice something and act on it, signals cross dozens of regions
+        of the brain. Until recently, no one could see more than a sliver of that. We can now
+        watch thousands of neurons at once, across the whole brain, while an animal decides.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================================================= THE QUESTION -->
+  <section class="sec" id="question">
+    <div class="col">
+      <p class="mark rule-mark">The question</p>
+      <h2>Where in the brain does a decision actually get made?</h2>
+      <p>
+        The honest answer, for most of the history of neuroscience, has been that we did not
+        know — not because the question was uninteresting, but because we could only listen to
+        a handful of cells at a time, in one place, and hope we had chosen the right place.
+      </p>
+      <p>
+        That constraint has lifted. New recording methods let us follow activity across the
+        entire brain simultaneously, at the resolution of single cells and single milliseconds.
+        The result has been humbling: signals we expected to find in one specialised region
+        turn out to be almost everywhere, and the interesting question becomes not
+        <em>where</em> a signal exists but <em>where it matters</em>.
+      </p>
+      <p>
+        These are the same circuits that falter in Parkinson's disease, in schizophrenia, in
+        the failures of attention that follow a stroke. Understanding how they work while they
+        are working is the prerequisite for understanding how they fail.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================== PLATE I -->
+  <section class="plate">
+    <div class="wide">
+      <div class="plate__frame plate__frame--sq">
+        <canvas id="plateCortex" aria-label="Activity across the surface of the mouse cortex"></canvas>
+      </div>
+      <div class="plate__cap">
+        <span class="plate__no">Plate I</span>
+        <span>
+          The surface of the cortex, both hemispheres, recorded thirty-five times a second while
+          the animal was awake. Warm regions are more active than the session average, cool
+          regions less. This is an unedited recording from our laboratory, reconstructed in your
+          browser as you read.
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= THE WORK -->
+  <section class="sec sec--rule" id="work">
+    <div class="col">
+      <p class="mark rule-mark">The work</p>
+      <h2>Three things had to be invented before this was possible.</h2>
+      <p>
+        The first is the probe. A silicon shank thinner than a human hair, carrying hundreds of
+        recording sites, that can be lowered through the brain and listen to every cell it
+        passes. We helped design and test these, and we build the software the rest of the
+        field uses to make sense of what they record.
+      </p>
+      <p>
+        The second is a way of seeing the whole surface at once, so that anything found in one
+        location can be placed in the context of everything else happening at that moment.
+      </p>
+      <p>
+        The third is the ability to interrupt. Watching tells you what a circuit does; switching
+        it off, briefly and precisely, tells you whether it mattered. Correlation is abundant in
+        the brain. Causation has to be earned.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================= PLATE II -->
+  <section class="plate">
+    <div class="wide">
+      <div class="plate__frame plate__frame--wide">
+        <canvas id="plateRaster" aria-label="Spikes from 141 simultaneously recorded neurons"></canvas>
+      </div>
+      <div class="plate__cap">
+        <span class="plate__no">Plate II</span>
+        <span>
+          One hundred and forty-one neurons, recorded at the same instant from a single probe.
+          Every mark is one cell firing once. Ninety seconds of a recording made in this
+          laboratory; the rows are ordered by depth along the probe.
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ QUOTE -->
+  <section class="quote">
+    <div class="col">
+      <figure style="margin:0">
+        <blockquote>
+          Signals we assumed were local turned out to be nearly everywhere. That was not the
+          answer we expected, and it changed the question.
+        </blockquote>
+        <figcaption class="mark">Nick Steinmetz</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =============================================================== PEOPLE -->
+  <section class="sec sec--rule" id="people">
+    <div class="wide">
+      <p class="mark rule-mark">The people</p>
+      <h2 style="max-width:24ch">Most of what a laboratory produces is people.</h2>
+      <p style="max-width:34ch; margin-bottom:2.5rem">
+        Eighteen at present — postdoctoral scientists, graduate students, undergraduates and
+        high-school students, several of whom will run laboratories of their own. Two who
+        trained here now hold faculty positions.
+      </p>
+      <ul class="whos">
+        {{PEOPLE_QUIET}}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========================================================== RECOGNITION -->
+  <section class="sec sec--rule">
+    <div class="col">
+      <p class="mark rule-mark">Recognition</p>
+      <ul class="honours">
+        <li><span class="yr">2026</span><span>Goldwater Scholarship, awarded to an undergraduate in the laboratory</span></li>
+        <li><span class="yr">2022</span><span>HHMI Hanna Gray Fellowship, awarded to a postdoctoral scientist here</span></li>
+        <li><span class="yr">2022</span><span>National Science Foundation CAREER Award</span></li>
+        <li><span class="yr">2020</span><span>Pew Biomedical Scholars Award</span></li>
+        <li><span class="yr">2020</span><span>Klingenstein&ndash;Simons Fellowship Award in Neuroscience</span></li>
+        <li><span class="yr">2019</span><span>Elected to the International Brain Laboratory, a twenty-two laboratory collaboration</span></li>
+      </ul>
+      <p class="dim" style="margin-top:2rem; font-size:1.0625rem">
+        Current work is supported by the National Institutes of Health, the National Science
+        Foundation and the Simons Foundation.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================== SUPPORT -->
+  <section class="ask" id="support">
+    <div class="col">
+      <p class="mark rule-mark">Support this work</p>
+      <h2>Federal funding decides what is safe. Private support decides what is possible.</h2>
+      <p>
+        Grants are awarded for work that can be justified in advance. The findings we are
+        proudest of came from experiments we could not have promised would work. Philanthropic
+        support is what lets a laboratory take that kind of risk — and what lets a graduate
+        student follow an unexpected result rather than abandon it.
+      </p>
+      <ul class="ask__ways">
+        <li><span class="dot" aria-hidden="true"></span><span><strong>A named graduate fellowship</strong> frees a student from teaching obligations for a year and lets them commit to a single hard problem.</span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>Instrumentation</strong> — a recording rig, a microscope — outlasts any individual grant and serves every project that follows.</span></li>
+        <li><span class="dot" aria-hidden="true"></span><span><strong>Unrestricted support</strong> is the rarest and most valuable, because it can be spent on the idea that has not been justified yet.</span></li>
+      </ul>
+      <p class="ask__cta"><a class="btn" href="#">Arrange a conversation</a></p>
+      <p class="dim" style="margin-top:1.75rem; font-size:0.9375rem">
+        Gifts are made through the University of Washington Foundation. We are glad to host
+        visitors in the laboratory.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================= SELECTED -->
+  <section class="sec" id="reading">
+    <div class="col">
+      <p class="mark rule-mark">Further reading</p>
+      <ul class="honours">
+        <li><span class="yr">Nature</span><span><a class="link" href="https://doi.org/10.1038/s41586-026-10443-5">Prefrontal to ventral tegmental area dynamics drive contingency degradation</a></span></li>
+        <li><span class="yr">Neuron</span><span><a class="link" href="https://doi.org/10.1016/j.neuron.2026.04.003">The midbrain reticular formation in contextual control of perceptual decisions</a></span></li>
+        <li><span class="yr">Nat Rev</span><span><a class="link" href="https://doi.org/10.1038/s41583-026-01042-4">Large-scale electrophysiology at single-spike resolution</a></span></li>
+      </ul>
+      <p class="dim" style="margin-top:1.75rem; font-size:1.0625rem">
+        A complete list of seventy publications, and the data behind them, is
+        <a class="link" href="#">freely available</a>.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wide foot__in" style="border-top:1px solid var(--rule); padding-top:2rem">
+    <nav class="foot__nav" aria-label="Footer">
+      <a href="#question">The question</a>
+      <a href="#work">The work</a>
+      <a href="#people">The people</a>
+      <a href="#reading">Publications</a>
+      <a href="#support">Support</a>
+      <a href="#">Contact</a>
+    </nav>
+    <p>
+      Department of Neurobiology &amp; Biophysics, Box 357290, University of Washington,
+      Seattle, Washington 98195.<br>
+      Design mockup — the two plates are unedited recordings from the laboratory.
+    </p>
+  </div>
+</footer>
+
+<div class="badge">Mockup D &middot; “Quiet”</div>
+
+<script>
+const RASTER = {{DATA:raster}};
+const WIDEFIELD = {{DATA:widefield}};
+{{PARTIAL:engine.js}}
+
+document.documentElement.classList.add('js');
+
+const raster = SL.decodeRaster(RASTER);
+const wf = SL.decodeWidefield(WIDEFIELD);
+
+/* Plate I -- the cortex, at half speed and on a printed-plate ramp. */
+SL.widefield(document.getElementById('plateCortex'), wf, {
+  speed: 0.5, gain: 1.35, fit: 'contain',
+});
+
+/* Plate II -- the raster, drifting slowly. Spikes are drawn from the upper half of the
+   ramp only, so they sit as burgundy marks on paper rather than picking up the cool end. */
+SL.raster(document.getElementById('plateRaster'), raster, {
+  mode: 'scroll', spanS: 22, speed: 0.5, dotW: 1.3, dotAlpha: 0.9,
+  shadeLo: 150, shadeHi: 255, padTop: 0.03, padBottom: 0.03,
+});
+
+/* The single circuit trace, under the masthead. */
+SL.pcbRule(document.getElementById('mastTrace'));
+document.getElementById('mastTrace').classList.add('pcb--on');
+
+</script>

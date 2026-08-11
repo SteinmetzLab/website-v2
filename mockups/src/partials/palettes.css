@@ -1,0 +1,168 @@
+/* ---------------------------------------------------------------------------
+   Four candidate palettes, shared by all three mockups.
+
+   A palette only publishes raw material:
+     --deep/--dark/--dark-2   dark grounds, deepest first
+     --di/--di-2/--di-3       ink on dark ground (primary/secondary/tertiary)
+     --drule                  hairline on dark
+     --lite/--lite-2          light grounds
+     --li/--li-2/--li-3       ink on light ground
+     --lrule                  hairline on light
+     --accent/--accent-2      the two brand accents
+     --on-accent              ink that sits on --accent
+     --d0 ... --d4              ordered ramp for data (canvas colourmaps read these)
+
+   Each mockup maps these onto its own semantic tokens, so the same palette can
+   drive a light-bodied editorial page and a fully dark one.
+   Neutrals are hue-biased toward each palette's accent rather than pure grey.
+--------------------------------------------------------------------------- */
+
+/* 1 -- SIGNAL : deep indigo ground, electric cyan signal */
+[data-palette="indigo"] {
+  --deep: #05080f;
+  --dark: #0a1020;
+  --dark-2: #111c33;
+  --di: #eef2fb;
+  --di-2: #a9b6d4;
+  --di-3: #6d7b9c;
+  --drule: #1e2b47;
+  --lite: #f6f7fb;
+  --lite-2: #eaeef7;
+  --li: #0b1120;
+  --li-2: #414c68;
+  --li-3: #6f7a94;
+  --lrule: #d5dcec;
+  --accent: #17c8e0;
+  --accent-2: #6d80ff;
+  --on-accent: #04141a;
+  --d0: #070d1c;
+  --d1: #1b3a86;
+  --d2: #1f79c4;
+  --d3: #2fd3ec;
+  --d4: #e6fbff;
+}
+
+/* 2 -- PLASMA : the widefield calcium palette, violet through magenta to amber */
+[data-palette="plasma"] {
+  --deep: #0d0418;
+  --dark: #170a29;
+  --dark-2: #23123c;
+  --di: #f7edfb;
+  --di-2: #c5aad8;
+  --di-3: #8f76a5;
+  --drule: #33194f;
+  --lite: #faf7fc;
+  --lite-2: #f2ecf7;
+  --li: #190a2a;
+  --li-2: #4c3a60;
+  --li-3: #77678a;
+  --lrule: #e4d9ee;
+  --accent: #ff2e93;
+  --accent-2: #ffb42e;
+  --on-accent: #1d0413;
+  --d0: #0d0221;
+  --d1: #6a00a8;
+  --d2: #b12a90;
+  --d3: #f2686a;
+  --d4: #fcce4b;
+}
+
+/* 3 -- PROJECTION : teal and coral, lifted from the axon-projection figures */
+[data-palette="teal"] {
+  --deep: #010a08;
+  --dark: #041613;
+  --dark-2: #07221e;
+  --di: #ebf7f4;
+  --di-2: #9fc4bd;
+  --di-3: #6b8f89;
+  --drule: #113631;
+  --lite: #f5faf8;
+  --lite-2: #eaf3f0;
+  --li: #05201c;
+  --li-2: #3a5751;
+  --li-3: #67827c;
+  --lrule: #d2e5e0;
+  --accent: #14b899;
+  --accent-2: #ff6f4e;
+  --on-accent: #02201a;
+  --d0: #010a08;
+  --d1: #0e5c52;
+  --d2: #2ec4a8;
+  --d3: #ffab8f;
+  --d4: #ff6f4e;
+}
+
+/* 4 -- ATLAS : near-monochrome page, all colour comes from the data itself */
+[data-palette="atlas"] {
+  --deep: #07070a;
+  --dark: #0d0d11;
+  --dark-2: #17171d;
+  --di: #f1f1f4;
+  --di-2: #a6a6b0;
+  --di-3: #71717c;
+  --drule: #23232b;
+  --lite: #f8f8f9;
+  --lite-2: #eeeef1;
+  --li: #0d0d11;
+  --li-2: #45454f;
+  --li-3: #71717c;
+  --lrule: #dededf;
+  --accent: #e9e9ee;
+  --accent-2: #8b93ff;
+  --on-accent: #0d0d11;
+  /* Anchored dark at the low end: without it a diverging quantity like dF/F puts its
+     resting baseline in the middle of the ramp, and the whole frame reads acid green. */
+  --d0: #0a0a11;
+  --d1: #3b4bc4;
+  --d2: #2bb6c8;
+  --d3: #8ad24a;
+  --d4: #f4d64a;
+}
+
+/* ---- the palette switcher itself (a mockup affordance, not site furniture) -- */
+.pal {
+  position: fixed;
+  z-index: 90;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--drule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--deep) 88%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.45);
+}
+.pal__label {
+  font: 700 0.5625rem/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--di-3);
+  padding-inline: 0.25rem 0.125rem;
+}
+.pal__btn {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  border: 1px solid var(--drule);
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.pal__btn:hover { transform: scale(1.14); }
+.pal__btn[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--deep), 0 0 0 3.5px currentColor;
+}
+.pal__btn:focus-visible { outline: 2px solid var(--di); outline-offset: 3px; }
+.pal__btn--indigo { background: linear-gradient(135deg, #0a1020 40%, #17c8e0); color: #17c8e0; }
+.pal__btn--plasma { background: linear-gradient(135deg, #170a29 40%, #ff2e93); color: #ff2e93; }
+.pal__btn--teal   { background: linear-gradient(135deg, #041613 40%, #14b899); color: #14b899; }
+.pal__btn--atlas  { background: linear-gradient(135deg, #0d0d11 40%, #f4569a 70%, #2bb6c8); color: #e9e9ee; }
+
+@media (max-width: 34rem) {
+  .pal { bottom: 0.5rem; right: 0.5rem; padding: 0.375rem 0.5rem; }
+  .pal__label { display: none; }
+}

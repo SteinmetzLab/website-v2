@@ -1,0 +1,18 @@
+<!-- Mockup-only controls: palette, typeface, theme, raster mode. A shipped page
+     omits this partial, which fixes whatever a-boot.js set as the defaults. -->
+<div class="pal" role="group" aria-label="Mockup controls">
+  <select class="pal__sel" id="fontSel" aria-label="Typeface">
+    <option value="plex">IBM Plex</option>
+    <option value="barlow">Barlow</option>
+    <option value="archivo">Archivo</option>
+    <option value="opensans">Open Sans</option>
+  </select>
+  <button class="pal__theme" id="modeBtn" aria-pressed="true" title="Switch the raster between sweeping and scrolling">Sweep</button>
+  <button class="pal__theme" id="themeBtn" aria-pressed="true" title="Switch between the light and dark body">Dark</button>
+  <span class="pal__label">Palette</span>
+  <button class="pal__btn pal__btn--indigo" data-pal="indigo" aria-pressed="false" title="Signal — indigo &amp; cyan"></button>
+  <button class="pal__btn pal__btn--plasma" data-pal="plasma" aria-pressed="false" title="Plasma — violet, magenta &amp; amber"></button>
+  <button class="pal__btn pal__btn--teal" data-pal="teal" aria-pressed="true" title="Projection — green &amp; orange"></button>
+  <button class="pal__btn pal__btn--atlas" data-pal="atlas" aria-pressed="false" title="Atlas — monochrome page, spectral data"></button>
+</div>
+<div class="badge">Mockup A &middot; “Signal”</div>

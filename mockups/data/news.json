@@ -1,0 +1,348 @@
+{
+ "_comment": "Lab news, newest first. Dates are YYYY-MM (a bare YYYY also works and sorts to the end of its year). Paper entries cover every 'selected' paper since 2019 in data/pubs.json; their months come from Crossref. 'kind' drives the label and filter: paper | award | lab. Keep notes to one short sentence.",
+ "item": [
+  {
+   "date": "2026-06",
+   "kind": "paper",
+   "title": "Brain-wide topographic coordination of rotating waves",
+   "note": "Ye et al., Science.",
+   "link": "https://doi.org/10.1126/science.adx1369"
+  },
+  {
+   "date": "2026-05",
+   "kind": "paper",
+   "title": "Prefrontal to ventral tegmental area dynamics drive contingency degradation",
+   "note": "With the Stuber lab, in Nature.",
+   "link": "https://doi.org/10.1038/s41586-026-10443-5"
+  },
+  {
+   "date": "2026-05",
+   "kind": "paper",
+   "title": "The midbrain reticular formation in contextual control of perceptual decisions",
+   "note": "Jordan Shaker's thesis work, in Neuron.",
+   "link": "https://doi.org/10.1016/j.neuron.2026.04.003"
+  },
+  {
+   "date": "2026-05",
+   "kind": "paper",
+   "title": "Large-scale electrophysiology at single-spike resolution",
+   "note": "A review with Josh Siegle in Nature Reviews Neuroscience.",
+   "link": "https://doi.org/10.1038/s41583-026-01042-4"
+  },
+  {
+   "date": "2026-03",
+   "kind": "paper",
+   "title": "A flexible quality metric for electrophysiological recordings",
+   "note": "Preprint with the IBL, across brain regions and species.",
+   "link": "https://doi.org/10.1101/2026.03.06.710130"
+  },
+  {
+   "date": "2026-02",
+   "kind": "lab",
+   "title": "Simons Foundation support for IBL infrastructure",
+   "note": "Extending the International Brain Laboratory core to new collaborations."
+  },
+  {
+   "date": "2026-01",
+   "kind": "award",
+   "title": "Rachel Yin named a Goldwater Scholar"
+  },
+  {
+   "date": "2026-01",
+   "kind": "paper",
+   "title": "Visualizing and identifying electrophysiological cell types in vivo",
+   "note": "In Nature Communications.",
+   "link": "https://doi.org/10.1038/s41467-026-71331-0"
+  },
+  {
+   "date": "2025-10",
+   "kind": "paper",
+   "title": "Benchmarking Probabilistic Time Series Forecasting Models on Neural Activity",
+   "note": "Lu et al., arXiv preprint.",
+   "link": "https://doi.org/10.48550/arXiv.2510.18037"
+  },
+  {
+   "date": "2025-10",
+   "kind": "paper",
+   "title": "Ultra-high-density Neuropixels probes improve detection and identification in neuronal recordings",
+   "note": "In Neuron.",
+   "link": "https://doi.org/10.1016/j.neuron.2025.08.030"
+  },
+  {
+   "date": "2025-09",
+   "kind": "paper",
+   "title": "Brain-wide representations of prior information in mouse decision-making",
+   "note": "Findling et al., Nature.",
+   "link": "https://doi.org/10.1038/s41586-025-09226-1"
+  },
+  {
+   "date": "2025-09",
+   "kind": "paper",
+   "title": "A brain-wide map of neural activity during complex behaviour",
+   "note": "The International Brain Laboratory, Nature.",
+   "link": "https://doi.org/10.1038/s41586-025-09235-0"
+  },
+  {
+   "date": "2025-08",
+   "kind": "paper",
+   "title": "Global and local origins of trial-to-trial spike count variability in visual cortex",
+   "note": "Li et al., bioRxiv preprint.",
+   "link": "https://doi.org/10.1101/2025.08.08.669442"
+  },
+  {
+   "date": "2025-07",
+   "kind": "lab",
+   "title": "Nick promoted to Associate Professor"
+  },
+  {
+   "date": "2025-05",
+   "kind": "paper",
+   "title": "Reproducibility of in-vivo electrophysiological measurements in mice",
+   "note": "The International Brain Laboratory, eLife.",
+   "link": "https://doi.org/10.7554/eLife.100840.3"
+  },
+  {
+   "date": "2025-04",
+   "kind": "award",
+   "title": "Rachel Yin wins a Mary Gates Scholarship and a Simons SURFiN fellowship"
+  },
+  {
+   "date": "2025-03",
+   "kind": "paper",
+   "title": "DREDge: robust motion correction for high-density extracellular recordings across species",
+   "note": "Windolf et al., Nature Methods.",
+   "link": "https://doi.org/10.1038/s41592-025-02614-5"
+  },
+  {
+   "date": "2025-02",
+   "kind": "paper",
+   "title": "Neuropixels Opto: Combining high-resolution electrophysiology and optogenetics",
+   "note": "In Nature Methods.",
+   "link": "https://doi.org/10.1101/2025.02.04.636286"
+  },
+  {
+   "date": "2024-11",
+   "kind": "paper",
+   "title": "Simultaneous mesoscopic measurement and manipulation of mouse cortical activity",
+   "note": "Matveev et al., bioRxiv preprint.",
+   "link": "https://doi.org/10.1101/2024.11.01.621418"
+  },
+  {
+   "date": "2023-12",
+   "kind": "award",
+   "title": "Anna Li wins an NIH F31 fellowship"
+  },
+  {
+   "date": "2023-10",
+   "kind": "paper",
+   "title": "Pinpoint: trajectory planning for multi-probe electrophysiology and injections in an interactive web-based 3D environment",
+   "note": "Birman et al., eLife.",
+   "link": "https://elifesciences.org/reviewed-preprints/91662"
+  },
+  {
+   "date": "2023-05",
+   "kind": "award",
+   "title": "Jordan Shaker wins an NIH F30 fellowship",
+   "note": "For work on the midbrain reticular nucleus in vision and decision-making."
+  },
+  {
+   "date": "2023-03",
+   "kind": "award",
+   "title": "Kenneth Yang wins a Mary Gates Scholarship",
+   "note": "For the Pinpoint 'co-pilot' extension."
+  },
+  {
+   "date": "2023-03",
+   "kind": "paper",
+   "title": "Data architecture for a large-scale neuroscience collaboration",
+   "note": "The International Brain Laboratory, Nature Methods.",
+   "link": "https://www.nature.com/articles/s41592-022-01742-6"
+  },
+  {
+   "date": "2023-02",
+   "kind": "paper",
+   "title": "A stable, distributed code for cue value in mouse cortex during reward learning",
+   "note": "Ottenheimer et al., eLife.",
+   "link": "https://elifesciences.org/articles/84604"
+  },
+  {
+   "date": "2022-09",
+   "kind": "award",
+   "title": "Anna Bowen wins an HHMI Hanna Gray Fellowship"
+  },
+  {
+   "date": "2022-08",
+   "kind": "paper",
+   "title": "A scale-dependent measure of system dimensionality",
+   "note": "Recanatesi et al., Patterns.",
+   "link": "https://doi.org/10.1016/j.patter.2022.100555"
+  },
+  {
+   "date": "2022-04",
+   "kind": "award",
+   "title": "Kai Nylund wins a Mary Gates Scholarship",
+   "note": "For visualisation work in Pinpoint."
+  },
+  {
+   "date": "2022-01",
+   "kind": "award",
+   "title": "NSF CAREER Award",
+   "note": "Five years of support for work on distributed spatial neural dynamics."
+  },
+  {
+   "date": "2022-01",
+   "kind": "paper",
+   "title": "The importance of accounting for movement when relating neuronal activity to sensory and cognitive processes",
+   "note": "Zagha et al., Journal of Neuroscience.",
+   "link": "https://doi.org/10.1523/JNEUROSCI.1919-21.2021"
+  },
+  {
+   "date": "2022-01",
+   "kind": "paper",
+   "title": "Cortical state dynamics and selective attention define the spatial pattern of correlated variability in neocortex",
+   "note": "Shi et al., Nature Communications.",
+   "link": "https://www.nature.com/articles/s41467-021-27724-4"
+  },
+  {
+   "date": "2021-09",
+   "kind": "paper",
+   "title": "CellExplorer: A framework for visualizing and characterizing single neurons",
+   "note": "Petersen et al., Neuron.",
+   "link": "https://doi.org/10.1016/j.neuron.2021.09.002"
+  },
+  {
+   "date": "2021-08",
+   "kind": "paper",
+   "title": "Go with the FLOW: Visualizing spatiotemporal dynamics in optical widefield calcium imaging",
+   "note": "Linden et al., J R Soc Interface.",
+   "link": "https://royalsocietypublishing.org/doi/10.1098/rsif.2021.0523"
+  },
+  {
+   "date": "2021-07",
+   "kind": "paper",
+   "title": "Sensory coding and the causal impact of mouse cortex in a visual decision",
+   "note": "Zatka-Haas et al., eLife.",
+   "link": "https://elifesciences.org/articles/63163"
+  },
+  {
+   "date": "2021-04",
+   "kind": "award",
+   "title": "David Ottenheimer wins an NIH F32 fellowship"
+  },
+  {
+   "date": "2021-04",
+   "kind": "paper",
+   "title": "Neuropixels 2.0: A miniaturized high-density probe for stable, long-term brain recordings",
+   "note": "Steinmetz et al., Science.",
+   "link": "https://science.sciencemag.org/content/372/6539/eabf4588"
+  },
+  {
+   "date": "2021-01",
+   "kind": "paper",
+   "title": "Striatal activity topographically reflects cortical activity",
+   "note": "Peters et al., Nature.",
+   "link": "https://www.nature.com/articles/s41586-020-03166-8"
+  },
+  {
+   "date": "2021-01",
+   "kind": "paper",
+   "title": "Top-down coordination of local cortical state during selective attention",
+   "note": "Van Kempen et al., Neuron.",
+   "link": "https://doi.org/10.1016/j.neuron.2020.12.013"
+  },
+  {
+   "date": "2020-10",
+   "kind": "award",
+   "title": "Dan Birman wins a Washington Research Foundation fellowship"
+  },
+  {
+   "date": "2020-10",
+   "kind": "paper",
+   "title": "Cortical state fluctuations during sensory decision making",
+   "note": "Jacobs et al., Current Biology.",
+   "link": "https://doi.org/10.1016/j.cub.2020.09.067"
+  },
+  {
+   "date": "2020-06",
+   "kind": "award",
+   "title": "Pew Biomedical Scholar"
+  },
+  {
+   "date": "2020-05",
+   "kind": "award",
+   "title": "Klingenstein-Simons Fellowship Award in Neuroscience"
+  },
+  {
+   "date": "2020-05",
+   "kind": "paper",
+   "title": "Arousal modulates retinal output",
+   "note": "Schroeder et al., Neuron.",
+   "link": "https://www.sciencedirect.com/science/article/pii/S0896627320303184"
+  },
+  {
+   "date": "2019-11",
+   "kind": "paper",
+   "title": "Distributed coding of choice, action, and engagement across the mouse brain",
+   "note": "Steinmetz et al., Nature.",
+   "link": "https://www.nature.com/articles/s41586-019-1787-x"
+  },
+  {
+   "date": "2019-10",
+   "kind": "paper",
+   "title": "New perspectives on dimensionality and variability from large-scale cortical dynamics",
+   "note": "Engel et al., Curr Opin Neurobiol.",
+   "link": "https://doi.org/10.1016/j.conb.2019.09.003"
+  },
+  {
+   "date": "2019-06",
+   "kind": "paper",
+   "title": "High-dimensional geometry of population responses in visual cortex",
+   "note": "Stringer et al., Nature.",
+   "link": "https://www.nature.com/articles/s41586-019-1346-5"
+  },
+  {
+   "date": "2019-06",
+   "kind": "paper",
+   "title": "Laminar Segregation of Sensory Coding and Behavioral Readout in Macaque V4",
+   "note": "Pettine et al., PNAS.",
+   "link": "https://www.pnas.org/content/early/2019/06/26/1819398116.short"
+  },
+  {
+   "date": "2019-04",
+   "kind": "lab",
+   "title": "The lab joins the International Brain Laboratory",
+   "note": "Nick elected as its twenty-second member, on the Physiology Working Group."
+  },
+  {
+   "date": "2019-04",
+   "kind": "paper",
+   "title": "Spontaneous behaviors drive multidimensional, brain-wide population activity",
+   "note": "Stringer et al., Science.",
+   "link": "https://science.sciencemag.org/content/364/6437/eaav7893"
+  },
+  {
+   "date": "2019-04",
+   "kind": "paper",
+   "title": "The impact of bilateral ongoing activity on evoked responses in mouse cortex",
+   "note": "Shimaoka et al., eLife.",
+   "link": "https://elifesciences.org/articles/43533"
+  },
+  {
+   "date": "2019-02",
+   "kind": "award",
+   "title": "Next Generation Leader, Allen Institute for Brain Science"
+  },
+  {
+   "date": "2019-01",
+   "kind": "lab",
+   "title": "The lab opens at the University of Washington"
+  },
+  {
+   "date": "2019-01",
+   "kind": "paper",
+   "title": "Distinct structure of cortical population activity on fast and infraslow timescales",
+   "note": "Okun et al., Cerebral Cortex.",
+   "link": "https://academic.oup.com/cercor/advance-article/doi/10.1093/cercor/bhz023/5364043"
+  }
+ ]
+}

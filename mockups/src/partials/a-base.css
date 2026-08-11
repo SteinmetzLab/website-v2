@@ -1,0 +1,306 @@
+{{FONTS}}
+{{PARTIAL:palettes.css}}
+
+/* ===========================================================================
+   MOCKUP A -- "SIGNAL"
+   Light editorial body, dark full-bleed bands where the live data lives.
+
+   Type   SLCond (Open Sans Condensed Bold) for condensed caps display -- it
+          echoes the lockup in the lab logo. SLSans for reading. System mono
+          for anything with a unit attached.
+   Layout One 1180px measure. Dark bands break the page into acts: hero,
+          the scrubber, the footer. Everything between them is white and quiet.
+   =========================================================================== */
+
+/* ---- typeface options -----------------------------------------------------
+   All four are OFL/Apache licensed and self-hostable; the page embeds subsets, so
+   nothing is fetched from a font CDN. One monospace (IBM Plex Mono) is shared, since
+   it only ever carries numbers, units and captions.                            */
+:root {
+  --cond: 'SLC-plex', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --sans: 'SLS-plex', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'SLMono', ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, monospace;
+
+  --bg: var(--lite);
+  --bg-2: var(--lite-2);
+  --fg: var(--li);
+  --fg-2: var(--li-2);
+  --fg-3: var(--li-3);
+  --rule: var(--lrule);
+
+  --measure: 74rem;
+  --gut: clamp(1.25rem, 4vw, 3rem);
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0: clamp(0.96rem, 0.93rem + 0.15vw, 1.05rem);
+  --step-1: clamp(1.12rem, 1.05rem + 0.35vw, 1.35rem);
+  --step-2: clamp(1.45rem, 1.3rem + 0.7vw, 1.95rem);
+  --step-3: clamp(2rem, 1.6rem + 1.9vw, 3.1rem);
+  --step-4: clamp(2.6rem, 1.8rem + 4.4vw, 5.6rem);
+}
+
+:root[data-font="opensans"] { --cond: 'SLC-opensans', sans-serif; --sans: 'SLS-opensans', sans-serif; }
+:root[data-font="plex"]     { --cond: 'SLC-plex', sans-serif;     --sans: 'SLS-plex', sans-serif; }
+:root[data-font="barlow"]   { --cond: 'SLC-barlow', sans-serif;   --sans: 'SLS-barlow', sans-serif; }
+:root[data-font="archivo"]  { --cond: 'SLC-archivo', sans-serif;  --sans: 'SLS-archivo', sans-serif; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--dark); --bg-2: var(--dark-2);
+    --fg: var(--di); --fg-2: var(--di-2); --fg-3: var(--di-3);
+    --rule: var(--drule);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: var(--dark); --bg-2: var(--dark-2);
+  --fg: var(--di); --fg-2: var(--di-2); --fg-3: var(--di-3);
+  --rule: var(--drule);
+}
+:root[data-theme="light"] {
+  --bg: var(--lite); --bg-2: var(--lite-2);
+  --fg: var(--li); --fg-2: var(--li-2); --fg-3: var(--li-3);
+  --rule: var(--lrule);
+}
+
+/* a band that is dark regardless of theme */
+.on-dark {
+  --bg: var(--deep); --bg-2: var(--dark-2);
+  --fg: var(--di); --fg-2: var(--di-2); --fg-3: var(--di-3);
+  --rule: var(--drule);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 var(--step-0)/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+canvas { display: block; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+/* ---- shared type devices ------------------------------------------------- */
+.eyebrow {
+  font: 700 0.6875rem/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ---- PCB traces -----------------------------------------------------------
+   Borrowed from the retreat poster and the logo: a trace runs out from a label,
+   steps up at 45 degrees and terminates in an open pad. Geometry is generated in
+   JS at the element's real pixel size so pads stay circular.                  */
+.pcb { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.pcb__wire {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+}
+.pcb__pad { fill: none; stroke: var(--rule); stroke-width: 1.25; opacity: 0; }
+.is-in .pcb__wire, .pcb--on .pcb__wire {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.15s cubic-bezier(.2,.7,.2,1);
+}
+.is-in .pcb__pad, .pcb--on .pcb__pad { opacity: 1; transition: opacity 0.45s ease 0.85s; }
+@media (prefers-reduced-motion: reduce) {
+  .pcb__wire { stroke-dashoffset: 0; transition: none; }
+  .pcb__pad { opacity: 1; transition: none; }
+}
+.trace { position: relative; flex: 1; align-self: stretch; min-height: 1.25rem; min-width: 3rem; }
+.eyebrow .trace .pcb__wire, .eyebrow .trace .pcb__pad { stroke: var(--accent); }
+
+/* corner traces on cards and panels */
+.has-corner { position: relative; }
+.has-corner > .pcb { z-index: 2; }
+.has-corner > .pcb .pcb__wire,
+.has-corner > .pcb .pcb__pad { stroke: color-mix(in srgb, var(--accent) 62%, transparent); }
+.display {
+  font-family: var(--cond);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+  line-height: 0.94;
+}
+.meta {
+  font: 400 0.75rem/1.5 var(--mono);
+  color: var(--fg-3);
+  letter-spacing: 0.01em;
+}
+.lede { font-size: var(--step-1); line-height: 1.55; color: var(--fg-2); max-width: 46ch; }
+
+/* ---- reveal ---------------------------------------------------------------
+   Gated on .js so that if the script never runs the content is simply visible
+   rather than stuck at opacity 0.                                            */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(1.1rem);
+  transition: opacity 0.75s cubic-bezier(.2,.7,.2,1), transform 0.75s cubic-bezier(.2,.7,.2,1);
+}
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---- header -------------------------------------------------------------- */
+.hd {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 70;
+  transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s;
+  border-bottom: 1px solid transparent;
+}
+.hd__in {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  height: 4.25rem;
+  position: relative;
+  z-index: 1;
+}
+/* Once you have scrolled past the hero the bar keeps a sliver of the recording
+   running behind the nav, so the page never stops showing data. */
+.hd__ribbon {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  /* confined to the gap between the wordmark and the nav, so it never sits under text */
+  -webkit-mask-image: linear-gradient(to right, transparent 13rem, #000 19rem, #000 48%, transparent 60%);
+  mask-image: linear-gradient(to right, transparent 13rem, #000 19rem, #000 48%, transparent 60%);
+}
+.hd.is-stuck .hd__ribbon { opacity: 0.5; }
+@media (max-width: 62rem) { .hd__ribbon { display: none; } }
+.hd.is-stuck {
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom-color: var(--rule);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  text-decoration: none;
+  color: var(--di);
+  flex: none;
+}
+.hd.is-stuck .brand { color: var(--fg); }
+.brand svg { width: 1.75rem; height: 1.75rem; flex: none; }
+.brand__name {
+  font-family: var(--cond);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.0625rem;
+  letter-spacing: 0.035em;
+  line-height: 1;
+}
+.brand__sub {
+  display: block;
+  font: 400 0.5rem/1 var(--mono);
+  letter-spacing: 0.14em;
+  opacity: 0.62;
+  margin-top: 0.125rem;
+}
+.nav { display: flex; gap: clamp(0.75rem, 1.8vw, 1.6rem); margin-left: auto; align-items: center; }
+.nav a {
+  font: 600 0.8125rem/1 var(--sans);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  color: var(--di-2);
+  padding: 0.5rem 0;
+  position: relative;
+}
+.hd.is-stuck .nav a { color: var(--fg-2); }
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 100%; bottom: 0.125rem;
+  height: 1.5px;
+  background: var(--accent);
+  transition: right 0.28s cubic-bezier(.2,.7,.2,1);
+}
+.nav a:hover { color: var(--accent); }
+.nav a:hover::after { right: 0; }
+.nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
+
+/* ---- menu button + small-screen nav -------------------------------------- */
+.burger {
+  display: none;
+  margin-left: auto;
+  width: 2.5rem; height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  flex-direction: column;
+  background: transparent;
+  border: 1px solid var(--drule);
+  color: var(--di);
+  cursor: pointer;
+}
+.hd.is-stuck .burger { border-color: var(--rule); color: var(--fg); }
+.burger span {
+  display: block;
+  width: 1rem; height: 1.5px;
+  background: currentColor;
+  transition: transform 0.3s cubic-bezier(.2,.7,.2,1), opacity 0.2s;
+}
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(0.4375rem) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-0.4375rem) rotate(-45deg); }
+.burger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 62rem) {
+  .burger { display: flex; }
+  .nav {
+    position: fixed;
+    inset: 4.25rem 0 auto 0;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.5rem 0 1rem;
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    max-height: calc(100svh - 4.25rem);
+    overflow-y: auto;
+  }
+  .nav.is-open { opacity: 1; transform: none; visibility: visible; }
+  .nav a {
+    color: var(--fg);
+    padding: 0.875rem var(--gut);
+    border-bottom: 1px solid var(--rule);
+    font-size: 1rem;
+  }
+  .nav a::after { display: none; }
+}
+

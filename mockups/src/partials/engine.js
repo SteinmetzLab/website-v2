@@ -791,7 +791,10 @@ const SL = (() => {
         if (el.dataset.count) countUp(el.querySelector('[data-count-target]') || el);
         io.unobserve(el);
       }),
-      { threshold: 0.16, rootMargin: '0px 0px -8% 0px' }
+      // Threshold 0, not a fraction: an element taller than the viewport can never reach
+      // a fractional ratio, and would sit at opacity 0 for ever. The negative bottom
+      // margin is what delays the reveal until the element is properly on screen.
+      { threshold: 0, rootMargin: '0px 0px -12% 0px' }
     );
     els.forEach((e) => io.observe(e));
   }

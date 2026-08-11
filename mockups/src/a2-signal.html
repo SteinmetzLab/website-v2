@@ -265,86 +265,7 @@
     </div>
 
     <div class="pubs" id="pubList" data-reveal>
-      <a class="pub" href="https://doi.org/10.1038/s41586-026-10443-5" data-tags="neuropixels behavior cortex">
-        <span class="pub__yr">2026</span>
-        <span>
-          <span class="pub__t">Prefrontal to ventral tegmental area dynamics drive contingency degradation</span>
-          <span class="pub__a">Hjort, Garrett, Gordon, Ancell, Trzeciak, Lu, Bruchas, Witten, Steinmetz, Stuber</span>
-        </span>
-        <span class="pub__j">Nature</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1016/j.neuron.2026.04.003" data-tags="neuropixels brainwide behavior cortex vision">
-        <span class="pub__yr">2026</span>
-        <span>
-          <span class="pub__t">The midbrain reticular formation in contextual control of perceptual decisions</span>
-          <span class="pub__a">Shaker, Schroeter, Birman, Steinmetz</span>
-        </span>
-        <span class="pub__j">Neuron</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1038/s41583-026-01042-4" data-tags="neuropixels methods">
-        <span class="pub__yr">2026</span>
-        <span>
-          <span class="pub__t">Large-scale electrophysiology at single-spike resolution</span>
-          <span class="pub__a">Siegle, Steinmetz &middot; Review</span>
-        </span>
-        <span class="pub__j">Nat Rev Neurosci</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1038/s41467-026-71331-0" data-tags="neuropixels methods">
-        <span class="pub__yr">2026</span>
-        <span>
-          <span class="pub__t">A multimodal approach for visualizing and identifying electrophysiological cell types in vivo</span>
-          <span class="pub__a">Lee, Gül, Heller, Lakunina, Yu, Shelton, Olsen, Steinmetz, Hurwitz, Jaramillo, Przytycki, Chandrasekaran</span>
-        </span>
-        <span class="pub__j">Nat Commun</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1101/2026.03.06.710130" data-tags="neuropixels methods brainwide">
-        <span class="pub__yr">2026</span>
-        <span>
-          <span class="pub__t">A flexible quality metric for electrophysiological recordings across brain regions and species</span>
-          <span class="pub__a">Roth, Chapuis, Winter, IBL, Ressmeyer, Bun, Canfield, Horwitz, Steinmetz &middot; Preprint</span>
-        </span>
-        <span class="pub__j">bioRxiv</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1016/j.neuron.2025.08.030" data-tags="neuropixels brainwide methods">
-        <span class="pub__yr">2025</span>
-        <span>
-          <span class="pub__t">Ultra-high-density Neuropixels probes improve detection and identification in neuronal recordings</span>
-          <span class="pub__a">Ye*, Shelton*, Shaker, Boussard, Colonell, … Harris, Steinmetz</span>
-        </span>
-        <span class="pub__j">Neuron</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1101/2025.02.04.636286" data-tags="neuropixels methods">
-        <span class="pub__yr">2025</span>
-        <span>
-          <span class="pub__t">Neuropixels Opto: combining high-resolution electrophysiology and optogenetics</span>
-          <span class="pub__a">Lakunina, Socha, Ladd, Bowen, … Li, … Ye, … Steinmetz, Svoboda, Siegle, Carandini</span>
-        </span>
-        <span class="pub__j">Nat Methods</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1101/2025.08.08.669442" data-tags="neuropixels brainwide widefield">
-        <span class="pub__yr">2025</span>
-        <span>
-          <span class="pub__t">Global and local origins of trial-to-trial spike count variability in visual cortex</span>
-          <span class="pub__a">Li, Lu, Ladd, Matveev, Shea-Brown, Steinmetz &middot; Preprint</span>
-        </span>
-        <span class="pub__j">bioRxiv</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.48550/arXiv.2510.18037" data-tags="widefield brainwide methods">
-        <span class="pub__yr">2025</span>
-        <span>
-          <span class="pub__t">Benchmarking probabilistic time-series forecasting models on neural activity</span>
-          <span class="pub__a">Lu, Li, Ladd, Matveev, Deole, Shea-Brown, Kutz, Steinmetz &middot; Preprint</span>
-        </span>
-        <span class="pub__j">arXiv</span>
-      </a>
-      <a class="pub" href="https://doi.org/10.1101/2024.11.01.621418" data-tags="widefield">
-        <span class="pub__yr">2024</span>
-        <span>
-          <span class="pub__t">Simultaneous mesoscopic measurement and manipulation of mouse cortical activity</span>
-          <span class="pub__a">Matveev, Li, Ye, Bowen, Opitz-Araya, Ting, Steinmetz &middot; Preprint</span>
-        </span>
-        <span class="pub__j">bioRxiv</span>
-      </a>
+      {{PUBS_RECENT}}
     </div>
     <p class="meta" style="margin-top:1.25rem">
       <a href="{{PUBS}}" style="color:var(--accent)">All {{PUB_COUNT}} publications</a> &middot; <a href="https://scholar.google.com/citations?user=PkcYP74AAAAJ&amp;hl=en">Google Scholar</a> &middot; <a href="https://orcid.org/0000-0001-7029-2908">ORCID</a>
@@ -497,16 +418,7 @@ const hdRaster = SL.raster(document.getElementById('hdRaster'), raster, {
 })();
 
 /* ---- research card: the psychometric, drawn from the fitted parameters --- */
-(() => {
-  const psy = SL.psychometric(document.getElementById('cardPsy'), {{JSON:psychometric}});
-  // draw the sweep once, the first time the card is actually on screen
-  const io = new IntersectionObserver((es) => es.forEach((e) => {
-    if (!e.isIntersecting) return;
-    psy.start();
-    io.disconnect();
-  }), { threshold: 0.35 });
-  io.observe(document.getElementById('cardPsy'));
-})();
+SL.psychometric(document.getElementById('cardPsy'), {{JSON:psychometric}});
 
 /* ---- research cards: clips play only while visible, and never off-screen -- */
 (() => {

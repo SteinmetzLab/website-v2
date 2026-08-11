@@ -247,6 +247,7 @@ JOURNAL_SHORT = {
     "Journal of Neurophysiology": "J Neurophysiol", "Scientific Data": "Sci Data",
 }
 # Which of pubs.json's many tags to expose as filters, and what to call them.
+DEFAULT_PUB_FILTER = "selected"      # which chip the Publications page opens on
 PUB_FILTERS = [("all", "Everything"), ("selected", "Selected"), ("neuropixels", "Neuropixels"),
                ("brainwide", "Brain-wide"), ("widefield", "Widefield"), ("vision", "Vision"),
                ("behavior", "Behavior"), ("methods", "Methods &amp; tools"),
@@ -282,9 +283,30 @@ def pubs_all() -> str:
     return "\n      ".join(out)
 
 
+def pubs_recent(n: int = 8) -> str:
+    """The front page shows only 'selected' papers, newest first -- the same judgement the
+    Publications page defaults to, rather than whatever happened to appear most recently."""
+    papers = json.loads((ROOT / "data/pubs.json").read_text(encoding="utf-8"))["papers"]
+    papers = [p for p in papers if "selected" in p.get("tags", [])]
+    papers.sort(key=lambda p: (-int(p["year"]), p.get("title", "")))
+    out = []
+    for p in papers[:n]:
+        jr = p.get("journal", "")
+        out.append(
+            f'<a class="pub" href="{_esc(p.get("link", "#"))}" '
+            f'data-tags="{_esc(" ".join(p.get("tags", [])))}">'
+            f'<span class="pub__yr">{_esc(p["year"])}</span><span>'
+            f'<span class="pub__t">{_esc(p.get("title", ""))}</span>'
+            f'<span class="pub__a">{_esc(_authors(p))}</span></span>'
+            f'<span class="pub__j">{_esc(JOURNAL_SHORT.get(jr, jr))}</span></a>'
+        )
+    return "\n      ".join(out)
+
+
 def pub_chips() -> str:
     return "\n      ".join(
-        f'<button class="chip" data-tag="{t}" aria-pressed="{"true" if t == "all" else "false"}">'
+        f'<button class="chip" data-tag="{t}" '
+        f'aria-pressed="{"true" if t == DEFAULT_PUB_FILTER else "false"}">'
         f"{label}</button>" for t, label in PUB_FILTERS)
 
 
@@ -407,12 +429,12 @@ def family_links(name: str) -> dict:
         return {"HOME": "a2-signal.html", "PUBS": "a2-publications.html",
                 "NEWS": "a2-news.html", "PEOPLE_PAGE": "a2-people.html",
                 "JOIN": "a2-join.html", "CONTACT": "a2-contact.html",
-                "TEACHING": "a2-teaching.html", "ETHICS": "a2-ethics.html"}
+                "TEACHING": "a2-teaching.html"}
     # A predates these pages, so its links stay where they were
     return {"HOME": "a-signal.html", "PUBS": "a-publications.html",
             "NEWS": "a-news.html", "PEOPLE_PAGE": "a-signal.html#people",
             "JOIN": "a-signal.html#join", "CONTACT": "a-signal.html#join",
-            "TEACHING": "a-signal.html", "ETHICS": "a-signal.html"}
+            "TEACHING": "a-signal.html"}
 
 
 def render(template: str, name: str = "a-signal.html") -> str:
@@ -442,6 +464,7 @@ def render(template: str, name: str = "a-signal.html") -> str:
     s = s.replace("{{PEOPLE_QUIET}}", people_quiet())
     s = s.replace("{{PUBS_ALL}}", pubs_all())
     s = s.replace("{{PUB_CHIPS}}", pub_chips())
+    s = s.replace("{{PUBS_RECENT}}", pubs_recent())
     s = s.replace("{{PUB_COUNT}}", str(len(json.loads(
         (ROOT / "data/pubs.json").read_text(encoding="utf-8"))["papers"])))
     s = s.replace("{{NEWS_ALL}}", news_all())

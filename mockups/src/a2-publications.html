@@ -91,6 +91,8 @@ const RASTER = {{DATA:raster}};
     chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
     apply(c.dataset.tag);
   }));
-  apply('all');
+  // open on whichever chip the build marked pressed (see DEFAULT_PUB_FILTER)
+  const start = chips.find((c) => c.getAttribute('aria-pressed') === 'true');
+  apply(start ? start.dataset.tag : 'all');
 })();
 </script>

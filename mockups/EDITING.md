@@ -29,7 +29,6 @@ palette/typeface/theme switcher still attached. Edit the `a2-*` files.
 | Join us | `src/a2-join.html` |
 | Contact | `src/a2-contact.html` |
 | Teaching | `src/a2-teaching.html` |
-| Ethics | `src/a2-ethics.html` |
 
 ## Where does a given piece of text live?
 
@@ -60,9 +59,9 @@ exists to prevent.
 
 ## Files that ship as-is
 
-Anything in `static/` is copied straight into the built site, unchanged -- PDFs and
-similar, which have to stay real files rather than being inlined as data URIs.
-Everything in `assets/` is inlined instead.
+Anything in a `static/` folder is copied straight into the built site, unchanged, for files
+that have to stay real files rather than being inlined as data URIs. Everything in
+`assets/` is inlined instead.
 
 ## Adding an entry
 

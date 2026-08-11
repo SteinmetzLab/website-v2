@@ -626,10 +626,10 @@ const SL = (() => {
    *
    *  data = { params: {bL,bR,sL,sR,c50,n}, points: [{dc, n, p:[L,R,0], ci:[[lo,hi]x3]}] } */
   function psychometric(cv, data, opts = {}) {
-    const o = Object.assign({ pad: { l: 46, r: 14, t: 14, b: 40 }, dur: 1500, dot: 3.4 }, opts);
+    const o = Object.assign({ pad: { l: 46, r: 14, t: 14, b: 40 }, dur: 1500, hold: 5000, loop: true, dot: 3.4 }, opts);
     const ctx = cv.getContext('2d');
     let lut = rampLUT();
-    let t0 = null, done = reduceMotion, raf = 0;
+    let t0 = null, done = reduceMotion, raf = 0, running = false;
 
     // model probabilities along the pedestal-0 slice: one side carries the contrast
     const P = data.params;
@@ -742,28 +742,39 @@ const SL = (() => {
       }
     }
 
+    // Sweep the curves in, hold the finished plot, then sweep again. One cycle is
+    // dur + hold; within a cycle the fraction runs 0 -> 1 and then sits at 1.
+    const cycle = () => o.dur + o.hold;
     const tick = (now) => {
       if (t0 === null) t0 = now;
-      const frac = Math.min(1, (now - t0) / o.dur);
+      const into = o.loop ? (now - t0) % cycle() : now - t0;
+      const frac = Math.min(1, into / o.dur);
       draw(frac);
-      if (frac < 1) raf = requestAnimationFrame(tick); else done = true;
+      if (o.loop || frac < 1) raf = requestAnimationFrame(tick);
+      else { done = true; running = false; }
     };
 
     const api = {
       draw: () => draw(done ? 1 : 0),
-      /** Draw once, animating the sweep the first time it is asked to. */
+      /** Sweep the curves in; with `loop` set, keep doing so on a cycle. */
       start() {
-        if (done) { draw(1); return api; }
+        if (reduceMotion) { draw(1); return api; }
+        if (running) return api;
+        running = true;
         cancelAnimationFrame(raf);
         t0 = null;
         raf = requestAnimationFrame(tick);
         return api;
       },
-      stop() { cancelAnimationFrame(raf); return api; },
+      stop() { running = false; cancelAnimationFrame(raf); return api; },
     };
-    onPalette(() => { lut = rampLUT(); draw(done ? 1 : 0); });
-    observeSize(cv, () => draw(done ? 1 : 0));
+    onPalette(() => { lut = rampLUT(); draw(done || running ? 1 : 0); });
+    observeSize(cv, () => draw(done || running ? 1 : 0));
     draw(reduceMotion ? 1 : 0);
+    // only animate while on screen, like the raster and widefield panels
+    new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? api.start() : api.stop())), {
+      rootMargin: '80px',
+    }).observe(cv);
     return api;
   }
 

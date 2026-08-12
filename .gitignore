@@ -12,3 +12,4 @@ scratch_*.xml
 __pycache__/
 *.pyc
 mockups/tools/_fontcache/
+mockups/out-personal/

@@ -449,11 +449,19 @@ def news_latest(n: int = 3) -> str:
     return "\n      ".join(_news_item_html(it, with_kind=False) for it in _news_items()[:n])
 
 
-def family_links(name: str) -> dict:
+CV_PDF = "Steinmetz_CV_2026-08-11.pdf"
+
+
+def family_links(name: str, deploy: bool = False) -> dict:
     """Where the shared nav and footer should point, given which page they land in.
 
     A and A2 are separate families with their own homepage and subpages; A also has no
     People page, so its People link stays an anchor on the front page."""
+    if name.startswith("ns-"):
+        # deploy=True writes the names the personal site actually serves
+        return {"HOME": "index.html" if deploy else "ns-index.html",
+                "PUBS": "publications.html" if deploy else "ns-publications.html",
+                "CV": CV_PDF}
     if name.startswith("a2-"):
         return {"HOME": "a2-signal.html", "PUBS": "a2-publications.html",
                 "NEWS": "a2-news.html", "PEOPLE_PAGE": "a2-people.html",
@@ -466,7 +474,7 @@ def family_links(name: str) -> dict:
             "TEACHING": "a-signal.html"}
 
 
-def render(template: str, name: str = "a-signal.html") -> str:
+def render(template: str, name: str = "a-signal.html", deploy: bool = False) -> str:
     s = template
     # {{PEOPLE}} renders the roster grid; the nav's link token is {{PEOPLE_PAGE}}. They are
     # different lengths on purpose -- a prefix collision here silently ate the grid once.
@@ -483,7 +491,7 @@ def render(template: str, name: str = "a-signal.html") -> str:
     else:
         raise SystemExit("partial includes nested more than 6 deep - probably a cycle")
 
-    for k, v in family_links(name).items():
+    for k, v in family_links(name, deploy).items():
         s = s.replace("{{" + k + "}}", v)
     s = s.replace("{{FONTS_SERIF}}", fonts_css_serif())
     s = s.replace("{{FONTS}}", fonts_css())
@@ -543,7 +551,33 @@ def _digest(b: str) -> str:
     return hashlib.sha256(b.encode("utf-8")).hexdigest()
 
 
+PERSONAL = {"ns-index.html": "index.html", "ns-publications.html": "publications.html"}
+
+
+def build_personal() -> int:
+    """Write the personal site under out-personal/, with the filenames it actually serves.
+
+    Separate from out/ because the same source has to link to ns-index.html when it is
+    previewed alongside the lab site, and to index.html once it is the site."""
+    dest = ROOT / "out-personal"
+    dest.mkdir(exist_ok=True)
+    for src_name, out_name in PERSONAL.items():
+        html = (GENERATED_BANNER.format(name=src_name)
+                + render((SRC / src_name).read_text(encoding="utf-8"), src_name, deploy=True))
+        (dest / out_name).write_text(html, encoding="utf-8")
+        print(f"{out_name:26s} {len(html)/1024:8.1f} KB")
+    for f in sorted((ROOT / "static").iterdir()):
+        if f.is_file() and f.name.startswith("Steinmetz_CV"):
+            (dest / f.name).write_bytes(f.read_bytes())
+            print(f"{f.name:26s} {f.stat().st_size/1024:8.1f} KB  (static)")
+    # GitHub Pages runs Jekyll over a user site by default; we are already built
+    (dest / ".nojekyll").write_text("", encoding="utf-8")
+    return 0
+
+
 def main(argv: list[str]) -> int:
+    if "--personal" in argv:
+        return build_personal()
     OUT.mkdir(exist_ok=True)
     force = "--force" in argv
     argv = [a for a in argv if a != "--force"]

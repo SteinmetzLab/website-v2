@@ -337,11 +337,38 @@ def people_by_group() -> str:
     return "\n      ".join(out)
 
 
+# Alumni are grouped by position in the same order as the current roster, so the two
+# halves of the People page read the same way down the page.
+ALUMNI_ORDER = ["Research scientist", "Postdoc", "Graduate student", "Rotation student",
+                "Undergraduate", "High-school student"]
+ALUMNI_HEADING = {"Research scientist": "Research scientists", "Postdoc": "Postdocs",
+                  "Graduate student": "Graduate students",
+                  "Rotation student": "Rotation students",
+                  "Undergraduate": "Undergraduate scientists",
+                  "High-school student": "High-school students"}
+
+
 def alumni_html() -> str:
-    """Former members as a compact table: who, what they were, when, where they went."""
+    """Former members grouped by position, most recent departure first within each group."""
     rows = json.loads((ROOT / "data/alumni.json").read_text(encoding="utf-8"))["alumni"]
-    out = []
+
+    def last_year(a):
+        years = re.findall(r"\d{4}", a["years"])
+        return int(years[-1]) if years else 0
+
+    def rank(a):
+        role = a.get("role", "")
+        return ALUMNI_ORDER.index(role) if role in ALUMNI_ORDER else len(ALUMNI_ORDER)
+
+    rows = sorted(rows, key=lambda a: (rank(a), -last_year(a), a["name"].split()[-1]))
+    out, group = [], None
     for a in rows:
+        if a.get("role") != group:
+            group = a.get("role")
+            if out:
+                out.append("</ul>")
+            out.append(f'<h3 class="cohort">{_esc(ALUMNI_HEADING.get(group, group))}</h3>')
+            out.append('<ul class="alumni">')
         note = a.get("note", "")
         now = a.get("now", "")
         tail = ""

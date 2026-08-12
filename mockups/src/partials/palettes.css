@@ -10,11 +10,11 @@
      --lrule                  hairline on light
      --accent/--accent-2      the two brand accents
      --on-accent              ink that sits on --accent
-     --d0 ... --d4              ordered ramp for data (canvas colourmaps read these)
+     --d0 ... --d4              ordered ramp for data (canvas colormaps read these)
 
    Each mockup maps these onto its own semantic tokens, so the same palette can
    drive a light-bodied editorial page and a fully dark one.
-   Neutrals are hue-biased toward each palette's accent rather than pure grey.
+   Neutrals are hue-biased toward each palette's accent rather than pure gray.
 --------------------------------------------------------------------------- */
 
 /* 1 -- SIGNAL : deep indigo ground, electric cyan signal */
@@ -92,7 +92,7 @@
   --d4: #ff6f4e;
 }
 
-/* 4 -- ATLAS : near-monochrome page, all colour comes from the data itself */
+/* 4 -- ATLAS : near-monochrome page, all color comes from the data itself */
 [data-palette="atlas"] {
   --deep: #07070a;
   --dark: #0d0d11;

@@ -4,35 +4,77 @@
   {
    "title": "Datasets",
    "items": [
-    { "label": "Brain-wide rotating waves", "href": "https://doi.org/10.6084/m9.figshare.27850707",
-      "note": "cortex-wide imaging and Neuropixels", "cite": "Ye et al., Science, 2026" },
-    { "label": "Midbrain reticular formation recordings", "href": "https://figshare.com/articles/dataset/Main_dataset_from_Shaker_et_al_2026/31428575",
-      "note": "context-dependent visual decisions", "cite": "Shaker et al., Neuron, 2026" },
-    { "label": "Neuropixels Ultra waveforms", "href": "https://npultra.steinmetzlab.net/",
-      "note": "browse or download", "cite": "Ye et al., Neuron, 2025" },
-    { "label": "IBL brain-wide map", "href": "https://dandiarchive.org/dandiset/000409",
-      "note": "699 recordings, NWB on DANDI", "cite": "International Brain Laboratory, Nature, 2025" },
-    { "label": "Olfactory Pavlovian conditioning", "href": "https://doi.org/10.6084/m9.figshare.21365598",
-      "note": "ephys + 2P", "cite": "Ottenheimer et al., eLife, 2023" },
-    { "label": "Neuropixels 2.0 with imposed brain motion", "href": "https://doi.org/10.6084/m9.figshare.14024495",
-      "cite": "Steinmetz et al., Science, 2021" },
-    { "label": "Visual discrimination recordings", "href": "https://figshare.com/articles/steinmetz/9598406",
-      "note": "also in NWB and ONE", "cite": "Steinmetz et al., Nature, 2019" }
+    {
+     "label": "Brain-wide rotating waves",
+     "href": "https://doi.org/10.6084/m9.figshare.27850707",
+     "note": "cortex-wide imaging and Neuropixels",
+     "cite": "Ye et al., Science, 2026"
+    },
+    {
+     "label": "Midbrain reticular formation recordings",
+     "href": "https://figshare.com/articles/dataset/Main_dataset_from_Shaker_et_al_2026/31428575",
+     "note": "context-dependent visual decisions",
+     "cite": "Shaker et al., Neuron, 2026"
+    },
+    {
+     "label": "Neuropixels Ultra waveforms",
+     "href": "https://npultra.steinmetzlab.net/",
+     "note": "browse or download",
+     "cite": "Ye et al., Neuron, 2025"
+    },
+    {
+     "label": "IBL brain-wide map",
+     "href": "https://dandiarchive.org/dandiset/000409",
+     "note": "699 recordings, NWB on DANDI",
+     "cite": "International Brain Laboratory, Nature, 2025"
+    },
+    {
+     "label": "Olfactory Pavlovian conditioning",
+     "href": "https://doi.org/10.6084/m9.figshare.21365598",
+     "note": "ephys + 2P",
+     "cite": "Ottenheimer et al., eLife, 2023"
+    },
+    {
+     "label": "Neuropixels 2.0 with imposed brain motion",
+     "href": "https://doi.org/10.6084/m9.figshare.14024495",
+     "cite": "Steinmetz et al., Science, 2021"
+    },
+    {
+     "label": "Visual discrimination recordings",
+     "href": "https://figshare.com/articles/steinmetz/9598406",
+     "note": "also in NWB and ONE",
+     "cite": "Steinmetz et al., Nature, 2019"
+    }
    ]
   },
   {
    "title": "Software",
    "items": [
-    { "label": "Pinpoint", "href": "https://data.virtualbrainlab.org/pinpoint/",
-      "note": "plan probe insertions" },
-    { "label": "SlidingRP", "href": "https://github.com/SteinmetzLab/slidingRefractory",
-      "note": "refractory-period contamination metric" },
-    { "label": "widefield", "href": "https://github.com/SteinmetzLab/widefield",
-      "note": "analyse cortex-wide imaging data" },
-    { "label": "allenCCF", "href": "https://github.com/cortex-lab/allenCCF",
-      "note": "work with the Allen atlas" },
-    { "label": "Alyx", "href": "https://github.com/cortex-lab/alyx",
-      "note": "experiment database" }
+    {
+     "label": "Pinpoint",
+     "href": "https://data.virtualbrainlab.org/pinpoint/",
+     "note": "plan probe insertions"
+    },
+    {
+     "label": "SlidingRP",
+     "href": "https://github.com/SteinmetzLab/slidingRefractory",
+     "note": "refractory-period contamination metric"
+    },
+    {
+     "label": "widefield",
+     "href": "https://github.com/SteinmetzLab/widefield",
+     "note": "analyze cortex-wide imaging data"
+    },
+    {
+     "label": "allenCCF",
+     "href": "https://github.com/cortex-lab/allenCCF",
+     "note": "work with the Allen atlas"
+    },
+    {
+     "label": "Alyx",
+     "href": "https://github.com/cortex-lab/alyx",
+     "note": "experiment database"
+    }
    ]
   }
  ]

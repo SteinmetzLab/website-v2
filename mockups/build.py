@@ -24,7 +24,7 @@ SRC = ROOT / "src"
 OUT = ROOT / "out"
 
 # Candidate typeface options. Each supplies a condensed display face and a body face at two
-# weights; one monospace is shared by all of them. `adjust` normalises x-height against Open
+# weights; one monospace is shared by all of them. `adjust` normalizes x-height against Open
 # Sans so switching option doesn't change how big the running text looks.
 FONT_OPTIONS = {
     "opensans": {"adjust": 100.0},

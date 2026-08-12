@@ -78,7 +78,7 @@ const SL = (() => {
              rectified: !!json.meta.rectified };
   }
 
-  /* ------------------------------------------------------------- colour ramp */
+  /* ------------------------------------------------------------- color ramp */
   const hex = (s) => {
     s = s.trim().replace('#', '');
     if (s.length === 3) s = s.split('').map((c) => c + c).join('');
@@ -343,10 +343,10 @@ const SL = (() => {
      Rebuilds each frame as dF/F = U · dV and paints it through the palette ramp.
   */
   function widefield(cv, wf, opts = {}) {
-    // `gain` divides the colour limit, so >1 saturates sooner and pushes real activation
+    // `gain` divides the color limit, so >1 saturates sooner and pushes real activation
     // into the warm end of the ramp instead of leaving the whole frame mid-scale. Prefer
     // tuning this over `gamma`: a power curve drags the highlights down along with the
-    // baseline, and past about 1.2 the activation peaks stop reaching the warm colours.
+    // baseline, and past about 1.2 the activation peaks stop reaching the warm colors.
     const o = Object.assign({ speed: 1, gain: 1.35, alpha: 1, fit: 'contain', gamma: 1 }, opts);
     const ctx = cv.getContext('2d');
     const { H, W, K, T, U, V } = wf;
@@ -668,7 +668,7 @@ const SL = (() => {
       const X = (dc) => x0 + ((dc + 100) / 200) * (x1 - x0);
       const Y = (v) => y1 - v * (y1 - y0);
 
-      // canvas cannot parse var() in a font string or a colour, so resolve them here
+      // canvas cannot parse var() in a font string or a color, so resolve them here
       const cs = getComputedStyle(document.documentElement);
       const mono = cs.getPropertyValue('--mono').trim() || 'monospace';
       ctx.lineWidth = Math.max(1, dpr);

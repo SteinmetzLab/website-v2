@@ -38,7 +38,7 @@ palette/typeface/theme switcher still attached. Edit the `a2-*` files.
 | Publications | `data/pubs.json` | A list that grows. Adding a paper is one entry; the year headings, filters and counts follow automatically. |
 | News | `data/news.json` | Same. Newest first is automatic — the build sorts by date, so put a new entry anywhere in the file. |
 | People (current) | `data/people.json` | Same. Order is derived from `group` then `joined`, so a new arrival lands in the right cohort. |
-| Alumni | `data/alumni.json` | Same. Sorted by leaving year. Fill in `now` as you learn where someone went; it renders in the accent colour. |
+| Alumni | `data/alumni.json` | Same. Sorted by leaving year. Fill in `now` as you learn where someone went; it renders in the accent color. |
 | The Open Science lists (datasets, software, hardware) | `data/resources.json` | Same. The section's *heading and lede* are prose and stay in `src/a-signal.html`. |
 | Colours, type, spacing, any styling | `src/partials/a-base.css`, `a-page.css`, `palettes.css` | Shared by every page. |
 | The header, nav, or footer | `src/partials/a-nav.html`, `a-foot.html` | Shared by every page — change once, all pages follow. |
@@ -79,6 +79,6 @@ change — not for ordinary text edits:
 python tools/make_widefield.py      # widefield SVD  -> assets/widefield_b64.json
 python tools/make_raster.py         # spike raster   -> assets/raster_b64.json
 python tools/make_psychometric.py   # model fit      -> assets/psychometric.json + review clips
-python tools/make_people.py         # face-centred portraits -> assets/people/
+python tools/make_people.py         # face-centered portraits -> assets/people/
 python tools/make_videos.py         # review MP4s in video/
 ```

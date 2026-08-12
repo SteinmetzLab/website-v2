@@ -1,6 +1,6 @@
 /* Shared page bootstrap for the mockup A family: palette / theme / typeface defaults,
    the circuit traces, the header state and menu, and the sliver of raster behind the
-   header bar. Pages add their own behaviour after this. */
+   header bar. Pages add their own behavior after this. */
 
 document.documentElement.dataset.palette = 'teal';
 document.documentElement.dataset.theme = 'dark';

@@ -2,6 +2,18 @@
  "_comment": "Lab news, newest first. Dates are YYYY-MM (a bare YYYY also works and sorts to the end of its year). Paper entries cover every 'selected' paper since 2019 in data/pubs.json; their months come from Crossref. 'kind' drives the label and filter: paper | award | lab. Keep notes to one short sentence.",
  "item": [
   {
+   "date": "2026-08",
+   "kind": "lab",
+   "title": "Saghar Mirbagheri successfully defends PhD thesis!",
+   "note": "On \"Prediction Content Shapes Population Representations in Mouse Primary Visual Cortex\"."
+  },
+  {
+   "date": "2026-07",
+   "kind": "lab",
+   "title": "Anna Li successfully defends PhD thesis!",
+   "note": "On \"Causal and distributed mechanisms of cortical computation\"."
+  },
+  {
    "date": "2026-06",
    "kind": "paper",
    "title": "Brain-wide topographic coordination of rotating waves",
@@ -16,7 +28,7 @@
    "link": "https://doi.org/10.1038/s41586-026-10443-5"
   },
   {
-   "date": "2026-05",
+   "date": "2026-04",
    "kind": "paper",
    "title": "The midbrain reticular formation in contextual control of perceptual decisions",
    "note": "Jordan Shaker's thesis work, in Neuron.",
@@ -33,19 +45,20 @@
    "date": "2026-03",
    "kind": "paper",
    "title": "A flexible quality metric for electrophysiological recordings",
-   "note": "Preprint with the IBL, across brain regions and species.",
+   "note": "Preprint with a new quality metric, and data across brain regions and species.",
    "link": "https://doi.org/10.1101/2026.03.06.710130"
   },
   {
-   "date": "2026-02",
+   "date": "2026-01",
    "kind": "lab",
-   "title": "Simons Foundation support for IBL infrastructure",
-   "note": "Extending the International Brain Laboratory core to new collaborations."
+   "title": "Simons Foundation supports IBL 2.0",
+   "note": "Extending the International Brain Laboratory core to new collaborations.",
+   "link": "https://iblcore.org/"
   },
   {
    "date": "2026-01",
    "kind": "award",
-   "title": "Rachel Yin named a Goldwater Scholar"
+   "title": "Rachel Yin named a Goldwater Scholar!"
   },
   {
    "date": "2026-01",
@@ -103,6 +116,12 @@
   },
   {
    "date": "2025-04",
+   "kind": "lab",
+   "title": "Jordan Shaker successfully defends PhD thesis!",
+   "note": "On \"The midbrain reticular formation in flexible decision-making\"."
+  },
+  {
+   "date": "2025-04",
    "kind": "award",
    "title": "Rachel Yin wins a Mary Gates Scholarship and a Simons SURFiN fellowship"
   },
@@ -114,11 +133,11 @@
    "link": "https://doi.org/10.1038/s41592-025-02614-5"
   },
   {
-   "date": "2025-02",
+   "date": "2026-06",
    "kind": "paper",
    "title": "Neuropixels Opto: Combining high-resolution electrophysiology and optogenetics",
    "note": "In Nature Methods.",
-   "link": "https://doi.org/10.1101/2025.02.04.636286"
+   "link": "http://dx.doi.org/10.1038/s41592-026-03076-z"
   },
   {
    "date": "2024-11",
@@ -140,7 +159,7 @@
    "link": "https://elifesciences.org/reviewed-preprints/91662"
   },
   {
-   "date": "2023-05",
+   "date": "2022-10",
    "kind": "award",
    "title": "Jordan Shaker wins an NIH F30 fellowship",
    "note": "For work on the midbrain reticular nucleus in vision and decision-making."
@@ -166,7 +185,7 @@
    "link": "https://elifesciences.org/articles/84604"
   },
   {
-   "date": "2022-09",
+   "date": "2022-01",
    "kind": "award",
    "title": "Anna Bowen wins an HHMI Hanna Gray Fellowship"
   },
@@ -338,7 +357,7 @@
    "title": "The lab opens at the University of Washington"
   },
   {
-   "date": "2019-01",
+   "date": "2019-03",
    "kind": "paper",
    "title": "Distinct structure of cortical population activity on fast and infraslow timescales",
    "note": "Okun et al., Cerebral Cortex.",

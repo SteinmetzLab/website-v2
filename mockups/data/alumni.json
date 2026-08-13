@@ -2,6 +2,14 @@
  "_comment": "Former lab members, newest departure first. Compiled from the trainee sections of Steinmetz_CV_SoM_2026-07-27.docx. 'now' is only filled in where the CV states a destination -- add more as you know them. Current members live in data/people.json.",
  "alumni": [
   {
+  "name": "Alex Wu",
+  "role": "MD-PhD Rotation Student",
+  "url": "",
+  "group": "grad",
+  "years": "2026",
+  "img": null
+ },
+ {
    "name": "Anna Bowen",
    "role": "Postdoc",
    "years": "2021-2026",

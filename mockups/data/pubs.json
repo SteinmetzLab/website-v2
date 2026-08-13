@@ -165,12 +165,12 @@
 				"Steinmetz NA"
 			],
 			"authors_short": [
-				"Li",
-				"Lu",
+				"Li*",
+				"Lu*",
 				"Ladd",
 				"Matveev",
-				"Shea-Brown",
-				"Steinmetz"
+				"Shea-Brown^",
+				"Steinmetz^"
 			],
 			"title": "Global and local origins of trial-to-trial spike count variability in visual cortex",
 			"year": "2025",
@@ -220,10 +220,9 @@
 			],
 			"title": "Neuropixels Opto: Combining high-resolution electrophysiology and optogenetics",
 			"year": "2025",
-			"journal": "Nature Methods (in press)",
-			"link": "https://doi.org/10.1101/2025.02.04.636286",
+			"journal": "Nature Methods",
+			"link": "http://dx.doi.org/10.1038/s41592-026-03076-z",
 			"tags": [
-				"preprint",
 				"selected",
 				"neuropixels",
 				"optogenetics",
@@ -281,8 +280,8 @@
 				"Steinmetz NA"
 			],
 			"authors_short": [
-				"Matveev",
-				"Li",
+				"Matveev*",
+				"Li*",
 				"Ye",
 				"Bowen",
 				"Opitz-Araya",
@@ -514,10 +513,10 @@
 			],
 			"title": "In vivo cell-type and brain region classification via multimodal contrastive learning",
 			"year": "2025",
-			"journal": "bioRxiv",
-			"link": "https://doi.org/10.1101/2024.11.05.622159",
+			"journal": "ICLR",
+			"link": "https://openreview.net/forum?id=10JOlFIPjt",
 			"tags": [
-				"preprint",
+				"peerReview",
 				"neuropixels",
 				"brainwide",
 				"IBL"
@@ -646,10 +645,11 @@
 			],
 			"title": "Pinpoint: trajectory planning for multi-probe electrophysiology and injections in an interactive web-based 3D environment",
 			"year": "2023",
-			"journal": "eLife [Reviewed Preprint]",
+			"journal": "eLife",
 			"link": "https://elifesciences.org/reviewed-preprints/91662",
 			"tags": [
 				"selected",
+				"peerReview",
 				"neuropixels",
 				"brainwide"
 			]
@@ -781,7 +781,6 @@
 			"link": "https://doi.org/10.1038/s41592-025-02614-5",
 			"tags": [
 				"peerReview",
-				"selected",
 				"neuropixels",
 				"brainwide"
 			]
@@ -866,7 +865,6 @@
 			"link": "https://doi.org/10.1523/JNEUROSCI.1919-21.2021",
 			"tags": [
 				"review",
-				"selected",
 				"neuropixels",
 				"brainwide"
 			]
@@ -983,7 +981,6 @@
 			"link": "https://www.nature.com/articles/s41467-021-27724-4",
 			"tags": [
 				"peerReview",
-				"selected",
 				"vision",
 				"cortex",
 				"population",
@@ -1020,7 +1017,6 @@
 				"attention", 
 				"dynamics", 
 				"vision", 
-				"selected",
 				"behavior"
 			]
 		},
@@ -1045,7 +1041,6 @@
 			"link": "https://doi.org/10.1016/j.neuron.2021.09.002",
 			"tags": [
 				"peerReview",
-				"selected",
 				"neuropixels"
 			]
 		},
@@ -1235,7 +1230,6 @@
 			"link": "https://royalsocietypublishing.org/doi/10.1098/rsif.2021.0523",
 			"tags": [
 				"peerReview",
-				"selected",
 				"widefield", 
 				"dynamics"
 			]
@@ -1444,7 +1438,6 @@
 			"pdflink": "Pettine et al - 2019 - PNAS.pdf",
 			"tags": [
 				"peerReview",
-				"selected",
 				"vision",
 				"microcircuits",
 				"behavior",
@@ -1668,7 +1661,6 @@
 			"pdflink": "Stringer et al. - 2016 - Inhibitory control of correlated intrinsic variability in cortical networks.pdf",
 			"tags": [
 				"peerReview",
-				"selected",
 				"dynamics"
 			],
 			"authors_short": [

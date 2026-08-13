@@ -1,0 +1,280 @@
+<title>1,745 neurons &mdash; Steinmetz Lab</title>
+
+<style>
+{{PARTIAL:a-base.css}}
+{{PARTIAL:a-page.css}}
+
+.phead { padding-block: 9rem clamp(1.5rem, 4vw, 2.5rem); }
+.phead__grid { display: grid; gap: 1.25rem; }
+.phead h1 { font-size: var(--step-3); max-width: 20ch; }
+.phead .lede { max-width: 52ch; }
+
+/* ---- the wall -----------------------------------------------------------
+   A tall spacer sets the scroll distance -- one row per neuron, at the same
+   spacing the 141-neuron panel uses -- while the canvas stays stuck to the
+   viewport and draws only the rows currently in front of you. Drawing all
+   1,745 rows into one canvas would be ~6,000 px tall and redraw every frame. */
+.wall { position: relative; }
+.wall__stick {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--deep);
+}
+.wall__stick canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.wall__hud {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 3rem 1.25rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  font: 400 0.6875rem/1.4 var(--mono);
+  color: var(--di-2);
+  pointer-events: none;
+  background: linear-gradient(to top, color-mix(in srgb, #000 78%, transparent), transparent);
+}
+.wall__hud b { color: var(--di); font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* a fixed key, so you always know which probe and shank you are looking at */
+.wall__key {
+  position: absolute;
+  left: 1.25rem; top: 1.25rem;
+  display: grid;
+  gap: 0.3125rem;
+  font: 400 0.625rem/1 var(--mono);
+  color: var(--di-2);
+  pointer-events: none;
+}
+.wall__key div { display: flex; align-items: center; gap: 0.4375rem; }
+.wall__key i { width: 1.75rem; height: 0.375rem; display: block; }
+
+.wall__scrollcue {
+  position: absolute;
+  left: 50%; bottom: 4.5rem;
+  transform: translateX(-50%);
+  font: 700 0.625rem/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--di-3);
+  pointer-events: none;
+  animation: cue 2.4s ease-in-out infinite;
+}
+@keyframes cue { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+@media (prefers-reduced-motion: reduce) { .wall__scrollcue { animation: none; } }
+
+.after { padding-block: clamp(3rem, 6vw, 5rem); }
+.after .lede { max-width: 54ch; }
+.figcap { color: var(--fg-3); font-size: var(--step--1); line-height: 1.6; max-width: 60ch; }
+</style>
+
+{{PARTIAL:a-nav.html}}
+
+<main id="top">
+  <section class="phead wrap">
+    <div class="phead__grid">
+      <p class="eyebrow pcb--on">One recording<span class="trace"></span></p>
+      <h1 class="display">{{NP2_UNITS}} neurons at once</h1>
+      <p class="lede">
+        Three Neuropixels 2.0 Quad-Base probes, twelve shanks, 4,608 recording sites in one
+        mouse. Every neuron that passed quality control is drawn below, at the same spacing
+        as the 141-neuron panel on the front page. Keep scrolling.
+      </p>
+    </div>
+  </section>
+
+  <div class="wall" id="wall">
+    <div class="wall__stick">
+      <canvas id="wallCv" aria-label="Spike raster of {{NP2_UNITS}} simultaneously recorded neurons."></canvas>
+      <div class="wall__key" id="wallKey" aria-hidden="true"></div>
+      <div class="wall__scrollcue" id="wallCue">Scroll</div>
+      <div class="wall__hud">
+        <span>Neurons <b id="wallRange">1&ndash;1</b> of {{NP2_UNITS}}</span>
+        <span>Probe <b id="wallProbe">0</b> &middot; shank <b id="wallShank">0</b></span>
+        <span>Depth <b id="wallDepth">0</b> &micro;m</span>
+        <span><b id="wallTime">0.0</b> s</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="sec wrap after">
+    <div class="sec__head" data-reveal>
+      <p class="eyebrow">What you just scrolled past<span class="trace"></span></p>
+      <h2 class="display">Every dot is one action potential</h2>
+    </div>
+    <p class="lede" data-reveal>
+      {{NP2_UNITS}} neurons, recorded simultaneously for {{NP2_WINDOW}} seconds, sorted with
+      Kilosort 4 and filtered to units with a firing rate above 0.1 spikes/s, an amplitude
+      above 50&nbsp;&micro;V, and a clean refractory period.
+    </p>
+    <p class="figcap" data-reveal style="margin-top:1.25rem">
+      Subject KM_077, 24&nbsp;May&nbsp;2026. Colour marks the probe &mdash; teal, salmon and
+      grey &mdash; and the four shades within each mark its four shanks. Neurons are ordered
+      by probe, then shank, then depth, so scrolling walks down one shank at a time from the
+      surface of the brain to {{NP2_DEEPEST}}&nbsp;&micro;m. Probe&nbsp;00 was drift-corrected
+      with DREDge before sorting.
+    </p>
+    <p class="meta" style="margin-top:1.5rem">
+      <a href="{{HOME}}#spikes" style="color:var(--accent)">Back to the 141-neuron panel</a>
+    </p>
+  </section>
+</main>
+
+{{PARTIAL:a-foot.html}}
+
+<script>
+const RASTER = {{DATA:raster}};
+const NP2 = {{JSON:np2_units}};
+{{PARTIAL:engine.js}}
+{{PARTIAL:a-boot.js}}
+
+/* ============================================================ the neuron wall
+   Spikes arrive as one binary of per-unit varint time deltas (see
+   tools/make_np2.py). 666k spikes as JSON would be ~8 MB of text to parse; this
+   is 0.7 MB and decodes into typed arrays in a few milliseconds. */
+(() => {
+  const cv = document.getElementById('wallCv');
+  const wall = document.getElementById('wall');
+  const ROW = 3.4;                 // px per neuron, matching the 141-neuron panel
+  const SPAN_S = 8;                // seconds across the canvas width
+  const SPEED = 1;                 // seconds of data per second of wall clock
+  const WIN_MS = NP2.window_s * 1000;
+
+  wall.style.height = `calc(100vh + ${Math.round(NP2.n_units * ROW)}px)`;
+
+  const el = (id) => document.getElementById(id);
+  const out = {
+    range: el('wallRange'), probe: el('wallProbe'), shank: el('wallShank'),
+    depth: el('wallDepth'), time: el('wallTime'), cue: el('wallCue'),
+  };
+
+  /* ---- colour: one family per probe, one shade per shank ---------------- */
+  const hex = (s) => {
+    s = s.trim().replace('#', '');
+    if (s.length === 3) s = s.split('').map((c) => c + c).join('');
+    const n = parseInt(s, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  let SHADES = [];
+  function buildShades() {
+    const cs = getComputedStyle(document.documentElement);
+    const base = [
+      hex(cs.getPropertyValue('--accent') || '#14b899'),     // probe 00: teal
+      hex(cs.getPropertyValue('--accent-2') || '#ff6f4e'),   // probe 01: salmon
+      hex(cs.getPropertyValue('--di-2') || '#9fb0ad'),       // probe 02: grey
+    ];
+    // brightest shank first, so shank 0 reads as the "top" of each family
+    const f = [1.0, 0.78, 0.58, 0.42];
+    SHADES = base.map((rgb) => f.map((k) => `rgb(${rgb.map((c) =>
+      Math.round(c * k + 255 * (1 - k) * 0.06)).join(' ')})`));
+  }
+  buildShades();
+  SL.onPalette(buildShades);
+
+  const key = document.getElementById('wallKey');
+  const drawKey = () => {
+    key.innerHTML = ['00', '01', '02'].map((p, i) =>
+      `<div><span>probe ${p}</span>` +
+      SHADES[i].map((c) => `<i style="background:${c}"></i>`).join('') +
+      '</div>').join('');
+  };
+  drawKey();
+  SL.onPalette(drawKey);
+
+  /* ---- decode the spike binary ------------------------------------------ */
+  let times = null, off = null;
+  async function load() {
+    const res = await fetch('np2_spikes.bin');
+    if (!res.ok) throw new Error('np2_spikes.bin: ' + res.status);
+    const buf = new Uint8Array(await res.arrayBuffer());
+    const total = NP2.units.reduce((a, u) => a + u.n, 0);
+    times = new Uint16Array(total);
+    off = new Uint32Array(NP2.units.length + 1);
+    let p = 0, k = 0;
+    const varint = () => {
+      let x = 0, s = 0, b;
+      do { b = buf[p++]; x |= (b & 0x7f) << s; s += 7; } while (b & 0x80);
+      return x;
+    };
+    for (let u = 0; u < NP2.units.length; u++) {
+      const n = varint();
+      let t = 0;
+      for (let i = 0; i < n; i++) { t += varint(); times[k++] = t; }
+      off[u + 1] = k;
+    }
+  }
+
+  /* ---- draw ------------------------------------------------------------- */
+  const lower = (u, ms) => {          // first spike index of unit u at or after ms
+    let lo = off[u], hi = off[u + 1];
+    while (lo < hi) { const m = (lo + hi) >> 1; if (times[m] < ms) lo = m + 1; else hi = m; }
+    return lo;
+  };
+
+  let t0 = 0, raf = 0, last = 0, running = false;
+  function draw() {
+    const { w, h, dpr } = SL.fitCanvas(cv);
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+    if (!times) return;
+
+    const rowPx = ROW * dpr;
+    const top = wall.getBoundingClientRect().top;      // 0 while stuck, then negative
+    const first = Math.max(0, Math.min(NP2.n_units - 1, Math.floor(-top / ROW)));
+    const nRows = Math.min(NP2.n_units - first, Math.ceil(h / rowPx) + 1);
+
+    const dotH = Math.max(1, rowPx * 0.8);
+    const dotW = Math.max(1, 1.5 * dpr);
+    const spanMs = SPAN_S * 1000;
+
+    for (let i = 0; i < nRows; i++) {
+      const u = first + i;
+      const m = NP2.units[u];
+      ctx.fillStyle = SHADES[m.p][m.s];
+      const y = i * rowPx;
+      // the window loops, so a span crossing the end wraps to the start
+      for (const [a, b, shift] of (t0 + spanMs <= WIN_MS
+        ? [[t0, t0 + spanMs, 0]]
+        : [[t0, WIN_MS, 0], [0, (t0 + spanMs) % WIN_MS, WIN_MS - t0]])) {
+        for (let k = lower(u, a), end = off[u + 1]; k < end && times[k] < b; k++) {
+          const x = ((times[k] - a + shift) / spanMs) * w;
+          ctx.fillRect(x, y, dotW, dotH);
+        }
+      }
+    }
+
+    const m0 = NP2.units[first];
+    out.range.textContent = `${(first + 1).toLocaleString('en-US')}–` +
+      `${(first + nRows).toLocaleString('en-US')}`;
+    out.probe.textContent = String(m0.p).padStart(2, '0');
+    out.shank.textContent = m0.s;
+    out.depth.textContent = Math.round(m0.d).toLocaleString('en-US');
+    out.time.textContent = (t0 / 1000).toFixed(1);
+    out.cue.style.opacity = first > 4 ? '0' : '';
+  }
+
+  function tick(ts) {
+    if (!running) return;
+    if (!last) last = ts;
+    t0 = (t0 + (ts - last) * SPEED) % WIN_MS;
+    last = ts;
+    draw();
+    raf = requestAnimationFrame(tick);
+  }
+
+  addEventListener('scroll', () => { if (!running) draw(); }, { passive: true });
+  SL.observeSize(cv, draw);
+
+  load().then(() => {
+    draw();
+    if (SL.reduceMotion) return;     // spikes still shown, simply not moving
+    running = true;
+    raf = requestAnimationFrame(tick);
+  }).catch((e) => {
+    console.error(e);
+    out.range.textContent = 'spike data unavailable';
+  });
+})();
+</script>

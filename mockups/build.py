@@ -239,6 +239,12 @@ def people_quiet() -> str:
     return "\n        ".join(out)
 
 
+# Author copies of the papers. They live in the old site's repo (278 MB of them), so the
+# page links to where they are already served rather than duplicating them here. Point this
+# at a local folder once they move.
+PDF_BASE = "https://www.steinmetzlab.net/assets/img/"
+
+
 JOURNAL_SHORT = {
     "Nature Reviews Neuroscience": "Nat Rev Neurosci", "Nature Communications": "Nat Commun",
     "Nature Methods": "Nat Methods", "Nature Methods (in press)": "Nat Methods",
@@ -274,12 +280,17 @@ def pubs_all() -> str:
             out.append(f'<h3 class="pubyear" data-year="{_esc(year)}">{_esc(year)}</h3>')
         tags = " ".join(p.get("tags", []))
         jr = p.get("journal", "")
+        pdf = ""
+        if p.get("pdflink"):
+            pdf = (f'<a class="pub__pdf" href="{_esc(PDF_BASE + p["pdflink"])}" '
+                   f'title="Author copy (PDF)">PDF</a>')
         out.append(
-            f'<a class="pub" href="{_esc(p.get("link", "#"))}" data-tags="{_esc(tags)}">'
+            f'<div class="pub" data-tags="{_esc(tags)}">'
+            f'<a class="pub__hit" href="{_esc(p.get("link", "#"))}">'
             f'<span class="pub__yr">{_esc(year)}</span><span>'
             f'<span class="pub__t">{_esc(p.get("title", ""))}</span>'
             f'<span class="pub__a">{_esc(_authors(p))}</span></span>'
-            f'<span class="pub__j">{_esc(JOURNAL_SHORT.get(jr, jr))}</span></a>'
+            f'<span class="pub__j">{_esc(JOURNAL_SHORT.get(jr, jr))}</span></a>{pdf}</div>'
         )
     return "\n      ".join(out)
 
@@ -340,10 +351,11 @@ def people_by_group() -> str:
 # Alumni are grouped by position in the same order as the current roster, so the two
 # halves of the People page read the same way down the page.
 ALUMNI_ORDER = ["Research scientist", "Postdoc", "Graduate student", "Rotation student",
-                "Undergraduate", "High-school student"]
+                "MD-PhD Rotation Student", "Undergraduate", "High-school student"]
 ALUMNI_HEADING = {"Research scientist": "Research scientists", "Postdoc": "Postdocs",
                   "Graduate student": "Graduate students",
                   "Rotation student": "Rotation students",
+                  "MD-PhD Rotation Student": "Rotation students",
                   "Undergraduate": "Undergraduate scientists",
                   "High-school student": "High-school students"}
 
@@ -363,11 +375,12 @@ def alumni_html() -> str:
     rows = sorted(rows, key=lambda a: (rank(a), -last_year(a), a["name"].split()[-1]))
     out, group = [], None
     for a in rows:
-        if a.get("role") != group:
-            group = a.get("role")
+        heading = ALUMNI_HEADING.get(a.get("role", ""), a.get("role", ""))
+        if heading != group:
+            group = heading
             if out:
                 out.append("</ul>")
-            out.append(f'<h3 class="cohort">{_esc(ALUMNI_HEADING.get(group, group))}</h3>')
+            out.append(f'<h3 class="cohort">{_esc(group)}</h3>')
             out.append('<ul class="alumni">')
         note = a.get("note", "")
         now = a.get("now", "")
@@ -466,12 +479,12 @@ def family_links(name: str, deploy: bool = False) -> dict:
         return {"HOME": "a2-signal.html", "PUBS": "a2-publications.html",
                 "NEWS": "a2-news.html", "PEOPLE_PAGE": "a2-people.html",
                 "JOIN": "a2-join.html", "CONTACT": "a2-contact.html",
-                "TEACHING": "a2-teaching.html"}
+                "TEACHING": "a2-teaching.html", "ARRAY": "a2-array.html"}
     # A predates these pages, so its links stay where they were
     return {"HOME": "a-signal.html", "PUBS": "a-publications.html",
             "NEWS": "a-news.html", "PEOPLE_PAGE": "a-signal.html#people",
             "JOIN": "a-signal.html#join", "CONTACT": "a-signal.html#join",
-            "TEACHING": "a-signal.html"}
+            "TEACHING": "a-signal.html", "ARRAY": "a2-array.html"}
 
 
 def render(template: str, name: str = "a-signal.html", deploy: bool = False) -> str:
@@ -506,6 +519,10 @@ def render(template: str, name: str = "a-signal.html", deploy: bool = False) -> 
         (ROOT / "data/pubs.json").read_text(encoding="utf-8"))["papers"])))
     s = s.replace("{{NEWS_ALL}}", news_all())
     s = s.replace("{{NEWS_LATEST}}", news_latest())
+    np2 = json.loads((ASSETS / "np2_units.json").read_text(encoding="utf-8"))
+    s = s.replace("{{NP2_UNITS}}", f'{np2["n_units"]:,}')
+    s = s.replace("{{NP2_WINDOW}}", str(int(np2["window_s"])))
+    s = s.replace("{{NP2_DEEPEST}}", f'{max(u["d"] for u in np2["units"]):,.0f}')
     s = s.replace("{{RESOURCES}}", resources_html())
     s = s.replace("{{PEOPLE_BY_GROUP}}", people_by_group())
     s = s.replace("{{ALUMNI}}", alumni_html())

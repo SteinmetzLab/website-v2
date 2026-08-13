@@ -34,6 +34,7 @@ document.documentElement.classList.add('js');
   if (!cv || typeof RASTER === 'undefined') return;
   SL.raster(cv, SL.decodeRaster(RASTER), {
     mode: 'sweep', spanS: 14, speed: 0.85, dotW: 1.2, fade: false,
+    barEl: document.getElementById('hdBar'),
   });
 })();
 

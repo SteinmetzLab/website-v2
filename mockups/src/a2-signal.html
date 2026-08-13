@@ -88,12 +88,11 @@
     <div class="sweepbar" id="heroBar" aria-hidden="true"></div>
     <div class="wrap hero__grid">
       <p class="eyebrow pcb--on" style="color: var(--accent)">Department of Neurobiology &amp; Biophysics<span class="trace"></span></p>
-      <h1 class="display">Brain-wide circuits for perception, cognition&nbsp;and <em>action</em></h1>
+      <h1 class="display">Brain-wide circuits for perception, cognition, and <em>action</em></h1>
       <div class="hero__foot">
         <p class="lede">
-          We record from thousands of neurons across the whole mouse brain at once — with
-          Neuropixels electrophysiology, cortex-wide calcium imaging, and optogenetics — to
-          work out how distributed circuits turn sensation into decisions.
+          We study how distributed circuits turn sensations into decisions, using large-scale electrophysiology, calcium imaging, and optogenetics. Our work aims to reveal the biological mechanisms of thought at a brain-wide scale.
+
         </p>
         <p class="figcap">
           Behind this text: <b>141 neurons recorded simultaneously</b>, 90 s of a real
@@ -108,9 +107,9 @@
   <section class="sec wrap" id="research">
     <div class="sec__head" data-reveal>
       <p class="eyebrow">What we do<span class="trace"></span></p>
-      <h2 class="display">Four questions we are asking</h2>
+      <h2 class="display">Our core research questions</h2>
       <p class="lede">
-        Each one needs a different way of looking at a brain. Every panel below is real data
+        Each panel below is real data
         from the lab and the collaborations it is part of.
       </p>
     </div>
@@ -122,10 +121,10 @@
           <span class="card__tag">Behavior</span>
         </div>
         <div class="card__body">
-          <h3>How do we decide actions based on what we see?</h3>
+          <h3>How do we choose our actions based on what we see?</h3>
           <p>
-            Mice report what they saw by turning a wheel, which gives us thousands of
-            precisely measured choices per session.
+            Mice report what they saw by turning a wheel, which gives us hundreds of
+            precisely measured choices per session, quantified with psychophysical modeling.
           </p>
         </div>
       </li>
@@ -139,8 +138,8 @@
         <div class="card__body">
           <h3>What neurons across the brain contribute to vision and decision-making?</h3>
           <p>
-            Neuropixels probes record hundreds of neurons at once, many probes at a time,
-            from cortex to midbrain.
+            With next-generation probes we record thousands of channels simultaneously,
+            from cortex to hindbrain.
           </p>
         </div>
       </li>
@@ -155,7 +154,7 @@
           <h3>What are the brain dynamics that give rise to behavior?</h3>
           <p>
             Activity crosses the cortex in coordinated patterns, including waves that
-            sweep and rotate, which we follow with imaging and electrophysiology.
+            sweep and rotate, which we measure with imaging and electrophysiology.
           </p>
         </div>
       </li>
@@ -167,9 +166,9 @@
           <span class="card__tag">Circuits</span>
         </div>
         <div class="card__body">
-          <h3>What circuits underlie these computations?</h3>
+          <h3>What circuits underlie brain-wide computation and dynamics?</h3>
           <p>
-            Optogenetics, anatomy and single-neuron reconstruction tell us which
+            High-precision anatomical approaches and optogenetic manipulations of brain activity tell us which
             projections actually carry a signal, and what happens without them.
           </p>
         </div>
@@ -181,17 +180,14 @@
   <section class="scrub on-dark" id="explore">
     <div class="wrap scrub__grid">
       <div class="scrub__copy" data-reveal>
-        <p class="eyebrow" style="color: var(--accent)">Cortex, live<span class="trace"></span></p>
-        <h2 class="display">Twenty-six seconds of mouse cortex</h2>
+        <p class="eyebrow" style="color: var(--accent)">Cortical imaging<span class="trace"></span></p>
+        <h2 class="display">Mouse brain activity over the cortical surface</h2>
         <p class="lede" style="color: var(--di-2)">
-          A real cortex-wide calcium recording, running continuously — both hemispheres of dorsal
-          cortex at 35&nbsp;frames per second. Each pixel is shown against its own baseline, so
-          black is rest and warm is activity above it.
+          An example cortex-wide calcium recording, running in real time, visualizing activity from both hemispheres of dorsal
+          cortex at 35&nbsp;frames per second. 
         </p>
         <p class="figcap">
-          Subject <b>ZYE_0092</b>, 2&nbsp;June&nbsp;2025. The whole camera field of view, 900
-          frames reconstructed live from 8&nbsp;spatial components — a few hundred KB instead
-          of a video file. The trace below the image is mean fluorescence across the frame —
+          Subject <b>ZYE_0092</b>, 2&nbsp;June&nbsp;2025. The trace below the image is mean fluorescence across the frame -
           click or drag along it to jump to that moment.
         </p>
       </div>
@@ -224,11 +220,11 @@
       </div>
 
       <div class="scrub__copy" data-reveal data-reveal-delay="0.1">
-        <p class="eyebrow" style="color: var(--accent)">Spikes, live<span class="trace"></span></p>
-        <h2 class="display">Ninety seconds of a Neuropixels probe</h2>
+        <p class="eyebrow" style="color: var(--accent)">Electrophysiology<span class="trace"></span></p>
+        <h2 class="display">Large-scale measurement at single-spike resolution</h2>
         <p class="lede" style="color: var(--di-2)">
           Every dot is one action potential from one neuron. Rows run from the top of the probe
-          down into the brain, so a vertical streak is many cells firing together.
+          down into the brain, so a vertical streak represents many cells firing together.
         </p>
         <div class="seg" role="group" aria-label="Visible time window">
           <button data-span="2" aria-pressed="false">2 s</button>
@@ -241,9 +237,14 @@
           <span>Population rate <b id="spkRateN">0.0</b> spikes/s</span>
         </p>
         <p class="figcap">
-          A single recording, 2024 Neuropixels workshop dataset, sorted with Kilosort. The trace
-          below the raster is population firing rate &mdash; click or drag along it to move the
+          A single recording, sorted with Kilosort. The trace
+          below the raster is population firing rate - click or drag along it to move the
           window, or use the arrow keys.
+        </p>
+        <p class="meta" style="margin-top:0.25rem">
+          Is 141 neurons not enough for you?
+          <a href="{{ARRAY}}" style="color:var(--accent)">See a recent recording with
+          {{NP2_UNITS}}</a>.
         </p>
       </div>
     </div>
@@ -276,16 +277,15 @@
   <section class="sec wrap" id="people">
     <div class="sec__head" data-reveal>
       <p class="eyebrow">People<span class="trace"></span></p>
-      <h2 class="display">{{PEOPLE_COUNT_WORD}} of us, at the moment</h2>
+      <h2 class="display">Our team</h2>
       <p class="lede">
-        Physicists, engineers, physicians and biologists — plus undergraduates and high-school
-        students who run their own projects and get their names on papers.
+        
       </p>
     </div>
     <div class="people" data-reveal id="peopleGrid">
       {{PEOPLE}}
     </div>
-    <p class="meta" style="margin-top:1.25rem">Plus {{ALUMNI_COUNT}} alumni &middot; <a href="{{PEOPLE_PAGE}}" style="color:var(--accent)">where they went</a></p>
+    <p class="meta" style="margin-top:1.25rem">Plus {{ALUMNI_COUNT}} alumni &middot; <a href="{{PEOPLE_PAGE}}" style="color:var(--accent)">All current and alumni</a></p>
   </section>
 
   <!-- ============================================================ NEWS -->
@@ -293,6 +293,9 @@
     <div class="sec__head" data-reveal>
       <p class="eyebrow">News<span class="trace"></span></p>
       <h2 class="display">Lab news</h2>
+      <p class="lede">
+        Updates on papers, awards, and more.
+      </p>
     </div>
     <div class="news" data-reveal>
       {{NEWS_LATEST}}
@@ -304,10 +307,9 @@
   <section class="sec wrap" id="resources">
     <div class="sec__head" data-reveal>
       <p class="eyebrow">Open science<span class="trace"></span></p>
-      <h2 class="display">Take our data. Take our code.</h2>
+      <h2 class="display">Shared data and code</h2>
       <p class="lede">
-        Everything below is public. If a tool you need doesn't exist, tell us — we probably want
-        it too.
+        Everything below is public. We encourage and support re-analysis and re-use of our work.
       </p>
     </div>
     <div class="res" data-reveal>
@@ -352,10 +354,10 @@ const heroRaster = SL.raster(document.getElementById('heroRaster'), raster, {
   padTop: 0.04, padBottom: 0.04,
   barEl: document.getElementById('heroBar'),
 });
-// No sweep bar in the header: the ribbon is a masked sliver, and a bar drawn across the
-// full bar width would stick out beyond it.
+// The header bar sweeps too; its wrapper is masked, so the bar stops with the sliver.
 const hdRaster = SL.raster(document.getElementById('hdRaster'), raster, {
   mode: 'sweep', spanS: 14, speed: 0.85, dotW: 1.2, fade: false,
+  barEl: document.getElementById('hdBar'),
 });
 
 

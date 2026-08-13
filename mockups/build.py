@@ -16,6 +16,7 @@ import hashlib
 import json
 import re
 import sys
+import urllib.parse
 from pathlib import Path
 
 ROOT = Path(__file__).parent
@@ -239,10 +240,13 @@ def people_quiet() -> str:
     return "\n        ".join(out)
 
 
-# Author copies of the papers. They live in the old site's repo (278 MB of them), so the
-# page links to where they are already served rather than duplicating them here. Point this
-# at a local folder once they move.
-PDF_BASE = "https://www.steinmetzlab.net/assets/img/"
+# Author copies of the papers, served from static/papers/ alongside the site.
+PDF_BASE = "papers/"
+
+
+def pdf_url(name: str) -> str:
+    """Percent-encode the filename: these are 'Author et al - year - Journal.pdf'."""
+    return PDF_BASE + urllib.parse.quote(name)
 
 
 JOURNAL_SHORT = {
@@ -282,7 +286,7 @@ def pubs_all() -> str:
         jr = p.get("journal", "")
         pdf = ""
         if p.get("pdflink"):
-            pdf = (f'<a class="pub__pdf" href="{_esc(PDF_BASE + p["pdflink"])}" '
+            pdf = (f'<a class="pub__pdf" href="{_esc(pdf_url(p["pdflink"]))}" '
                    f'title="Author copy (PDF)">PDF</a>')
         out.append(
             f'<div class="pub" data-tags="{_esc(tags)}">'
@@ -304,13 +308,20 @@ def pubs_recent(n: int = 8) -> str:
     out = []
     for p in papers[:n]:
         jr = p.get("journal", "")
+        # same two-part row as the Publications page: .pub is the container, .pub__hit
+        # carries the grid and the link. They must stay in step -- when only this one
+        # still emitted a bare <a class="pub">, the front-page list lost its layout.
+        pdf = ""
+        if p.get("pdflink"):
+            pdf = (f'<a class="pub__pdf" href="{_esc(pdf_url(p["pdflink"]))}" '
+                   f'title="Author copy (PDF)">PDF</a>')
         out.append(
-            f'<a class="pub" href="{_esc(p.get("link", "#"))}" '
-            f'data-tags="{_esc(" ".join(p.get("tags", [])))}">'
+            f'<div class="pub" data-tags="{_esc(" ".join(p.get("tags", [])))}">'
+            f'<a class="pub__hit" href="{_esc(p.get("link", "#"))}">'
             f'<span class="pub__yr">{_esc(p["year"])}</span><span>'
             f'<span class="pub__t">{_esc(p.get("title", ""))}</span>'
             f'<span class="pub__a">{_esc(_authors(p))}</span></span>'
-            f'<span class="pub__j">{_esc(JOURNAL_SHORT.get(jr, jr))}</span></a>'
+            f'<span class="pub__j">{_esc(JOURNAL_SHORT.get(jr, jr))}</span></a>{pdf}</div>'
         )
     return "\n      ".join(out)
 
@@ -631,10 +642,24 @@ def main(argv: list[str]) -> int:
     # than being inlined as a data URI.
     static = ROOT / "static"
     if static.is_dir():
-        for f in sorted(static.iterdir()):
-            if f.is_file():
-                (OUT / f.name).write_bytes(f.read_bytes())
+        n_sub, sz_sub = 0, 0
+        for f in sorted(static.rglob("*")):
+            if not f.is_file():
+                continue
+            rel = f.relative_to(static)
+            dst = OUT / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            if dst.exists() and dst.stat().st_size == f.stat().st_size:
+                pass                      # skip rewriting hundreds of MB every build
+            else:
+                dst.write_bytes(f.read_bytes())
+            if rel.parent == Path("."):
                 print(f"{f.name:22s} {f.stat().st_size/1024:8.1f} KB  (static)")
+            else:
+                n_sub += 1
+                sz_sub += f.stat().st_size
+        if n_sub:
+            print(f"{'static subfolders':22s} {sz_sub/1e6:8.1f} MB  ({n_sub} files)")
 
     if HOMEPAGE in targets:
         index = (OUT / HOMEPAGE).read_text(encoding="utf-8")

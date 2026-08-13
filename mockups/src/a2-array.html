@@ -142,7 +142,19 @@ const NP2 = {{JSON:np2_units}};
   const SPEED = 1;                 // seconds of data per second of wall clock
   const WIN_MS = NP2.window_s * 1000;
 
-  wall.style.height = `calc(100vh + ${Math.round(NP2.n_units * ROW)}px)`;
+  // The sticky pane is 100vh, so the scrollable distance inside .wall is its height
+  // minus 100vh. Setting the height to exactly one row per neuron means that distance
+  // runs out at the moment the last neuron reaches the bottom of the pane -- adding a
+  // viewport here (as this once did) buys a screen of empty black past the end.
+  wall.style.height = `${Math.round(NP2.n_units * ROW)}px`;
+
+  let wallTop = 0;
+  const measure = () => {
+    wallTop = wall.getBoundingClientRect().top + scrollY;
+  };
+  measure();
+  addEventListener('resize', measure, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure).catch(() => {});
 
   const el = (id) => document.getElementById(id);
   const out = {
@@ -221,9 +233,13 @@ const NP2 = {{JSON:np2_units}};
     if (!times) return;
 
     const rowPx = ROW * dpr;
-    const top = wall.getBoundingClientRect().top;      // 0 while stuck, then negative
-    const first = Math.max(0, Math.min(NP2.n_units - 1, Math.floor(-top / ROW)));
-    const nRows = Math.min(NP2.n_units - first, Math.ceil(h / rowPx) + 1);
+    // scrollY against a cached offset, rather than getBoundingClientRect() every frame:
+    // reading the rect forces a synchronous layout mid-animation, which is what made the
+    // scroll feel choppy.
+    const visible = Math.ceil(h / rowPx);
+    const maxFirst = Math.max(0, NP2.n_units - visible);
+    const first = Math.max(0, Math.min(maxFirst, Math.floor((scrollY - wallTop) / ROW)));
+    const nRows = Math.min(NP2.n_units - first, visible + 1);
 
     const dotH = Math.max(1, rowPx * 0.8);
     const dotW = Math.max(1, 1.5 * dpr);

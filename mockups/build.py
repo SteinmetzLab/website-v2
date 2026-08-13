@@ -326,6 +326,15 @@ def pubs_recent(n: int = 8) -> str:
     return "\n      ".join(out)
 
 
+def pub_chips_two() -> str:
+    """Just Selected / Everything, for the personal site: the same filter mechanism as the
+    lab page, without the topic chips that page needs."""
+    return "\n      ".join(
+        f'<button class="chip" data-tag="{t}" '
+        f'aria-pressed="{"true" if t == DEFAULT_PUB_FILTER else "false"}">{label}</button>'
+        for t, label in (("selected", "Selected"), ("all", "Everything")))
+
+
 def pub_chips() -> str:
     return "\n      ".join(
         f'<button class="chip" data-tag="{t}" '
@@ -525,6 +534,7 @@ def render(template: str, name: str = "a-signal.html", deploy: bool = False) -> 
     s = s.replace("{{PEOPLE_QUIET}}", people_quiet())
     s = s.replace("{{PUBS_ALL}}", pubs_all())
     s = s.replace("{{PUB_CHIPS}}", pub_chips())
+    s = s.replace("{{PUB_CHIPS_TWO}}", pub_chips_two())
     s = s.replace("{{PUBS_RECENT}}", pubs_recent())
     s = s.replace("{{PUB_COUNT}}", str(len(json.loads(
         (ROOT / "data/pubs.json").read_text(encoding="utf-8"))["papers"])))

@@ -32,21 +32,7 @@
     radial-gradient(120% 85% at 8% 100%, color-mix(in srgb, var(--deep) 92%, transparent), transparent 68%),
     linear-gradient(to top, var(--deep) 2%, transparent 55%);
 }
-/* the sweeping bar, kept out of the canvas so it leaves no residue and can glow */
-.sweepbar {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 1px;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--accent) 16%, var(--accent) 84%, transparent);
-  box-shadow: 0 0 14px 1px color-mix(in srgb, var(--accent) 60%, transparent);
-}
-.hd__ribbon + .sweepbar,
-.hd .sweepbar {
-  z-index: 0;
-  box-shadow: 0 0 8px 0 color-mix(in srgb, var(--accent) 55%, transparent);
-}
+/* .sweepbar now lives in a-base.css, shared by every page with a header ribbon */
 
 .hero__grid { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
 .hero h1 {

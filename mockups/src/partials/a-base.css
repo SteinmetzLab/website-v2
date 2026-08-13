@@ -220,6 +220,25 @@ canvas { display: block; }
 }
 .hd.is-stuck .hd__ribbonwrap { opacity: 0.5; }
 @media (max-width: 62rem) { .hd__ribbonwrap { display: none; } }
+
+/* The sweeping bar, kept out of the canvas so it leaves no residue and can glow.
+   Shared, not page-local: every page with a header ribbon has one, and while this
+   lived inline in the front page the bar rendered unstyled everywhere else. */
+.sweepbar {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--accent) 16%, var(--accent) 84%, transparent);
+  box-shadow: 0 0 14px 1px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+/* inside the header the bar sits above the ribbon and glows less, since the sliver
+   it travels over is only a few dozen pixels tall */
+.hd .sweepbar {
+  z-index: 0;
+  box-shadow: 0 0 8px 0 color-mix(in srgb, var(--accent) 55%, transparent);
+}
 .hd.is-stuck {
   background: color-mix(in srgb, var(--bg) 90%, transparent);
   backdrop-filter: blur(14px) saturate(1.2);

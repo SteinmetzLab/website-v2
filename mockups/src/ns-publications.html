@@ -25,8 +25,8 @@
 <main id="top">
   <section class="phead wrap">
     <div class="phead__grid">
-      <p class="eyebrow pcb--on">Publications<span class="trace"></span></p>
-      <h1 class="display">{{PUB_COUNT}} papers</h1>
+      <p class="eyebrow pcb--on">Research<span class="trace"></span></p>
+      <h1 class="display">Publications</h1>
       <p class="lede">
         Newest first. Also on
         <a href="https://scholar.google.co.uk/citations?user=PkcYP74AAAAJ&amp;hl=en"
@@ -37,6 +37,10 @@
   </section>
 
   <section class="sec wrap" style="padding-top:0">
+    <div class="chips" role="group" aria-label="Filter publications">
+      {{PUB_CHIPS_TWO}}
+    </div>
+    <p class="meta" style="margin:-1rem 0 1.5rem"><b id="shown">0</b> of {{PUB_COUNT}}</p>
     <div class="pubs">
       {{PUBS_ALL}}
     </div>
@@ -50,4 +54,35 @@ const RASTER = {{DATA:raster}};
 {{PARTIAL:engine.js}}
 {{PARTIAL:a-boot.js}}
 {{PARTIAL:ns-boot.js}}
+
+/* Selected / Everything, the same mechanism as the lab publications page. */
+(() => {
+  const chips = [...document.querySelectorAll('.chip')];
+  const pubs = [...document.querySelectorAll('.pub')];
+  const years = [...document.querySelectorAll('.pubyear')];
+  const shown = document.getElementById('shown');
+
+  const apply = (tag) => {
+    pubs.forEach((p) => {
+      p.hidden = tag !== 'all' && !p.dataset.tags.split(' ').includes(tag);
+    });
+    // a year heading goes once every paper under it is filtered out
+    years.forEach((h) => {
+      let any = false;
+      for (let el = h.nextElementSibling; el && !el.classList.contains('pubyear');
+           el = el.nextElementSibling) {
+        if (!el.hidden) { any = true; break; }
+      }
+      h.hidden = !any;
+    });
+    shown.textContent = pubs.filter((p) => !p.hidden).length;
+  };
+
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    apply(c.dataset.tag);
+  }));
+  const start = chips.find((c) => c.getAttribute('aria-pressed') === 'true');
+  apply(start ? start.dataset.tag : 'all');
+})();
 </script>

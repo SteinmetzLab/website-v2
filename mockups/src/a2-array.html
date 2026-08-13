@@ -18,7 +18,10 @@
 .wall__stick {
   position: sticky;
   top: 0;
+  /* dvh tracks the phone's shrinking address bar; vh does not, so a plain 100vh
+     pane is taller than the visible area and the last rows sit under the chrome */
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: var(--deep);
 }

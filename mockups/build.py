@@ -563,6 +563,21 @@ def render(template: str, name: str = "a-signal.html", deploy: bool = False) -> 
     return ascii_safe(s)
 
 
+# Without a viewport meta, phones lay the page out at ~980 CSS px and then scale the
+# result down to fit, so 16 px text arrives at about 6 px. These pages used to be
+# fragments with no <html>/<head>, because they were previewed inside a wrapper that
+# supplied one; served directly by GitHub Pages they need their own. The parser closes
+# <head> itself at the first <header>, so title and style still land in the head.
+DOC_HEAD = (
+    "<!doctype html>\n"
+    '<html lang="en">\n'
+    "<head>\n"
+    '<meta charset="utf-8">\n'
+    '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+)
+DOC_TAIL = "\n</body>\n</html>\n"
+
+
 GENERATED_BANNER = (
     "<!-- GENERATED FILE - DO NOT EDIT.\n"
     "     Every edit here is destroyed the next time build.py runs.\n"
@@ -590,8 +605,9 @@ def build_personal() -> int:
     dest = ROOT / "out-personal"
     dest.mkdir(exist_ok=True)
     for src_name, out_name in PERSONAL.items():
-        html = (GENERATED_BANNER.format(name=src_name)
-                + render((SRC / src_name).read_text(encoding="utf-8"), src_name, deploy=True))
+        html = (GENERATED_BANNER.format(name=src_name) + DOC_HEAD
+                + render((SRC / src_name).read_text(encoding="utf-8"), src_name, deploy=True)
+                + DOC_TAIL)
         (dest / out_name).write_text(html, encoding="utf-8")
         print(f"{out_name:26s} {len(html)/1024:8.1f} KB")
     for f in sorted((ROOT / "static").iterdir()):
@@ -632,8 +648,8 @@ def main(argv: list[str]) -> int:
         if not src.exists():
             print(f"!! missing {src}")
             return 1
-        html = (GENERATED_BANNER.format(name=name)
-                + render(src.read_text(encoding="utf-8"), name))
+        html = (GENERATED_BANNER.format(name=name) + DOC_HEAD
+                + render(src.read_text(encoding="utf-8"), name) + DOC_TAIL)
         dst = OUT / name
         dst.write_text(html, encoding="utf-8")
         seen[name] = _digest(html)

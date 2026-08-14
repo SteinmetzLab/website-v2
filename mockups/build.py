@@ -629,6 +629,63 @@ def build_personal() -> int:
     return 0
 
 
+# Where the Jekyll site's URLs went. Those paths are in Google, in email signatures and on
+# other labs' pages, and every one of them would 404 the day this site replaces it. GitHub
+# Pages has no redirect config, so each becomes a directory with a meta-refresh index.html;
+# the canonical link is there so search engines fold the old URL into the new one rather
+# than indexing both.
+REDIRECTS = {
+    "about": "a2-signal.html#research",
+    "pubs": "a2-publications.html",
+    "all_pubs": "a2-publications.html",
+    "people": "a2-people.html",
+    "news": "a2-news.html",
+    "join": "a2-join.html",
+    "contact": "a2-contact.html",
+    "teaching": "a2-teaching.html",
+    "neusci490": "a2-teaching.html",
+    "shared": "a2-signal.html#resources",
+    "dei": "a2-join.html",
+    "ethics": "a2-join.html",
+    "categories": "index.html",
+    # postings that were their own page; the Join page is where they live now
+    "npultra_pd": "a2-join.html",
+    "ibl_scientist": "a2-join.html",
+}
+
+SITE_URL = "https://www.steinmetzlab.net/"
+
+
+def _stub(target: str, page: str, title: str, body: str) -> str:
+    """`target` is relative, so a stub still works under a github.io sub-path; `page` is
+    the same destination as a site-root path, which is what the canonical link needs."""
+    return (
+        "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        f'<meta http-equiv="refresh" content="0; url={target}">\n'
+        f'<link rel="canonical" href="{SITE_URL}{page}">\n'
+        f"<title>{title}</title>\n</head>\n<body>\n"
+        f'<p>{body} <a href="{target}">Continue to the Steinmetz Lab site</a>.</p>\n'
+        "</body>\n</html>\n"
+    )
+
+
+def write_redirects() -> None:
+    """The old permalinks, and a 404 for everything else (including the news posts, which
+    lived at /:title/ and cannot be mapped one to one)."""
+    for old, new in REDIRECTS.items():
+        d = OUT / old
+        d.mkdir(exist_ok=True)
+        (d / "index.html").write_text(
+            _stub("../" + new, new, "Moved", "This page has moved."), encoding="utf-8")
+    # 404.html is served for any depth of missing path, so its link has to be root-relative
+    # rather than "../": there is no telling how far down the URL that produced it was.
+    (OUT / "404.html").write_text(
+        _stub("/", "", "Page not found",
+              "That page is not part of the redesigned site."), encoding="utf-8")
+    print(f"{'redirects':22s} {len(REDIRECTS) + 1:8d} stubs")
+
+
 def main(argv: list[str]) -> int:
     if "--personal" in argv:
         return build_personal()
@@ -686,6 +743,11 @@ def main(argv: list[str]) -> int:
                 sz_sub += f.stat().st_size
         if n_sub:
             print(f"{'static subfolders':22s} {sz_sub/1e6:8.1f} MB  ({n_sub} files)")
+
+    write_redirects()
+    # GitHub Pages runs Jekyll over a branch-published site by default, and a leading
+    # underscore anywhere would make it drop files. We are already built.
+    (OUT / ".nojekyll").write_text("", encoding="utf-8")
 
     if HOMEPAGE in targets:
         index = (OUT / HOMEPAGE).read_text(encoding="utf-8")

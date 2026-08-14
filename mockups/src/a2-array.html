@@ -113,8 +113,8 @@
       above 50&nbsp;&micro;V, and a clean refractory period.
     </p>
     <p class="figcap" data-reveal style="margin-top:1.25rem">
-      Subject KM_077, 24&nbsp;May&nbsp;2026. Colour marks the probe &mdash; teal, salmon and
-      grey &mdash; and the four shades within each mark its four shanks. Neurons are ordered
+      Subject KM_077, 24&nbsp;May&nbsp;2026. Color marks the probe &mdash; teal, salmon and
+      gray &mdash; and the four shades within each mark its four shanks. Neurons are ordered
       by probe, then shank, then depth, so scrolling walks down one shank at a time from the
       surface of the brain to {{NP2_DEEPEST}}&nbsp;&micro;m. Probe&nbsp;00 was drift-corrected
       with DREDge before sorting.
@@ -165,7 +165,7 @@ const NP2 = {{JSON:np2_units}};
     depth: el('wallDepth'), time: el('wallTime'), cue: el('wallCue'),
   };
 
-  /* ---- colour: one family per probe, one shade per shank ---------------- */
+  /* ---- color: one family per probe, one shade per shank ----------------- */
   const hex = (s) => {
     s = s.trim().replace('#', '');
     if (s.length === 3) s = s.split('').map((c) => c + c).join('');
@@ -178,7 +178,7 @@ const NP2 = {{JSON:np2_units}};
     const base = [
       hex(cs.getPropertyValue('--accent') || '#14b899'),     // probe 00: teal
       hex(cs.getPropertyValue('--accent-2') || '#ff6f4e'),   // probe 01: salmon
-      hex(cs.getPropertyValue('--di-2') || '#9fb0ad'),       // probe 02: grey
+      hex(cs.getPropertyValue('--di-2') || '#9fb0ad'),       // probe 02: gray
     ];
     // brightest shank first, so shank 0 reads as the "top" of each family
     const f = [1.0, 0.78, 0.58, 0.42];

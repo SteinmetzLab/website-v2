@@ -2,13 +2,13 @@ name: Build and deploy
 
 # Builds mockups/out and publishes it to GitHub Pages.
 #
-# Deliberately runs on a branch called `main` only. Point this at a TEST repository first
-# (see DEPLOY.md); it will happily overwrite whatever Pages currently serves for whichever
-# repo it lives in.
+# It will happily overwrite whatever Pages currently serves for whichever repo it lives
+# in, so point it at a test repository first (see DEPLOY.md). `master` is here because the
+# repo that owns www.steinmetzlab.net predates the main-branch default and still uses it.
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
     paths:
       - 'mockups/**'
       - '.github/workflows/deploy.yml'
@@ -39,6 +39,13 @@ jobs:
       - name: Build
         working-directory: mockups
         run: python build.py --force
+
+      # A hostname can be claimed by exactly one repository, so only the repo that owns
+      # www.steinmetzlab.net ships a CNAME. Deployments of this same workflow from a test
+      # repo publish without one and stay on their github.io URL.
+      - name: Claim the custom domain
+        if: github.repository == 'SteinmetzLab/SteinmetzLab.github.io'
+        run: echo 'www.steinmetzlab.net' > mockups/out/CNAME
 
       - name: Check nothing was left unrendered
         working-directory: mockups

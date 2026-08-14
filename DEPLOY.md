@@ -42,15 +42,52 @@ or 2 instead.
 
 ## Going live
 
-Once you are happy:
+The plan is to replace the contents of `SteinmetzLab/SteinmetzLab.github.io` — the repo
+that owns `www.steinmetzlab.net` — with this project. The old Jekyll site stays in that
+repo's git history, which is the only copy of it, so nothing is lost.
 
-1. Point the workflow at the repo that owns the domain, **or** move the domain to the new
-   repo (Settings → Pages → Custom domain: `www.steinmetzlab.net`, and remove it from the
-   old repo first — one repo per hostname).
-2. Keep the `CNAME` file. GitHub Pages recreates it from the custom-domain setting, but if
-   it goes missing the domain stops resolving to the site.
-3. Keep the old repo. It is the only copy of the previous site, and its git history is the
-   record of what was published before.
+Two things about that repo are not what this workflow expects, and both matter:
+
+- **Its default branch is `master`, not `main`.** The workflow triggers on both.
+- **Its Pages source is "Deploy from a branch", so GitHub runs Jekyll over it.** This
+  project is already built; Jekyll would produce nothing usable. The source has to be
+  **Settings → Pages → Build and deployment → Source: GitHub Actions**. That is a click in
+  the browser; there is no way to set it from a workflow. `actions/configure-pages` will
+  *not* do it — with `enablement: true` it creates a Pages site if one is missing, but when
+  a site already exists it only reads the config back, it never changes the build type.
+
+Order, to keep the downtime to the length of one workflow run:
+
+1. Flip **Settings → Pages → Source** to **GitHub Actions**. The last deployment keeps
+   being served while you do this.
+2. Push this project to that repo's `master`, replacing the Jekyll tree. The push runs the
+   workflow, which builds and deploys in two or three minutes.
+3. Check `https://www.steinmetzlab.net/` **in a browser that has been there before**, not
+   just a fresh incognito window — see the service worker note below, which is the one
+   failure mode that only shows up for returning visitors.
+
+Keep the custom domain setting on that repo. A hostname can be claimed by exactly one
+repository, and the workflow writes a `CNAME` file into the artifact only when it is
+running in `SteinmetzLab/SteinmetzLab.github.io`, so test deployments elsewhere cannot
+take the domain away from it.
+
+### The old site's service worker
+
+The Jekyll theme registered a service worker at `/sw.js` whose precache list included `/`
+and `/index.html`. Every browser that has ever loaded `www.steinmetzlab.net` still has it
+installed and will answer navigations from *its own cache* — so without intervention those
+visitors keep seeing the old homepage after launch, indefinitely, with nothing to tell them
+the site changed. `mockups/static/sw.js` is a replacement at the same URL that drops every
+cache, unregisters itself and reloads the tab. It has to keep shipping; deleting it brings
+the problem straight back.
+
+### Old URLs
+
+The Jekyll site's permalinks (`/people/`, `/pubs/`, `/join/`, `/news/`, …) are in search
+results and on other labs' pages. `REDIRECTS` in `build.py` turns each into a directory
+holding a meta-refresh stub pointing at the new page, and writes a `404.html` for anything
+else — the news posts, which lived at `/:title/`, cannot be mapped one to one. Add an entry
+to that dict if you find an old URL that is still being linked.
 
 ## What the workflow assumes
 

@@ -81,6 +81,37 @@ jobs:
             exit 1
           fi
 
+      # website-v2 was where this site was built and reviewed before it replaced the
+      # Jekyll one. Now that the same build is live, a second complete copy of the site
+      # under /website-v2/ is duplicate content on the lab's own domain -- and it is on
+      # the lab's domain, because a custom domain on the org's github.io repo captures
+      # its project pages too. So that repo keeps its history and its sources, and
+      # publishes one redirect instead of a site. Delete this step to get staging back.
+      - name: Retire the staging deployment
+        if: github.repository != 'SteinmetzLab/SteinmetzLab.github.io'
+        run: |
+          rm -rf mockups/out
+          mkdir -p mockups/out
+          cat > mockups/out/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="robots" content="noindex">
+          <meta http-equiv="refresh" content="0; url=https://www.steinmetzlab.net/">
+          <link rel="canonical" href="https://www.steinmetzlab.net/">
+          <title>Moved</title>
+          </head>
+          <body>
+          <p>This was the staging copy of the Steinmetz Lab site. It is now the live one:
+          <a href="https://www.steinmetzlab.net/">www.steinmetzlab.net</a>.</p>
+          </body>
+          </html>
+          HTML
+          cp mockups/out/index.html mockups/out/404.html
+          touch mockups/out/.nojekyll
+
       # enablement lets the first run turn Pages on itself, instead of failing until
       # somebody sets Settings -> Pages -> Source by hand.
       - uses: actions/configure-pages@v5

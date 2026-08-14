@@ -57,14 +57,29 @@ jobs:
 
       # A single uncaught exception in the page script leaves every reveal-on-scroll
       # section invisible, which looks like "the page stops below the hero". Run each
-      # page's script against a DOM stub so that failure can never ship again.
+      # page's script against a DOM stub so that failure can never ship again. runpage.js
+      # follows <script src> as well, so a page whose linked engine or recording went
+      # missing fails here rather than in somebody's browser.
       - name: Smoke-test the page scripts
         working-directory: mockups
         run: |
-          for f in out/index.html out/a2-signal.html out/a-signal.html \
-                   out/a-publications.html out/a-news.html; do
+          for f in out/*.html; do
             node tools/runpage.js "$f" || exit 1
           done
+
+      # The pages link their fonts, clips and recordings instead of inlining them, which
+      # is the difference between a 75 KB homepage and a 2.6 MB one. It is an easy thing
+      # to undo by accident, and nothing else would notice, so assert it.
+      - name: Check the pages stayed small
+        working-directory: mockups
+        run: |
+          big=$(ls -S out/a2-*.html out/ns-*.html out/index.html | head -1)
+          kb=$(( $(wc -c < "$big") / 1024 ))
+          echo "largest deployed page: $big (${kb} KB)"
+          if [ "$kb" -gt 250 ]; then
+            echo "::error::$big is ${kb} KB -- an asset is being inlined again"
+            exit 1
+          fi
 
       # enablement lets the first run turn Pages on itself, instead of failing until
       # somebody sets Settings -> Pages -> Source by hand.

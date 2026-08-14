@@ -1,13 +1,19 @@
-"""Assemble each mockup in src/ into a single self-contained HTML file in out/.
+"""Assemble each mockup in src/ into a page in out/, plus the shared files it links to.
 
 Templates use these placeholders:
-    {{FONTS}}            -> @font-face rules with the subset Open Sans faces inlined
+    {{FONTS}}            -> @font-face rules pointing at the linked woff subsets
     {{MARK}}             -> the circuit-brain logo mark as inline SVG (stroke: currentColor)
-    {{DATA:name}}        -> contents of assets/<name>_b64.json  (real recording data)
-    {{IMG:name}}         -> data: URI for assets/<name>.webp
-    {{VIDEO:name}}       -> data: URI for assets/<name>.mp4   (a looping clip)
-    {{JSON:name}}        -> contents of assets/<name>.json, minified, as a JS literal
+    {{IMG:name}}         -> URL of assets/<name>.webp
+    {{VIDEO:name}}       -> URL of assets/<name>.mp4   (a looping clip)
+    {{SCRIPT:name}}      -> <script src> for a linked script: `engine`, or one of
+                            LINKED_SCRIPTS, each of which defines one global
     {{PARTIAL:name}}     -> contents of src/partials/<name>
+    {{DATA:name}}        -> contents of assets/<name>_b64.json, pasted in as a literal
+    {{JSON:name}}        -> contents of assets/<name>.json, minified, as a JS literal
+
+The last two inline their payload. The deployed A2 and NS pages use {{SCRIPT:...}} instead;
+{{DATA}} and {{JSON}} remain for the older comparison mockups, which are single files on
+purpose so one of them can be mailed to somebody as an attachment.
 """
 from __future__ import annotations
 
@@ -23,6 +29,57 @@ ROOT = Path(__file__).parent
 ASSETS = ROOT / "assets"
 SRC = ROOT / "src"
 OUT = ROOT / "out"
+
+# ---------------------------------------------------------------------------
+# Linked assets
+#
+# These pages used to inline every font, clip, recording and portrait as base64,
+# which is right for emailing somebody a single self-contained file and wrong for
+# a site: the homepage came to 2.6 MB, and because it was all *inside* the HTML,
+# none of it could be cached -- the same fonts and the same 141-neuron recording
+# were downloaded again in full on every page.
+#
+# Now each of those is written into out/assets/ under a content-hashed name and
+# referenced by URL. The hash is what makes this safe to cache: the file name
+# changes whenever the bytes do, so a stale copy can never be served, and the
+# assets themselves never need to expire. It also means the browser fetches only
+# what a page actually renders -- all four typeface families ship, but a font is
+# only requested if something on the page is set in it.
+# ---------------------------------------------------------------------------
+ASSET_DIR = "assets"
+_asset_out = OUT          # which build's assets/ we are writing into
+_emitted: dict[str, str] = {}   # logical name -> URL, so one file is written once
+
+
+def _emit(name: str, data: bytes) -> str:
+    """Write `data` into <out>/assets/ under a content-hashed name; return its URL.
+
+    `name` is a logical name with an extension, e.g. "clip_wave.mp4"; any slashes
+    in it are flattened, since assets/ is one flat directory."""
+    key = f"{_asset_out}|{name}"
+    if key in _emitted:
+        return _emitted[key]
+    flat = name.replace("/", "-")
+    stem, _, ext = flat.rpartition(".")
+    url = f"{ASSET_DIR}/{stem}.{hashlib.sha256(data).hexdigest()[:10]}.{ext}"
+    p = _asset_out / url
+    p.parent.mkdir(parents=True, exist_ok=True)
+    if not p.exists():
+        p.write_bytes(data)
+    _emitted[key] = url
+    return url
+
+
+def _use_asset_dir(dest: Path) -> None:
+    """Point the emitters at `dest` and clear its assets/, so a rebuild cannot leave
+    the previous build's hashed files lying around next to the current ones."""
+    global _asset_out
+    _asset_out = dest
+    d = dest / ASSET_DIR
+    if d.is_dir():
+        for f in d.iterdir():
+            if f.is_file():
+                f.unlink()
 
 # Candidate typeface options. Each supplies a condensed display face and a body face at two
 # weights; one monospace is shared by all of them. `adjust` normalizes x-height against Open
@@ -40,10 +97,13 @@ def _face(family: str, weight: str, role: str, adjust: float | None = None) -> s
     if not p.exists():
         raise SystemExit(f"missing font subset {p.name} -- run tools/make_fonts.py")
     extra = f"size-adjust:{adjust}%;" if adjust and adjust != 100.0 else ""
+    # The subsets are stored as base64 text because that is what inlining needed; a
+    # linked face wants the woff itself, so decode on the way out.
+    url = _emit(f"font-{role}.woff", base64.b64decode(p.read_text().strip()))
     return (
         f"@font-face{{font-family:'{family}';font-style:normal;font-weight:{weight};"
         f"font-display:block;{extra}"
-        f"src:url(data:font/woff;base64,{p.read_text().strip()}) format('woff')}}"
+        f"src:url({url}) format('woff')}}"
     )
 
 
@@ -73,13 +133,11 @@ def fonts_css_serif() -> str:
 
 def img_uri(name: str) -> str:
     # a name may include a subfolder, e.g. people/nick-steinmetz
-    p = ASSETS / f"{name}.webp"
-    return "data:image/webp;base64," + base64.b64encode(p.read_bytes()).decode("ascii")
+    return _emit(f"{name}.webp", (ASSETS / f"{name}.webp").read_bytes())
 
 
 def video_uri(name: str) -> str:
-    p = ASSETS / f"{name}.mp4"
-    return "data:video/mp4;base64," + base64.b64encode(p.read_bytes()).decode("ascii")
+    return _emit(f"{name}.mp4", (ASSETS / f"{name}.mp4").read_bytes())
 
 
 def json_literal(name: str) -> str:
@@ -88,6 +146,34 @@ def json_literal(name: str) -> str:
     if isinstance(d, dict):
         d.pop("_comment", None)
     return json.dumps(d, separators=(",", ":"))
+
+
+# What a page can pull in as a linked <script> rather than pasting into its own. Each of
+# these defines one global; they are classic scripts, so the browser runs them in document
+# order and the global is already there by the time the page's inline script runs. That is
+# what keeps this a pure size change -- no async, no callbacks, no page code touched.
+#
+# The recording is the reason this matters more than the byte count suggests: every page
+# draws the sliver of raster behind the header, so the same 149 KB used to be re-downloaded
+# on every single navigation. Linked, it is fetched once for the whole site.
+LINKED_SCRIPTS = {
+    "raster": ("RASTER", lambda: (ASSETS / "raster_b64.json").read_text(encoding="utf-8")),
+    "widefield": ("WIDEFIELD",
+                  lambda: (ASSETS / "widefield_b64.json").read_text(encoding="utf-8")),
+    "np2_units": ("NP2", lambda: json_literal("np2_units")),
+}
+
+
+def script_tag(name: str) -> str:
+    """{{SCRIPT:name}} -> a <script src> for one of the linked scripts, or for the engine."""
+    if name == "engine":
+        js = (SRC / "partials" / "engine.js").read_text(encoding="utf-8")
+    else:
+        var, load = LINKED_SCRIPTS[name]
+        js = f"var {var} = {load().strip()};\n"
+    # Same reasoning as ascii_safe(): escape rather than rely on the host's charset.
+    js = "".join(c if ord(c) < 128 else f"\\u{ord(c):04x}" for c in js)
+    return f'<script src="{_emit(name + ".js", js.encode("ascii"))}"></script>'
 
 
 def _esc(s: str) -> str:
@@ -149,9 +235,7 @@ def people_html() -> str:
     for p in recs:
         name, role, url = p["name"], p.get("role", ""), p.get("url") or ""
         if p.get("img"):
-            uri = ("data:image/webp;base64,"
-                   + base64.b64encode((ASSETS / "people" / f"{p['img']}.webp").read_bytes())
-                   .decode("ascii"))
+            uri = img_uri(f"people/{p['img']}")
             face = f'<img class="person__pic" src="{uri}" alt="" loading="lazy">'
         else:
             face = (f'<div class="person__pic person__pic--mono">'
@@ -226,9 +310,7 @@ def people_quiet() -> str:
     for p in recs:
         name, role = p["name"], p.get("role", "")
         if p.get("img"):
-            uri = ("data:image/webp;base64,"
-                   + base64.b64encode((ASSETS / "people" / f"{p['img']}.webp").read_bytes())
-                   .decode("ascii"))
+            uri = img_uri(f"people/{p['img']}")
             face = f'<img class="who__face" src="{uri}" alt="" loading="lazy">'
         else:
             face = '<span class="who__face who__face--none" aria-hidden="true"></span>'
@@ -566,6 +648,7 @@ def render(template: str, name: str = "a-signal.html", deploy: bool = False) -> 
     s = re.sub(r"\{\{IMG:([\w\-/]+)\}\}", img_sub, s)
     s = re.sub(r"\{\{VIDEO:([\w\-]+)\}\}", lambda m: video_uri(m.group(1)), s)
     s = re.sub(r"\{\{JSON:([\w\-]+)\}\}", lambda m: json_literal(m.group(1)), s)
+    s = re.sub(r"\{\{SCRIPT:([\w\-]+)\}\}", lambda m: script_tag(m.group(1)), s)
 
     left = re.findall(r"\{\{[^}]+\}\}", s)
     if left:
@@ -614,6 +697,7 @@ def build_personal() -> int:
     previewed alongside the lab site, and to index.html once it is the site."""
     dest = ROOT / "out-personal"
     dest.mkdir(exist_ok=True)
+    _use_asset_dir(dest)
     for src_name, out_name in PERSONAL.items():
         html = (GENERATED_BANNER.format(name=src_name) + DOC_HEAD
                 + render((SRC / src_name).read_text(encoding="utf-8"), src_name, deploy=True)
@@ -690,6 +774,7 @@ def main(argv: list[str]) -> int:
     if "--personal" in argv:
         return build_personal()
     OUT.mkdir(exist_ok=True)
+    _use_asset_dir(OUT)
     force = "--force" in argv
     argv = [a for a in argv if a != "--force"]
     targets = argv[1:] or [p.name for p in sorted(SRC.glob("*.html"))]

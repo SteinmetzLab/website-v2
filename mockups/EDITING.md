@@ -59,9 +59,11 @@ exists to prevent.
 
 ## Files that ship as-is
 
-Anything in a `static/` folder is copied straight into the built site, unchanged, for files
-that have to stay real files rather than being inlined as data URIs. Everything in
-`assets/` is inlined instead.
+Anything in a `static/` folder is copied straight into the built site under its own name,
+unchanged. Everything in `assets/` is also copied into the built site, but under a
+content-hashed name the build works out (`clip_wave.1e969f4fd5.mp4`) and links to. Use
+`static/` when the URL has to be predictable -- a PDF you have already emailed a link to,
+say -- and `assets/` for anything the page refers to through the build.
 
 ## Adding an entry
 

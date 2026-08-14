@@ -98,10 +98,27 @@ to that dict if you find an old URL that is still being linked.
   and are run by hand when the underlying data changes.
 - The build is deterministic and takes a few seconds.
 
-## Before the first real deploy
+## Linked assets
 
-The pages are currently one self-contained file each, with fonts, clips and data inlined as
-base64. That is right for emailing a mockup and wrong for a real site: the homepage is about
-2.6 MB and none of it is cached between pages. Switching `build.py` to write linked assets
-into `out/assets/` would cut the homepage to a few hundred KB and let the shared fonts and
-recordings be fetched once. That change is worth making before launch, not after.
+The deployed pages link their fonts, clips, portraits and recordings out of `out/assets/`
+rather than inlining them as base64. That took the homepage from **2.6 MB to 75 KB** — the
+gain is not only the first load but every load after it, because an inlined asset sits
+*inside* the HTML and so can never be cached: the same fonts and the same 141-neuron
+recording used to be re-downloaded in full on every single page.
+
+- Each file is written under a **content-hashed name** (`raster.83ae5fd9bc.js`). The name
+  changes whenever the bytes do, so a cached copy can never go stale and the assets never
+  need to expire.
+- The recordings and the shared engine are linked **classic scripts**, which the browser
+  runs in document order. `RASTER` and `SL` are therefore already defined by the time a
+  page's own inline script runs, exactly as when they were pasted in above it — nothing in
+  the page code had to become asynchronous.
+- All four typeface families still ship, but a browser only requests a font it actually
+  renders, so an A2 page fetches four woff files rather than thirteen.
+- Two CI steps defend this. `runpage.js` follows `<script src>`, so a page whose linked
+  engine or recording went missing fails the build; and a size gate fails if any deployed
+  page grows past 250 KB, which is what an accidental return to inlining would look like.
+
+The older `a-*`, `b-*`, `c-*` and `d-*` comparison mockups still inline everything, via the
+`{{DATA:...}}` and `{{JSON:...}}` placeholders. That is deliberate — they exist to be
+mailed to somebody as a single file.

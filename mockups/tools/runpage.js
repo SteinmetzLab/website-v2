@@ -3,6 +3,7 @@
 
    Usage: node tools/runpage.js out/a2-signal.html            */
 const fs = require('fs');
+const path = require('path');
 
 const file = process.argv[2] || 'out/a2-signal.html';
 const html = fs.readFileSync(file, 'utf8');
@@ -78,27 +79,53 @@ global.scrollY = 0;
 global.atob = (s) => Buffer.from(s, 'base64').toString('binary');
 global.performance = { now: () => 0 };
 
-const blocks = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
-console.log(`${file}: ${blocks.length} script block(s)`);
-let failed = false;
-blocks.forEach((code, i) => {
-  try {
-    new Function(code)();
-    console.log(`  block ${i}: ran to completion`);
-  } catch (e) {
-    failed = true;
-    console.log(`  block ${i}: ${e.constructor.name}: ${e.message}`);
-    const line = (e.stack || '').split('\n').find((l) => l.includes('<anonymous>'));
-    if (line) {
-      const m = line.match(/<anonymous>:(\d+):/);
-      if (m) {
-        const n = +m[1] - 2;                 // new Function wraps the body in one extra line
-        const src = code.split('\n');
-        for (let j = Math.max(0, n - 3); j < Math.min(src.length, n + 2); j++) {
-          console.log(`    ${j + 1 === n ? '>>' : '  '} ${src[j]}`);
-        }
-      }
+/* Collect every script the page runs, in document order: the linked ones (engine, the
+   recordings) as well as the inline block. They are concatenated and run as one body
+   rather than one call per script, because that is the part of the browser's behavior
+   this test exists to check -- a `const` at the top of a classic script is visible to
+   every script after it, which is the whole reason the page can keep using SL and RASTER
+   as if they were still pasted in above it. Running each separately would scope them
+   away and pass a page that breaks in a browser. */
+const parts = [];
+for (const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+  const src = /\bsrc="([^"]+)"/.exec(m[1]);
+  if (src) {
+    const p = path.resolve(path.dirname(file), src[1]);
+    if (!fs.existsSync(p)) {
+      console.log(`${file}: missing linked script ${src[1]}`);
+      process.exit(1);
+    }
+    parts.push({ name: src[1], code: fs.readFileSync(p, 'utf8') });
+  } else {
+    parts.push({ name: '(inline)', code: m[2] });
+  }
+}
+
+console.log(`${file}: ${parts.length} script(s): ${parts.map((p) => p.name).join(', ')}`);
+
+// Line at which each part starts in the concatenated body, for blaming an error.
+const starts = [];
+let n = 1;
+for (const p of parts) { starts.push(n); n += p.code.split('\n').length; }
+const body = parts.map((p) => p.code).join('\n');
+
+try {
+  new Function(body)();
+  console.log('  ran to completion');
+  process.exit(0);
+} catch (e) {
+  console.log(`  ${e.constructor.name}: ${e.message}`);
+  const at = /<anonymous>:(\d+):/.exec(
+    (e.stack || '').split('\n').find((l) => l.includes('<anonymous>')) || '');
+  if (at) {
+    const line = +at[1] - 2;               // new Function wraps the body in one extra line
+    let i = starts.findIndex((s) => s > line) - 1;
+    if (i < 0) i = parts.length - 1;
+    console.log(`  in ${parts[i].name}:`);
+    const src = body.split('\n');
+    for (let j = Math.max(0, line - 3); j < Math.min(src.length, line + 2); j++) {
+      console.log(`    ${j + 1 === line ? '>>' : '  '} ${src[j]}`);
     }
   }
-});
-process.exit(failed ? 1 : 0);
+  process.exit(1);
+}

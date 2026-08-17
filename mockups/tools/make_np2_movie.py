@@ -137,13 +137,17 @@ def scroll_track(n_frames, hold_s, scroll_s, ease_s, max_scroll):
 # ---- text -------------------------------------------------------------------------
 
 def fonts():
+    """The readout sits at one size; only the shank labels and key step down from it.
+
+    The three readout lines are deliberately the same size as each other -- a big headline
+    over small detail turns the overlay into the subject, and the subject is the wall.
+    """
     def f(name, size):
         return ImageFont.truetype(str(FONT_DIR / name), size)
     return dict(
-        head=f("arialbd.ttf", 54),
-        body=f("arial.ttf", 32),
-        small=f("arial.ttf", 24),
-        key=f("arial.ttf", 22),
+        head=f("arialbd.ttf", 22),
+        body=f("arial.ttf", 22),
+        key=f("arial.ttf", 18),
     )
 
 
@@ -161,16 +165,16 @@ def scrims():
     double the darkening and leave a visible seam along the join.
     """
     xs, ys = np.arange(W), np.arange(H)
-    left = 1.0 - smoothstep((xs - 520) / 430.0)
-    narrow = 1.0 - smoothstep((xs - 300) / 400.0)
-    right = smoothstep((xs - (W - 500)) / 320.0)
-    top = 1.0 - smoothstep((ys - 205) / 175.0)
-    bottom = smoothstep((ys - (H - 250)) / 200.0)
+    left = 1.0 - smoothstep((xs - 380) / 260.0)
+    narrow = 1.0 - smoothstep((xs - 290) / 300.0)
+    right = smoothstep((xs - (W - 450)) / 310.0)
+    top = 1.0 - smoothstep((ys - 130) / 130.0)
+    bottom = smoothstep((ys - (H - 250)) / 190.0)
 
     sc = np.zeros((H, W))
-    sc = np.maximum(sc, 0.88 * top[:, None] * left[None, :])      # the readout
-    sc = np.maximum(sc, 0.86 * bottom[:, None] * narrow[None, :])  # the probe key
-    sc = np.maximum(sc, 0.55 * np.ones((H, 1)) * right[None, :])   # the shank labels
+    sc = np.maximum(sc, 0.86 * top[:, None] * left[None, :])       # the readout
+    sc = np.maximum(sc, 0.92 * bottom[:, None] * narrow[None, :])  # the probe key
+    sc = np.maximum(sc, 0.64 * np.ones((H, 1)) * right[None, :])   # the shank labels
     return sc[..., None]
 
 
@@ -184,11 +188,11 @@ def headline(ps, blocks):
     p0, s0 = ps[blocks[0][0]]
     p1, s1 = ps[blocks[-1][0]]
     if len(blocks) == 1:
-        return [(f"probe {p0:02d}  \u00b7  shank {s0}", (p0, s0))]
+        return [(f"Probe {p0:02d} \u00b7 Shank {s0}", (p0, s0))]
     if p0 == p1:
-        return [(f"probe {p0:02d}  \u00b7  shanks {s0}\u2013{s1}", (p0, s0))]
-    return [(f"probe {p0:02d} shank {s0}", (p0, s0)), ("   \u2192   ", None),
-            (f"probe {p1:02d} shank {s1}", (p1, s1))]
+        return [(f"Probe {p0:02d} \u00b7 Shanks {s0}\u2013{s1}", (p0, s0))]
+    return [(f"Probe {p0:02d} Shank {s0}", (p0, s0)), ("  \u2192  ", None),
+            (f"Probe {p1:02d} Shank {s1}", (p1, s1))]
 
 
 def render(args):
@@ -281,25 +285,23 @@ def render(args):
         # ---- the readout, upper left -----------------------------------------
         last = first + nrows
         blocks = [(bs, be) for bs, be in zip(bstart, bend) if be > first and bs < last]
-        x, y = 56, 52
+        x, y = 56, 48
         for part, k in headline(ps, blocks):
             col = tuple(int(v) for v in (shades[k[0], k[1]] if k else ink3))
             d.text((x, y), part, font=fnt["head"], fill=col)
             x += text_w(d, part, fnt["head"])
-        y += 76
-        d.text((56, y), f"neurons {first + 1:,}\u2013{last:,} of {n:,}",
+        y += 32
+        d.text((56, y), f"Neurons {first + 1:,}\u2013{last:,} of {n:,}",
                font=fnt["body"], fill=tuple(int(v) for v in ink))
-        y += 44
+        y += 32
         d.text((56, y), f"t = {t0 / 1000:.1f} s", font=fnt["body"],
                fill=tuple(int(v) for v in ink2))
-        y += 42
-        d.text((56, y), f"real time  \u00b7  {span_s:g} s of recording across the frame",
-               font=fnt["small"], fill=tuple(int(v) for v in ink3))
 
         # ---- one label per shank on screen, right edge ------------------------
         # The depth span belongs to a shank, not to the frame: each shank is a full pass
         # from the top of the recorded band down to the tip, so a single top-to-bottom
         # range across a frame that holds three of them would mean nothing.
+        ylast = -1e9
         for bs, be in blocks:
             vs, ve = max(bs, first), min(be, last) - 1
             col = tuple(int(v) for v in shades[ps[bs, 0], ps[bs, 1]])
@@ -307,37 +309,39 @@ def render(args):
             if 0 < yb < H:                       # rule where this shank starts
                 dim = tuple(int(v * 0.62 + int(deep[j]) * 0.38) for j, v in enumerate(col))
                 d.line([(0, yb), (W - 60, yb)], fill=dim, width=1)
-            ty = int(min(max(yb, 10), H - 66))
-            lab = f"probe {ps[bs, 0]:02d} \u00b7 shank {ps[bs, 1]}"
+            # A shank whose boundary sits just under the frame edge would otherwise print
+            # on top of the one above it, since both clamp to the same y. Push each label
+            # clear of the last, and give up on slivers too thin to be worth naming.
+            if ve - vs + 1 < 8:
+                continue
+            ty = max(int(min(max(yb, 10), H - 56)), int(ylast + 48))
+            if ty > H - 56:
+                continue
+            lab = f"Probe {ps[bs, 0]:02d} \u00b7 Shank {ps[bs, 1]}"
             sub = f"{u['meta'][vs, 2]:,.0f}\u2013{u['meta'][ve, 2]:,.0f} \u00b5m along shank"
-            d.text((W - 46 - text_w(d, lab, fnt["key"]), ty), lab,
+            d.text((W - 42 - text_w(d, lab, fnt["key"]), ty), lab,
                    font=fnt["key"], fill=col)
-            d.text((W - 46 - text_w(d, sub, fnt["key"]), ty + 26), sub,
+            d.text((W - 42 - text_w(d, sub, fnt["key"]), ty + 22), sub,
                    font=fnt["key"], fill=tuple(int(v) for v in ink3))
+            ylast = ty
 
         # ---- probe key, lower left -------------------------------------------
-        ky = H - 178
-        d.text((56, ky), "shank", font=fnt["key"], fill=tuple(int(v) for v in ink3))
+        # No progress bar anywhere: how far down the wall you are is exactly the thing
+        # the movie should not advertise -- the point is that it keeps going.
+        ky = H - 148
+        d.text((56, ky), "Shank", font=fnt["key"], fill=tuple(int(v) for v in ink3))
         for s in range(4):
-            d.text((166 + s * 38, ky), str(s), font=fnt["key"],
+            d.text((146 + s * 32, ky), str(s), font=fnt["key"],
                    fill=tuple(int(v) for v in ink3))
-        ky += 32
+        ky += 28
         for p in range(3):
-            d.text((56, ky), f"probe {p:02d}", font=fnt["key"],
+            d.text((56, ky), f"Probe {p:02d}", font=fnt["key"],
                    fill=tuple(int(v) for v in ink3))
             for s in range(4):
-                x0 = 160 + s * 38
-                d.rectangle([x0, ky + 6, x0 + 28, ky + 14],
+                x0 = 140 + s * 32
+                d.rectangle([x0, ky + 5, x0 + 24, ky + 12],
                             fill=tuple(int(v) for v in shades[p, s]))
-            ky += 34
-
-        # ---- how far down the wall, right edge -------------------------------
-        bx, by0, by1 = W - 26, 60, H - 60
-        d.rectangle([bx, by0, bx + 6, by1], fill=tuple(int(v) for v in rgb(pal["drule"])))
-        f0 = by0 + (by1 - by0) * first / n
-        f1 = by0 + (by1 - by0) * (first + nrows) / n
-        d.rectangle([bx, f0, bx + 6, max(f0 + 3, f1)],
-                    fill=tuple(int(v) for v in shades[ps[first, 0], ps[first, 1]]))
+            ky += 28
 
         arr = np.asarray(img)
         if writer is None:

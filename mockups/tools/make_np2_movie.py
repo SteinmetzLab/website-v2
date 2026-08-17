@@ -245,9 +245,13 @@ def render(args):
         todo = [int(round(f * (n_frames - 1))) for f in
                 np.linspace(0, 1, args.preview)]
     else:
+        # crf 27 rather than the 18-20 the other renderers use. This frame is mostly flat
+        # ground with a few thousand 2 px dots on it, and at 1:1 the two are not tellable
+        # apart -- but 40 s at crf 18 is 67 MB and at 27 it is 22 MB, which is the
+        # difference between a file you can mail and one you cannot.
         writer = imageio.get_writer(
             path, fps=FPS, codec="libx264", macro_block_size=1,
-            ffmpeg_params=["-crf", "18", "-preset", "slow", "-pix_fmt", "yuv420p",
+            ffmpeg_params=["-crf", str(args.crf), "-preset", "slow", "-pix_fmt", "yuv420p",
                            "-movflags", "+faststart"])
 
     for i in todo:
@@ -364,6 +368,8 @@ def main(argv):
     p.add_argument("--span", type=float, default=SPAN_S,
                    help="seconds of recording across the frame width; the time axis stays "
                         "real time either way, a wider span just slows the leftward drift")
+    p.add_argument("--crf", type=int, default=27,
+                   help="x264 quality, lower is bigger; 18 for a master to re-encode from")
     p.add_argument("--palette", default="teal")
     p.add_argument("--name", default="np2_wall_1745.mp4")
     p.add_argument("--preview", type=int, default=0,

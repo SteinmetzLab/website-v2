@@ -1,5 +1,38 @@
 # Editing the site
 
+## Where the site actually lives
+
+This folder -- `D:\Dropbox\code\SteinmetzLabWebsite_v2\mockups` -- is the source. `data/`
+and `src/` here are the only copy of the site's content; there is no other master
+somewhere else. Edit them and rebuild.
+
+The one thing that is *not* obvious is which GitHub repo publishes the result. There are
+two, and they hold identical trees:
+
+| Repo | What it publishes |
+|---|---|
+| `SteinmetzLab/SteinmetzLab.github.io`, branch **`master`** | **www.steinmetzlab.net** -- the live site |
+| `SteinmetzLab/website-v2`, branch `main` -- this folder's `origin` | Nothing. Since the launch its workflow publishes a single redirect (see DEPLOY.md). |
+
+So `git push origin main` from here **does not update the live site**. A change is only
+live once it also reaches `SteinmetzLab.github.io`'s `master`. Its history begins with the
+old Jekyll site, which is why it is a separate history rather than the same branch under
+two names; the trees are kept identical by hand.
+
+To deploy, push here for the record, then put the same commit on the live repo:
+
+```
+git push origin main
+
+git clone --branch master https://github.com/SteinmetzLab/SteinmetzLab.github.io.git D:/temp/livesite
+#   copy the changed files from mockups/ into D:/temp/livesite/mockups/, then
+cd D:/temp/livesite && git add -A && git commit && git push origin master
+```
+
+Before pushing, confirm the two trees match -- `git rev-parse HEAD^{tree}` in each should
+print the same hash. That is the check that the live repo really got what you built.
+Pushing to `master` runs the workflow, which builds and deploys in two or three minutes.
+
 ## The one rule
 
 **Edit `src/` and `data/`. Never edit `out/`.**
